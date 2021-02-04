@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prettier": "npx prettier --check \"**/*.{ts,tsx,css,json,js,jsx}\"",
+    "prettier:write": "npx prettier --write \"**/*.{ts,tsx,json}\"",
+    "lint": "npx eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "next": "10.0.6",
@@ -15,6 +19,16 @@
   "devDependencies": {
     "@types/node": "^14.14.25",
     "@types/react": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.22.0",
+    "prettier": "2.2.1",
     "typescript": "^4.1.3"
   }
 }
