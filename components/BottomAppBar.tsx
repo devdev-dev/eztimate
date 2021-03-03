@@ -1,18 +1,16 @@
 import { Menu, MenuItem } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import Fab from '@material-ui/core/Fab';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { AccountCircle } from '@material-ui/icons';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import SearchIcon from '@material-ui/icons/Search';
-import { useRouter } from 'next/router';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
 import React from 'react';
 
 export default function BottomAppBar() {
-  const router = useRouter();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -32,13 +30,14 @@ export default function BottomAppBar() {
           <Typography variant="h6" className={classes.title}>
             Esteem | Easy Estimations
           </Typography>
-          <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-            <RadioButtonUncheckedIcon onClick={() => router.push('/app/teams')} />
-          </Fab>
           <div className={classes.grow} />
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
+          <Button variant="text" color="inherit" className={classes.button} startIcon={<AddCircleIcon />}>
+            Create
+          </Button>
+          <Button variant="text" color="inherit" className={classes.button} startIcon={<PlayForWorkIcon />}>
+            Join
+          </Button>
+          &nbsp;|&nbsp;
           <div>
             <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleMenu} color="inherit">
               <AccountCircle />
@@ -70,8 +69,8 @@ export default function BottomAppBar() {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    title: {
-      flexGrow: 1
+    button: {
+      margin: theme.spacing(1)
     },
     text: {
       padding: theme.spacing(2, 2, 0)
@@ -99,6 +98,59 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       right: 0,
       margin: '0 auto'
+    },
+    root: {
+      flexGrow: 1
+    },
+    menuButton: {
+      marginRight: theme.spacing(2)
+    },
+    title: {
+      flexGrow: 1,
+      display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'block'
+      }
+    },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25)
+      },
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 'auto'
+      }
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    inputRoot: {
+      color: 'inherit'
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: '15ch',
+        '&:focus': {
+          width: '20ch'
+        }
+      }
     }
   })
 );

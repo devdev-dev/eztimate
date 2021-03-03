@@ -22,7 +22,7 @@ export default function MyApp(props) {
       <Head>
         <title>My page</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head> 
+      </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {getLayout(<Component {...pageProps} />)}
