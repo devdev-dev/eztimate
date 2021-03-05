@@ -9,11 +9,24 @@ import { AccountCircle } from '@material-ui/icons';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
 import React from 'react';
+import CreateSessionDialog from './CreateSessionDialog';
+import JoinSessionDialog from './JoinSessionDialog';
 
 export default function BottomAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const [isCreateDialogOpen, setCreateDialogOpen] = React.useState(false);
+  const [isJoinDialogOpen, setJoinDialogOpen] = React.useState(false);
+
+  const handleCreate = () => {
+    setCreateDialogOpen(true);
+  };
+
+  const handleJoin = () => {
+    setJoinDialogOpen(true);
+  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -25,16 +38,18 @@ export default function BottomAppBar() {
 
   return (
     <React.Fragment>
+      <CreateSessionDialog open={isCreateDialogOpen} onDialogClose={() => setCreateDialogOpen(false)} />
+      <JoinSessionDialog open={isJoinDialogOpen} onDialogClose={() => setJoinDialogOpen(false)} />
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Esteem | Easy Estimations
           </Typography>
           <div className={classes.grow} />
-          <Button variant="text" color="inherit" className={classes.button} startIcon={<AddCircleIcon />}>
+          <Button variant="text" color="inherit" className={classes.button} startIcon={<AddCircleIcon />} onClick={handleCreate}>
             Create
           </Button>
-          <Button variant="text" color="inherit" className={classes.button} startIcon={<PlayForWorkIcon />}>
+          <Button variant="text" color="inherit" className={classes.button} startIcon={<PlayForWorkIcon />} onClick={handleJoin}>
             Join
           </Button>
           &nbsp;|&nbsp;
