@@ -16,7 +16,7 @@ export default function CreateSessionDialog(props: DialogProps) {
   const handleClose = (create = false) => {
     props.onDialogClose();
     if (create) {
-      fetch('http://localhost:3000/api/session/create')
+      fetch('/api/session/create')
         .then(response => console.log(`A nice response after create - ${response}`))
         .catch(error => console.error(`Something went wrong - ${error}`));
     }

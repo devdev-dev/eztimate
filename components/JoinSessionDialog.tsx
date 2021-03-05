@@ -16,7 +16,7 @@ export default function CreateSessionDialog(props: DialogProps) {
   const handleClose = (join = false) => {
     props.onDialogClose();
     if (join) {
-      fetch('http://localhost:3000/api/session/join')
+      fetch('/api/session/join')
         .then(response => console.log(`A nice response after join - ${response}`))
         .catch(error => console.error(`Something went wrong - ${error}`));
     }
