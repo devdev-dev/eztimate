@@ -3,7 +3,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { setCookie } from '../../../utils/cookies';
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
+const handler = (request: NextApiRequest, response: NextApiResponse) => {
   const MongoClient = require('mongodb').MongoClient;
   const uri = 'mongodb+srv://admin:Yt353h5&p9bfzofwU@cluster0.k6eo6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -13,7 +13,7 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
       if (error) {
         console.error(error);
       } else {
-        console.log('Got Connected');
+        console.log(`Got Connected with ${JSON.stringify(request.body)}`);
         // client.db('eztimate').collection('sessions').insertOne({
         //   name: 'First Session'
         // });
@@ -23,8 +23,8 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
     client.close();
   }
 
-  setCookie(res, 'session_id', 'id');
-  res.end(res.getHeader('Set-Cookie'));
+  setCookie(response, 'session_id', 'id');
+  response.end(response.getHeader('Set-Cookie'));
 };
 
 export default handler;

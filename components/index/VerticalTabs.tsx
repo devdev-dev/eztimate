@@ -24,7 +24,7 @@ export default function FullWidthTabs() {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="index-tabs">
           <Tab icon={<LaunchIcon />} label="Start Estimation" {...a11yProps(0)} />
-          <Tab icon={<GroupAddIcon />} label="Join Estimation" {...a11yProps(1)} />
+          <Tab icon={<GroupAddIcon />} label="Join your team" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} dir={theme.direction}>

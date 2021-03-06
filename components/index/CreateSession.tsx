@@ -1,14 +1,31 @@
-import { Avatar, Box, Button, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
+import { Action, useMutation } from 'react-fetching-library';
+import { useForm } from 'react-hook-form';
 import Copyright from './Copyright';
+
+const createSessionAction = data =>
+  ({
+    method: 'POST',
+    endpoint: '/api/session/create',
+    body: data
+  } as Action);
+
 export default function CreateSession() {
   const classes = useStyles();
+  const { loading, mutate, error } = useMutation(createSessionAction);
 
-  const handleButtonClick = () => {
-    fetch('/api/session/create')
-      .then(response => console.log(`A nice response after create - ${response}`))
-      .catch(error => console.error(`Something went wrong - ${error}`));
+  if (error) {
+    // TODO
+  }
+
+  const { register, handleSubmit } = useForm();
+  const submitForm = data => {
+    console.log(data);
+    mutate({
+      sessionName: data.session_name
+    });
   };
 
   return (
@@ -17,21 +34,27 @@ export default function CreateSession() {
         <LaunchIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Start Estimating
+        Start Estimation
       </Typography>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="session_name"
-        label="Name of your estimation session"
-        name="session_name"
-        autoFocus
-      />
-      <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} onClick={handleButtonClick}>
-        Create
-      </Button>
+      <form onSubmit={handleSubmit(submitForm)} className={classes.form} noValidate>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          inputRef={register}
+          id="session_name"
+          label="Name of your estimation session"
+          name="session_name"
+          autoFocus
+        />
+        <div className={classes.buttonProgressWrapper}>
+          <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
+            Create
+          </Button>
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        </div>
+      </form>
       <Box mt={5}>
         <Copyright />
       </Box>
@@ -54,7 +77,16 @@ const useStyles = makeStyles(theme => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+  buttonProgressWrapper: {
+    margin: theme.spacing(3, 0, 2),
+    position: 'relative',
+    width: '100%'
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   }
 }));

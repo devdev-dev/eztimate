@@ -1,8 +1,10 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import Head from 'next/head';
 import React from 'react';
+import { ClientContextProvider, createClient } from 'react-fetching-library';
 import theme from '../components/mui/theme';
+
+const client = createClient();
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -23,10 +25,13 @@ export default function MyApp(props) {
         <title>My page</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+      <ClientContextProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </ClientContextProvider>
+      ,
     </>
   );
 }
