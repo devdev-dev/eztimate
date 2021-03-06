@@ -22,7 +22,6 @@ export default function CreateSession() {
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
-    console.log(data);
     mutate({
       sessionName: data.session_name
     });
