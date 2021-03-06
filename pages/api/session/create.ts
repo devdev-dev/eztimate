@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { setCookie } from '../../../utils/cookies';
 import { connectToDatabase } from '../../../utils/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
@@ -9,10 +8,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     name: request.body.sessionName
   });
 
-  setCookie(response, 'session_id', result.insertedId);
-
   response.statusCode = 200;
   response.json({ session_id: result.insertedId });
-  response.getHeader('Set-Cookie');
   response.end();
 };
