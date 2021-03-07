@@ -1,10 +1,4 @@
-import { CircularProgress } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import { useRouter } from 'next/router';
 import React from 'react';
