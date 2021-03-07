@@ -10,11 +10,11 @@ import React from 'react';
 import CreateSession from './CreateSession';
 import JoinSession from './JoinSession';
 
-export interface VerticalTabsProps {
+export interface IndexTabsProps {
   sessionId: string;
 }
 
-export default function VerticalTabs(props: VerticalTabsProps) {
+export default function IndexTabs(props: IndexTabsProps) {
   const classes = useStyles();
   const theme = useTheme();
 

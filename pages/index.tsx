@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import { NextPage, NextPageContext } from 'next';
 import React from 'react';
-import VerticalTabs from '../components/index/VerticalTabs';
+import IndexTabs from '../components/index/IndexTabs';
 import withAppLayout from '../components/withAppLayout';
 
 interface IndexProps {
@@ -18,7 +18,7 @@ const Index: NextPage<IndexProps> = props => {
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <VerticalTabs sessionId={props.sessionId} />
+        <IndexTabs sessionId={props.sessionId} />
       </Grid>
     </Grid>
   );
