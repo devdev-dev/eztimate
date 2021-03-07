@@ -21,7 +21,7 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
-      teamId: data.session_id
+      teamId: data.teamId
     })
       .then(result => {
         if (result.error) {
