@@ -8,7 +8,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     name: request.body.sessionName
   });
 
-  response.statusCode = 200;
-  response.json({ session_id: result.insertedId });
-  response.end();
+  if (result) {
+    response.status(200).send({ sessionId: result.insertedId });
+  } else {
+    response.status(400).send({ error: 'SESSION_NOT_CREATED' });
+  }
 };

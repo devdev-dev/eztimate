@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { Action, useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
@@ -14,6 +15,7 @@ const createSessionAction = data =>
 
 export default function CreateSession() {
   const classes = useStyles();
+  const router = useRouter();
   const { loading, mutate, error } = useMutation(createSessionAction);
 
   if (error) {
@@ -24,7 +26,9 @@ export default function CreateSession() {
   const submitForm = data => {
     mutate({
       sessionName: data.session_name
-    });
+    })
+      .then(result => router.push('/app'))
+      .catch(error => console.error(JSON.stringify(error)));
   };
 
   return (
@@ -35,7 +39,7 @@ export default function CreateSession() {
       <Typography component="h1" variant="h5">
         Start Estimation
       </Typography>
-      <form onSubmit={handleSubmit(submitForm)} className={classes.form} noValidate>
+      <form onSubmit={handleSubmit(submitForm)} className={classes.form}>
         <TextField
           variant="outlined"
           margin="normal"
@@ -45,7 +49,6 @@ export default function CreateSession() {
           id="session_name"
           label="Name of your estimation session"
           name="session_name"
-          autoFocus
         />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>

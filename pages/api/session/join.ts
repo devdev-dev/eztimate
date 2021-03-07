@@ -1,31 +1,15 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
+import { ObjectID } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { setCookie } from '../../../utils/cookies';
+import { connectToDatabase } from '../../../utils/mongodb';
 
-const handler = (request: NextApiRequest, response: NextApiResponse) => {
-  const MongoClient = require('mongodb').MongoClient;
-  const uri = 'mongodb+srv://admin:Yt353h5&p9bfzofwU@cluster0.k6eo6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+export default async (request: NextApiRequest, response: NextApiResponse) => {
+  const { db } = await connectToDatabase();
 
-  try {
-    client.connect(error => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(`Got Connected with ${JSON.stringify(request.body)}`);
-        // client.db('eztimate').collection('sessions').insertOne({
-        //   name: 'First Session'
-        // });
-      }
-    });
-  } finally {
-    client.close();
+  const result = await db.collection('sessions').findOne({ _id: new ObjectID(request.body.sessionId) });
+
+  if (result) {
+    response.status(200).send({ sessionId: result });
+  } else {
+    response.status(400).send({ error: 'SESSION_NOT_FOUND' });
   }
-
-  setCookie(response, 'session_id', 'id');
-  response.end(response.getHeader('Set-Cookie'));
 };
-
-export default handler;
-,0

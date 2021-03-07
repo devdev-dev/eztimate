@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { Action, useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
@@ -18,19 +19,29 @@ const joinSessionAction = data =>
     body: data
   } as Action);
 
-export default function JoinSession() {
-  const classes = useStyles();
-  const { loading, mutate, error } = useMutation(joinSessionAction);
+export interface JoinSessionProps {
+  sessionId: string;
+}
 
-  if (error) {
-    // TODO
-  }
+export default function JoinSession(props: JoinSessionProps) {
+  const classes = useStyles();
+  const router = useRouter();
+  const { loading, mutate } = useMutation(joinSessionAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
       sessionId: data.session_id
-    });
+    })
+      .then(result => {
+        if (result.error) {
+          console.error(result.error);
+        } else {
+          console.log(result.payload);
+          router.push('/app');
+        }
+      })
+      .catch(error => console.error(error));
   };
 
   return (
@@ -41,7 +52,7 @@ export default function JoinSession() {
       <Typography component="h1" variant="h5">
         Join your team
       </Typography>
-      <form onSubmit={handleSubmit(submitForm)} className={classes.form} noValidate>
+      <form onSubmit={handleSubmit(submitForm)} className={classes.form}>
         <TextField
           variant="outlined"
           margin="normal"
@@ -51,7 +62,7 @@ export default function JoinSession() {
           id="session_id"
           label="Session ID to Join"
           name="session_id"
-          autoFocus
+          value={props.sessionId}
         />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>

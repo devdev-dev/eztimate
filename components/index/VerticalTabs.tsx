@@ -10,12 +10,17 @@ import React from 'react';
 import CreateSession from './CreateSession';
 import JoinSession from './JoinSession';
 
-export default function FullWidthTabs() {
+export interface VerticalTabsProps {
+  sessionId: string;
+}
+
+export default function VerticalTabs(props: VerticalTabsProps) {
   const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const [value, setValue] = React.useState(props.sessionId ? 1 : 0);
+
+  const handleChange = (_, newValue: number) => {
     setValue(newValue);
   };
 
@@ -31,7 +36,7 @@ export default function FullWidthTabs() {
         <CreateSession />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        <JoinSession />
+        <JoinSession sessionId={props.sessionId} />
       </TabPanel>
     </div>
   );

@@ -2,22 +2,31 @@ import { Grid } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import { NextPage, NextPageContext } from 'next';
 import React from 'react';
 import VerticalTabs from '../components/index/VerticalTabs';
 import withAppLayout from '../components/withAppLayout';
 
-function Index() {
+interface IndexProps {
+  sessionId: string;
+}
+
+const Index: NextPage<IndexProps> = props => {
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <VerticalTabs />
+        <VerticalTabs sessionId={props.sessionId} />
       </Grid>
     </Grid>
   );
-}
+};
+
+Index.getInitialProps = async (context: NextPageContext) => {
+  return { sessionId: (context.query?.join as string) ?? undefined };
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
