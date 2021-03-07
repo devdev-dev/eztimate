@@ -9,7 +9,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const result = await database.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
-      response.status(200).send({ teamId: result });
+      response.status(200).send({ teamId: result._id });
     } else {
       response.status(400).send({ error: 'SESSION_NOT_FOUND' });
     }
