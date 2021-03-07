@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 
 let cachedClient = null;
 let cachedDb = null;
@@ -27,4 +27,8 @@ export async function connectToDatabase() {
   cachedDb = db;
 
   return { client, db };
+}
+
+export function getObjectId(objectId: string): ObjectID | undefined {
+  return ObjectID.isValid(objectId) ? new ObjectID(objectId) : undefined;
 }
