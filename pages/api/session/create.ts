@@ -9,7 +9,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   });
 
   if (result) {
-    response.status(200).send({ sessionId: result.insertedId });
+    response.status(200).send({ teamId: result.insertedId });
   } else {
     response.status(400).send({ error: 'SESSION_NOT_CREATED' });
   }

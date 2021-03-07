@@ -7,18 +7,18 @@ import Typography from '@material-ui/core/Typography';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import LaunchIcon from '@material-ui/icons/Launch';
 import React from 'react';
-import CreateSession from './CreateSession';
-import JoinSession from './JoinSession';
+import CreateTeamTabContent from './CreateTeamTabContent';
+import JoinTeamTabContent from './JoinTeamTabContent';
 
 export interface IndexTabsProps {
-  sessionId: string;
+  teamId: string;
 }
 
 export default function IndexTabs(props: IndexTabsProps) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [value, setValue] = React.useState(props.sessionId ? 1 : 0);
+  const [value, setValue] = React.useState(props.teamId ? 1 : 0);
 
   const handleChange = (_, newValue: number) => {
     setValue(newValue);
@@ -28,15 +28,15 @@ export default function IndexTabs(props: IndexTabsProps) {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="index-tabs">
-          <Tab icon={<LaunchIcon />} label="Start Estimation" {...a11yProps(0)} />
+          <Tab icon={<LaunchIcon />} label="Create a new Team" {...a11yProps(0)} />
           <Tab icon={<GroupAddIcon />} label="Join your team" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} dir={theme.direction}>
-        <CreateSession />
+        <CreateTeamTabContent />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        <JoinSession sessionId={props.sessionId} />
+        <JoinTeamTabContent teamId={props.teamId} />
       </TabPanel>
     </div>
   );

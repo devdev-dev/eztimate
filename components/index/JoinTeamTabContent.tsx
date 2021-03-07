@@ -20,10 +20,10 @@ const joinSessionAction = data =>
   } as Action);
 
 export interface JoinSessionProps {
-  sessionId: string;
+  teamId: string;
 }
 
-export default function JoinSession(props: JoinSessionProps) {
+export default function JoinTeamTabContent(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
   const { loading, mutate } = useMutation(joinSessionAction);
@@ -31,7 +31,7 @@ export default function JoinSession(props: JoinSessionProps) {
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
-      sessionId: data.session_id
+      teamId: data.session_id
     })
       .then(result => {
         if (result.error) {
@@ -60,9 +60,9 @@ export default function JoinSession(props: JoinSessionProps) {
           fullWidth
           inputRef={register}
           id="session_id"
-          label="Session ID to Join"
+          label="Team ID"
           name="session_id"
-          defaultValue={props.sessionId}
+          defaultValue={props.teamId}
         />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>

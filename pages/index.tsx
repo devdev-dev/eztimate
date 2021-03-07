@@ -8,7 +8,7 @@ import IndexTabs from '../components/index/IndexTabs';
 import withAppLayout from '../components/withAppLayout';
 
 interface IndexProps {
-  sessionId: string;
+  teamId: string;
 }
 
 const Index: NextPage<IndexProps> = props => {
@@ -18,14 +18,14 @@ const Index: NextPage<IndexProps> = props => {
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <IndexTabs sessionId={props.sessionId} />
+        <IndexTabs teamId={props.teamId} />
       </Grid>
     </Grid>
   );
 };
 
 Index.getInitialProps = async (context: NextPageContext) => {
-  return { sessionId: (context.query?.join as string) ?? undefined };
+  return { teamId: (context.query?.join as string) ?? undefined };
 };
 
 const useStyles = makeStyles(theme => ({

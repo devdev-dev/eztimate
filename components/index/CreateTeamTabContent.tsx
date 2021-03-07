@@ -13,7 +13,7 @@ const createSessionAction = data =>
     body: data
   } as Action);
 
-export default function CreateSession() {
+export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
   const { loading, mutate, error } = useMutation(createSessionAction);
@@ -37,19 +37,10 @@ export default function CreateSession() {
         <LaunchIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Start Estimation
+        Create a new team
       </Typography>
       <form onSubmit={handleSubmit(submitForm)} className={classes.form}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          inputRef={register}
-          id="session_name"
-          label="Name of your estimation session"
-          name="session_name"
-        />
+        <TextField variant="outlined" margin="normal" required fullWidth inputRef={register} id="session_name" label="Team Name" name="session_name" />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
             Create
