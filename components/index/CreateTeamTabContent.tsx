@@ -2,16 +2,10 @@ import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typograph
 import LaunchIcon from '@material-ui/icons/Launch';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Action, useMutation } from 'react-fetching-library';
+import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
+import { createSessionAction } from '../../utils/mongodb.actions';
 import Copyright from './Copyright';
-
-const createSessionAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/session/create',
-    body: data
-  } as Action);
 
 export default function CreateTeamTabContent() {
   const classes = useStyles();

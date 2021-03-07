@@ -10,14 +10,8 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Action, useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
+import { joinSessionAction } from '../../utils/mongodb.actions';
 import Copyright from './Copyright';
-
-const joinSessionAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/session/join',
-    body: data
-  } as Action);
 
 export interface JoinSessionProps {
   teamId: string;
@@ -35,7 +29,7 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
     })
       .then(result => {
         if (result.error) {
-          console.error(result.error);
+          // TODO
         } else {
           console.log(result.payload);
           router.push('/app');
