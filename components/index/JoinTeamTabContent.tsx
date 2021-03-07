@@ -5,7 +5,7 @@ import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
 import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
-import { joinSessionAction } from '../../utils/mongodb.actions';
+import { joinSessionAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
 export interface JoinSessionProps {

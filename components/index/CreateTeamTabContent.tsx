@@ -5,7 +5,7 @@ import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
 import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
-import { createSessionAction } from '../../utils/mongodb.actions';
+import { createSessionAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
 export default function CreateTeamTabContent() {

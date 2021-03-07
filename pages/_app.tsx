@@ -2,7 +2,7 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import Head from 'next/head';
 import React from 'react';
 import { ClientContextProvider, createClient } from 'react-fetching-library';
-import theme from '../components/mui/theme';
+import theme from '../utils/mui/theme';
 
 const client = createClient();
 
