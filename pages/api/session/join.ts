@@ -6,7 +6,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const teamIdObject = getObjectId(request.body.teamId);
   if (teamIdObject) {
-    const result = await database.collection('sessions').findOne({ _id: teamIdObject });
+    const result = await database.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
       response.status(200).send({ teamId: result });

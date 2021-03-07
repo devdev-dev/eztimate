@@ -8,8 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Action, useMutation } from 'react-fetching-library';
+import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
+import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
 import { joinSessionAction } from '../../utils/mongodb.actions';
 import Copyright from './Copyright';
 
@@ -20,6 +21,7 @@ export interface JoinSessionProps {
 export default function JoinTeamTabContent(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
+  const [_, setSessionTeamId] = useSessionStorage('teamId', undefined);
   const { loading, mutate } = useMutation(joinSessionAction);
 
   const { register, handleSubmit } = useForm();
@@ -31,7 +33,7 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
         if (result.error) {
           // TODO
         } else {
-          console.log(result.payload);
+          setSessionTeamId(result.payload.teamId);
           router.push('/app');
         }
       })

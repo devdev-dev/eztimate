@@ -4,24 +4,25 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
+import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
 import { createSessionAction } from '../../utils/mongodb.actions';
 import Copyright from './Copyright';
 
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
-  const { loading, mutate, error } = useMutation(createSessionAction);
-
-  if (error) {
-    // TODO
-  }
+  const [_, setSessionTeamId] = useSessionStorage('teamId', undefined);
+  const { loading, mutate } = useMutation(createSessionAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
       sessionName: data.session_name
     })
-      .then(result => router.push('/app'))
+      .then(result => {
+        setSessionTeamId(result.payload.teamId);
+        router.push('/app');
+      })
       .catch(error => console.error(JSON.stringify(error)));
   };
 
@@ -34,7 +35,19 @@ export default function CreateTeamTabContent() {
         Create a new team
       </Typography>
       <form onSubmit={handleSubmit(submitForm)} className={classes.form}>
-        <TextField variant="outlined" margin="normal" required fullWidth inputRef={register} id="session_name" label="Team Name" name="session_name" />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          inputRef={register}
+          id="session_name"
+          label="Team Name"
+          name="session_name"
+          inputProps={{
+            autoComplete: 'off'
+          }}
+        />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
             Create

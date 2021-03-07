@@ -4,7 +4,7 @@ import { connectToDatabase } from '../../../utils/mongodb';
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { db } = await connectToDatabase();
 
-  const result = await db.collection('sessions').insertOne({
+  const result = await db.collection('teams').insertOne({
     name: request.body.sessionName
   });
 
