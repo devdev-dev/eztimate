@@ -62,7 +62,7 @@ export default function JoinSession(props: JoinSessionProps) {
           id="session_id"
           label="Session ID to Join"
           name="session_id"
-          value={props.sessionId}          
+          defaultValue={props.sessionId}
         />
         <div className={classes.buttonProgressWrapper}>
           <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
