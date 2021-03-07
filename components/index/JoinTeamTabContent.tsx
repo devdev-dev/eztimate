@@ -59,9 +59,9 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
           required
           fullWidth
           inputRef={register}
-          id="session_id"
+          id="teamId"
           label="Team ID"
-          name="session_id"
+          name="teamId"
           defaultValue={props.teamId}
         />
         <div className={classes.buttonProgressWrapper}>
