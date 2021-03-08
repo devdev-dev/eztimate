@@ -6,11 +6,11 @@ const theme = responsiveFontSizes(
   createMuiTheme({
     palette: {
       primary: {
-        main: '#00acc1',
+        main: '#AAAAAA',
         contrastText: '#fafafa'
       },
       secondary: {
-        main: '#00838f'
+        main: '#666666'
       },
       error: {
         main: red.A400

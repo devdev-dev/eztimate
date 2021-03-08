@@ -8,12 +8,12 @@ const Estimate = () => {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={2} direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.header}>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={8}>
           <Typography component="h2" variant="h6" gutterBottom>
             Estimate with your Team
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={4} className={classes.avatar}>
+        <Grid item xs={4} className={classes.avatar}>
           <Avatar>
             <PersonIcon />
           </Avatar>
@@ -48,7 +48,7 @@ const Estimate = () => {
       </Paper>
       <Paper elevation={0} className={classes.cards}>
         <Grid direction="row" justify="center" alignItems="stretch" container>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
@@ -57,7 +57,7 @@ const Estimate = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
@@ -66,7 +66,7 @@ const Estimate = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
@@ -75,7 +75,7 @@ const Estimate = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
@@ -84,7 +84,7 @@ const Estimate = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
@@ -93,11 +93,47 @@ const Estimate = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4} md={2} className={classes.cardsContent}>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography variant="h4" color="textSecondary">
                   13
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
+            <Card className={classes.card}>
+              <CardContent className={classes.cardContent}>
+                <Typography variant="h4" color="textSecondary">
+                  20
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
+            <Card className={classes.card}>
+              <CardContent className={classes.cardContent}>
+                <Typography variant="h4" color="textSecondary">
+                  40
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
+            <Card className={classes.card}>
+              <CardContent className={classes.cardContent}>
+                <Typography variant="h4" color="textSecondary">
+                  100
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3} md={2} className={classes.cardsContent}>
+            <Card className={classes.card}>
+              <CardContent className={classes.cardContent}>
+                <Typography variant="h4" color="textSecondary">
+                  ?
                 </Typography>
               </CardContent>
             </Card>

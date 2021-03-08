@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase, getObjectId } from '../../../utils/mongodb';
+import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { db: database } = await connectToDatabase();

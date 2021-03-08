@@ -21,7 +21,7 @@ const Dashboard = () => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: '100vh'
+      height: 'calc(100vh - 50px)'
     },
     image: {}
   })
