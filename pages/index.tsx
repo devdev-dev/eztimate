@@ -1,5 +1,4 @@
 import { Grid } from '@material-ui/core';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import { NextPage, NextPageContext } from 'next';
@@ -15,7 +14,6 @@ const Index: NextPage<IndexProps> = props => {
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
-      <CssBaseline />
       <Grid item xs={false} md={7} />
       <Grid item xs={12} md={4} component={Paper} elevation={6} square>
         <IndexTabs teamId={props.teamId} />
