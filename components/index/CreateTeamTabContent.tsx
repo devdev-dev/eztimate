@@ -2,16 +2,16 @@ import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typograph
 import LaunchIcon from '@material-ui/icons/Launch';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useCookies } from 'react-cookie';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
 import { createSessionAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
-  const [_, setSessionTeamId] = useSessionStorage('teamId', undefined);
+  const [cookie, setCookie] = useCookies(['teamId']);
   const { loading, mutate } = useMutation(createSessionAction);
 
   const { register, handleSubmit } = useForm();
@@ -20,7 +20,11 @@ export default function CreateTeamTabContent() {
       sessionName: data.session_name
     })
       .then(result => {
-        setSessionTeamId(result.payload.teamId);
+        setCookie('teamId', JSON.stringify(result.payload.teamId), {
+          path: '/',
+          maxAge: 3600, // Expires after 1hr
+          sameSite: true
+        });
         router.push('/app');
       })
       .catch(error => console.error(JSON.stringify(error)));

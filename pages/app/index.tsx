@@ -1,8 +1,9 @@
-import { createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
+import withTeamId from '../../components/withTeamId';
 
 const Dashboard = () => {
   const classes = useStyles();
@@ -18,7 +19,7 @@ const Dashboard = () => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       height: 'calc(100vh - 50px)'
@@ -27,4 +28,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default withAppLayout(Dashboard);
+export default withAppLayout(withTeamId(Dashboard));

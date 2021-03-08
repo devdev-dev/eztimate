@@ -2,9 +2,9 @@ import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typograph
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useCookies } from 'react-cookie';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { useSessionStorage } from '../../utils/hooks/useBrowserStorage';
 import { joinSessionAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
@@ -15,7 +15,7 @@ export interface JoinSessionProps {
 export default function JoinTeamTabContent(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
-  const [_, setSessionTeamId] = useSessionStorage('teamId', undefined);
+  const [cookie, setCookie] = useCookies(['teamId']);
   const { loading, mutate } = useMutation(joinSessionAction);
 
   const { register, handleSubmit } = useForm();
@@ -27,7 +27,11 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
         if (result.error) {
           // TODO
         } else {
-          setSessionTeamId(result.payload.teamId);
+          setCookie('teamId', JSON.stringify(result.payload.teamId), {
+            path: '/',
+            maxAge: 3600, // Expires after 1hr
+            sameSite: true
+          });
           router.push('/app');
         }
       })
