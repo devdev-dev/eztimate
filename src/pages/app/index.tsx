@@ -1,11 +1,12 @@
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/client';
 import React from 'react';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import withTeamId from '../../components/withTeamId';
 
-const Dashboard = () => {
+const Dashboard = ({ user }) => {
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
@@ -19,6 +20,17 @@ const Dashboard = () => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getSession(context);
+  if (!session) {
+    context.res.writeHead(302, { Location: '/' });
+    context.res.end();
+    return { props: {} };
+  }
+
+  return { props: { user: session.user } };
+};
+
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -28,4 +40,4 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default withAppLayout(withTeamId(Dashboard));
+export default withAppLayout(Dashboard);
