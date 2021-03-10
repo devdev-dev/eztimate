@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
@@ -10,7 +11,10 @@ import Copyright from './Copyright';
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
+  const [session] = useSession();
   const { loading: mutationLoading, mutate } = useMutation(createSessionAction);
+
+  console.log('\n session', JSON.stringify(session, null, 2));
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {

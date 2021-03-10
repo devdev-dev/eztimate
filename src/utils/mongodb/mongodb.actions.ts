@@ -3,13 +3,13 @@ import { Action } from 'react-fetching-library';
 export const joinSessionAction = data =>
   ({
     method: 'POST',
-    endpoint: '/api/session/join',
+    endpoint: '/api/team/join',
     body: data
   } as Action);
 
 export const createSessionAction = data =>
   ({
     method: 'POST',
-    endpoint: '/api/session/create',
+    endpoint: '/api/team/create',
     body: data
   } as Action);

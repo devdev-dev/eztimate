@@ -29,13 +29,17 @@ const options = {
       console.log('signin \n');
       return true;
     },
-    async redirect(url, baseUrl) {
+    async redirect(_, baseUrl) {
       return baseUrl;
     },
     async session(session, user) {
+      session.user.objectID = user.objectID;
       return session;
     },
-    async jwt(token, user, account, profile, isNewUser) {
+    async jwt(token, user) {
+      if (user) {
+        token.objectID = user.id;
+      }
       return token;
     }
   },
