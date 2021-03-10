@@ -26,6 +26,7 @@ const options = {
   },
   callbacks: {
     async signIn() {
+      console.log('signin \n');
       return true;
     },
     async redirect(url, baseUrl) {

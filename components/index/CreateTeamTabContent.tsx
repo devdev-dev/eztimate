@@ -1,9 +1,7 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
-import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useCookies } from 'react-cookie';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
 import { createSessionAction } from '../../utils/mongodb/mongodb.actions';
@@ -12,21 +10,14 @@ import Copyright from './Copyright';
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
-  const [session, loading] = useSession();
-  const [cookie, setCookie] = useCookies(['teamId']);
   const { loading: mutationLoading, mutate } = useMutation(createSessionAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
-      sessionName: data.teamId
+      teamId: data.teamId
     })
-      .then(result => {
-        setCookie('teamId', JSON.stringify(result.payload.teamId), {
-          path: '/',
-          maxAge: 3600, // Expires after 1hr
-          sameSite: true
-        });
+      .then(_ => {
         router.push('/app');
       })
       .catch(error => console.error(JSON.stringify(error)));

@@ -1,11 +1,9 @@
 import { AppBar, createStyles, fade, IconButton, makeStyles, Menu, MenuItem, Theme, Toolbar, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import React from 'react';
-import { useCookies } from 'react-cookie';
 
 export default function BottomAppBar() {
   const classes = useStyles();
-  const [cookies, setCookies, removeCookie] = useCookies();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -19,7 +17,6 @@ export default function BottomAppBar() {
 
   const handleLogOut = () => {
     handleClose();
-    removeCookie('teamId');
   };
 
   return (
@@ -30,31 +27,29 @@ export default function BottomAppBar() {
             Eztimate | Easy Estimation.
           </Typography>
           <div className={classes.grow} />
-          {cookies.teamId && (
-            <div>
-              <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleMenu} color="inherit">
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleLogOut}>Logout</MenuItem>
-              </Menu>
-            </div>
-          )}
+          <div>
+            <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleMenu} color="inherit">
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     </React.Fragment>
