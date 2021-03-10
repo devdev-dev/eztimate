@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useCookies } from 'react-cookie';
@@ -11,13 +12,14 @@ import Copyright from './Copyright';
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
+  const [session, loading] = useSession();
   const [cookie, setCookie] = useCookies(['teamId']);
-  const { loading, mutate } = useMutation(createSessionAction);
+  const { loading: mutationLoading, mutate } = useMutation(createSessionAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
-      sessionName: data.session_name
+      sessionName: data.teamId
     })
       .then(result => {
         setCookie('teamId', JSON.stringify(result.payload.teamId), {
@@ -45,18 +47,18 @@ export default function CreateTeamTabContent() {
           required
           fullWidth
           inputRef={register}
-          id="session_name"
+          id="teamId"
           label="Team Name"
-          name="session_name"
+          name="teamId"
           inputProps={{
             autoComplete: 'off'
           }}
         />
         <div className={classes.buttonProgressWrapper}>
-          <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
+          <Button type="submit" fullWidth variant="contained" color="primary" disabled={mutationLoading}>
             Create
           </Button>
-          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          {mutationLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </form>
       <Box mt={5}>

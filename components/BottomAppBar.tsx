@@ -22,8 +22,6 @@ export default function BottomAppBar() {
     removeCookie('teamId');
   };
 
-  console.log(cookies);
-
   return (
     <React.Fragment>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
