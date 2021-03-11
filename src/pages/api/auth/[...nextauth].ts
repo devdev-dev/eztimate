@@ -64,7 +64,7 @@ const options = {
     }
   },
   database: process.env.MONGODB_URI + process.env.MONGODB_DB,
-  debug: process.env.IS_PROD === 'true'
+  debug: process.env.IS_PROD === 'false'
 };
 
 export default (req, res) => NextAuth(req, res, options as InitOptions);
