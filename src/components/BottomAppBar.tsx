@@ -1,12 +1,13 @@
 import { AppBar, createStyles, fade, IconButton, makeStyles, Menu, MenuItem, Theme, Toolbar, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
-import { signOut } from 'next-auth/client';
+import { signOut, useSession } from 'next-auth/client';
 import router from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { SwitchTeamAction } from '../utils/mongodb/mongodb.actions';
 
 export default function BottomAppBar() {
+  const [session] = useSession();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -42,30 +43,32 @@ export default function BottomAppBar() {
             Eztimate | Easy Estimation.
           </Typography>
           <div className={classes.grow} />
-          <div>
-            <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleMenu} color="inherit">
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleSwitchTeam}>Switch Team</MenuItem>
-              <MenuItem onClick={handleLogOut}>Sign Out</MenuItem>
-            </Menu>
-          </div>
+          {session && (
+            <div>
+              <IconButton onClick={handleMenu} color="inherit">
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleSwitchTeam}>Switch Team</MenuItem>
+                <MenuItem onClick={handleLogOut}>Sign Out</MenuItem>
+              </Menu>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     </React.Fragment>
