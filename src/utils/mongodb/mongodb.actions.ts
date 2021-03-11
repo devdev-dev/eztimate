@@ -1,15 +1,21 @@
 import { Action } from 'react-fetching-library';
 
-export const joinSessionAction = data =>
+export const JoinTeamAction = data =>
   ({
     method: 'POST',
     endpoint: '/api/team/join',
     body: data
   } as Action);
 
-export const createSessionAction = data =>
+export const CreateTeamAction = data =>
   ({
     method: 'POST',
     endpoint: '/api/team/create',
     body: data
+  } as Action);
+
+export const SwitchTeamAction = () =>
+  ({
+    method: 'POST',
+    endpoint: '/api/team/switch'
   } as Action);

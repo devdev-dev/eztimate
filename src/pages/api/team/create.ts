@@ -10,15 +10,31 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(400).send({ error: 'UNAUTHORIZED' });
     return;
   }
+  const loggedInUserID = getObjectId((session.user as any).objectID);
 
-  const result = await db.collection('teams').insertOne({
-    name: request.body.teamId,
-    members: [getObjectId((session.user as any).objectID)]
+  const { insertedId: insertedTeamId } = await db.collection('teams').insertOne({
+    name: request.body.teamName,
+    members: [loggedInUserID]
   });
 
-  if (result) {
-    response.status(200).send({ teamId: result.insertedId });
+  await db.collection('users').updateOne(
+    { _id: loggedInUserID },
+    {
+      $addToSet: {
+        teams: insertedTeamId
+      }
+    }
+  );
+
+  if (insertedTeamId) {
+    await storeTeamIdInSession(insertedTeamId, request);
+    response.status(200).send({ teamId: insertedTeamId });
   } else {
     response.status(400).send({ error: 'SESSION_NOT_CREATED' });
   }
 };
+
+async function storeTeamIdInSession(insertedTeamId: any, request: NextApiRequest) {
+  global.teamSession = insertedTeamId;
+  await getSession({ req: request });
+}

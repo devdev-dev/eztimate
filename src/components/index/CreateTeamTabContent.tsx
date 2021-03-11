@@ -1,25 +1,21 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
-import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { createSessionAction } from '../../utils/mongodb/mongodb.actions';
+import { CreateTeamAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
 export default function CreateTeamTabContent() {
   const classes = useStyles();
   const router = useRouter();
-  const [session] = useSession();
-  const { loading: mutationLoading, mutate } = useMutation(createSessionAction);
-
-  console.log('\n session', JSON.stringify(session, null, 2));
+  const { loading: mutationLoading, mutate } = useMutation(CreateTeamAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
     mutate({
-      teamId: data.teamId
+      teamName: data.teamName
     })
       .then(_ => {
         router.push('/app');
@@ -42,9 +38,9 @@ export default function CreateTeamTabContent() {
           required
           fullWidth
           inputRef={register}
-          id="teamId"
+          id="teamName"
           label="Team Name"
-          name="teamId"
+          name="teamName"
           inputProps={{
             autoComplete: 'off'
           }}

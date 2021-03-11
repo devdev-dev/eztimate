@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { joinSessionAction } from '../../utils/mongodb/mongodb.actions';
+import { JoinTeamAction } from '../../utils/mongodb/mongodb.actions';
 import Copyright from './Copyright';
 
 export interface JoinSessionProps {
@@ -14,7 +14,7 @@ export interface JoinSessionProps {
 export default function JoinTeamTabContent(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
-  const { loading, mutate } = useMutation(joinSessionAction);
+  const { loading, mutate } = useMutation(JoinTeamAction);
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {

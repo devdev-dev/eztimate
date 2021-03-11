@@ -1,6 +1,10 @@
 import { AppBar, createStyles, fade, IconButton, makeStyles, Menu, MenuItem, Theme, Toolbar, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
+import { signOut } from 'next-auth/client';
+import router from 'next/router';
 import React from 'react';
+import { useMutation } from 'react-fetching-library';
+import { SwitchTeamAction } from '../utils/mongodb/mongodb.actions';
 
 export default function BottomAppBar() {
   const classes = useStyles();
@@ -16,6 +20,17 @@ export default function BottomAppBar() {
   };
 
   const handleLogOut = () => {
+    signOut();
+    handleClose();
+  };
+
+  const { loading, mutate } = useMutation(SwitchTeamAction);
+  const handleSwitchTeam = () => {
+    mutate({})
+      .then(_ => {
+        router.push('/');
+      })
+      .catch(error => console.error(JSON.stringify(error)));
     handleClose();
   };
 
@@ -47,7 +62,8 @@ export default function BottomAppBar() {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+              <MenuItem onClick={handleSwitchTeam}>Switch Team</MenuItem>
+              <MenuItem onClick={handleLogOut}>Sign Out</MenuItem>
             </Menu>
           </div>
         </Toolbar>

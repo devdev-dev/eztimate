@@ -5,6 +5,7 @@ import React from 'react';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
+import { SessionUser } from '../../utils/types';
 
 const Dashboard = ({ user }) => {
   const classes = useStyles();
@@ -22,12 +23,11 @@ const Dashboard = ({ user }) => {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const session = await getSession(context);
-  if (!session) {
+  if (!session || !(session.user as SessionUser).teamSession) {
     context.res.writeHead(302, { Location: '/' });
     context.res.end();
     return { props: {} };
   }
-
   return { props: { user: session.user } };
 };
 
