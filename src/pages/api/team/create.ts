@@ -3,7 +3,7 @@ import { getSession } from 'next-auth/client';
 import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db } = await connectToDatabase();
+  const { db: database } = await connectToDatabase();
   const session = await getSession({ req: request });
 
   if (!session) {
@@ -12,12 +12,12 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   }
   const loggedInUserID = getObjectId((session.user as any).objectID);
 
-  const { insertedId: insertedTeamId } = await db.collection('teams').insertOne({
+  const { insertedId: insertedTeamId } = await database.collection('teams').insertOne({
     name: request.body.teamName,
     members: [loggedInUserID]
   });
 
-  await db.collection('users').updateOne(
+  await database.collection('users').updateOne(
     { _id: loggedInUserID },
     {
       $addToSet: {
