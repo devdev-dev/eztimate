@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/client';
 import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
@@ -9,7 +10,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const result = await database.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
-      response.status(200).send({ teamId: result._id });
+      await storeTeamIdInSession(request.body.teamId, request);
+      response.status(200).end();
     } else {
       response.status(400).send({ error: 'SESSION_NOT_FOUND' });
     }
@@ -17,3 +19,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(400).send({ error: 'SESSION_ID_INVALID' });
   }
 };
+
+async function storeTeamIdInSession(teamId: string, request: NextApiRequest) {
+  global.teamSession = teamId;
+  await getSession({ req: request });
+}

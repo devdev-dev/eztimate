@@ -17,7 +17,7 @@ export default function CreateTeamTabContent() {
     mutate({
       teamName: data.teamName
     })
-      .then(_ => {
+      .then(() => {
         router.push('/app');
       })
       .catch(error => console.error(JSON.stringify(error)));

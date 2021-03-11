@@ -21,12 +21,8 @@ export default function JoinTeamTabContent(props: JoinSessionProps) {
     mutate({
       teamId: data.teamId
     })
-      .then(result => {
-        if (result.error) {
-          // TODO
-        } else {
-          router.push('/app');
-        }
+      .then(() => {
+        router.push('/app');
       })
       .catch(error => console.error(error));
   };

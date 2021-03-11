@@ -28,7 +28,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   if (insertedTeamId) {
     await storeTeamIdInSession(insertedTeamId, request);
-    response.status(200).send({ teamId: insertedTeamId });
+    response.status(200).end();
   } else {
     response.status(400).send({ error: 'SESSION_NOT_CREATED' });
   }
