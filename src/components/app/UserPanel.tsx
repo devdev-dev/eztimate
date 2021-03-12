@@ -8,25 +8,33 @@ import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import { useSession } from 'next-auth/client';
 import React from 'react';
-
-const actions = [
-  { icon: <FileCopyIcon />, name: 'Copy' },
-  { icon: <ShareIcon />, name: 'Share' },
-  { icon: <EmailIcon />, name: 'EMail' }
-];
+import { SessionUser } from '../../utils/types';
 
 export default function UserPanel() {
+  const [session] = useSession();
   const classes = useStyles();
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpenClose = () => {
     setOpen(!open);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCopy = () => {
+    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+    const el = document.createElement('textarea');
+    el.value = `${origin}/?join=${(session.user as SessionUser).teamSession}`;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   };
+
+  const handleEMail = () => {};
+
+  const handleShare = () => {};
 
   return (
     <Grid container spacing={2} direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
@@ -52,12 +60,13 @@ export default function UserPanel() {
             className={classes.speedDial}
             icon={<SpeedDialIcon icon={<PersonAddIcon />} openIcon={<CloseIcon />} />}
             onClick={handleOpenClose}
+            onClose={() => setOpen(false)}
             open={open}
             direction="down"
           >
-            {actions.map(action => (
-              <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} onClick={handleClose} />
-            ))}
+            <SpeedDialAction key="Copy" icon={<FileCopyIcon />} tooltipTitle="Copy" onClick={handleCopy} />
+            <SpeedDialAction key="EMail" icon={<EmailIcon />} tooltipTitle="EMail" onClick={handleEMail} />
+            <SpeedDialAction key="Share" icon={<ShareIcon />} tooltipTitle="Share" onClick={handleShare} />
           </SpeedDial>
         </div>
       </Grid>
