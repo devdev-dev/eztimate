@@ -1,12 +1,13 @@
 import { Grid } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import Cookies from 'cookies';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
 import IndexTabs from '../components/index/IndexTabs';
 import withAppLayout from '../components/withAppLayout';
-import { SessionUser } from '../utils/types';
+import { CookieName } from '../utils/types';
 
 interface IndexProps {
   teamId: string;
@@ -25,9 +26,10 @@ const Index: NextPage<IndexProps> = props => {
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  console.log("/serversideprops");
   const session = await getSession(context);
-  if (session && (session.user as SessionUser).teamSession) {
+  const cookies = new Cookies(context.req, context.res);
+
+  if (session && cookies.get(CookieName.TEAM_ID)) {
     context.res.writeHead(302, { Location: '/app' });
     context.res.end();
     return { props: {} };

@@ -27,14 +27,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   );
 
   if (insertedTeamId) {
-    await storeTeamIdInSession(insertedTeamId, request);
-    response.status(200).end();
+    response.status(200).send({ teamId: insertedTeamId });
   } else {
     response.status(400).send({ error: 'SESSION_NOT_CREATED' });
   }
 };
-
-async function storeTeamIdInSession(insertedTeamId: any, request: NextApiRequest) {
-  global.teamSession = insertedTeamId;
-  await getSession({ req: request });
-}

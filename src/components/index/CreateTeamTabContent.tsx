@@ -1,10 +1,12 @@
 import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
 import { CreateTeamAction } from '../../utils/mongodb/mongodb.actions';
+import { CookieName } from '../../utils/types';
 import Copyright from './Copyright';
 
 export default function CreateTeamTabContent() {
@@ -17,7 +19,8 @@ export default function CreateTeamTabContent() {
     mutate({
       teamName: data.teamName
     })
-      .then(() => {
+      .then(result => {
+        Cookies.set(CookieName.TEAM_ID, result.payload.teamId);
         router.push('/app');
       })
       .catch(error => console.error(JSON.stringify(error)));

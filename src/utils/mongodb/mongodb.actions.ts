@@ -13,9 +13,3 @@ export const CreateTeamAction = data =>
     endpoint: '/api/team/create',
     body: data
   } as Action);
-
-export const SwitchTeamAction = () =>
-  ({
-    method: 'POST',
-    endpoint: '/api/team/switch'
-  } as Action);

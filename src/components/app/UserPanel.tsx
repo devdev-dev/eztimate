@@ -8,24 +8,20 @@ import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import { useSession } from 'next-auth/client';
+import Cookies from 'js-cookie';
 import React from 'react';
-import { SessionUser } from '../../utils/types';
+import { CookieName } from '../../utils/types';
 
 export default function UserPanel() {
-  const [session] = useSession();
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
 
-  const handleOpenClose = () => {
-    setOpen(!open);
-  };
-
+  const handleOpenClose = () => setOpen(!open);
   const handleCopy = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
     const el = document.createElement('textarea');
-    el.value = `${origin}/?join=${(session.user as SessionUser).teamSession}`;
+    el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
     document.body.appendChild(el);
     el.select();
     document.execCommand('copy');

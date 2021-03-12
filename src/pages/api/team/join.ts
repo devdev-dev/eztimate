@@ -11,7 +11,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const result = await database.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
-
       const loggedInUserID = getObjectId((session.user as any).objectID);
       await database.collection('users').updateOne(
         { _id: loggedInUserID },
@@ -22,8 +21,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
         }
       );
 
-      await storeTeamIdInSession(request.body.teamId, request);
-      response.status(200).end();
+      response.status(200).send({ teamId: request.body.teamId });
     } else {
       response.status(400).send({ error: 'SESSION_NOT_FOUND' });
     }
@@ -31,8 +29,3 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(400).send({ error: 'SESSION_ID_INVALID' });
   }
 };
-
-async function storeTeamIdInSession(teamId: string, request: NextApiRequest) {
-  global.teamSession = teamId;
-  await getSession({ req: request });
-}

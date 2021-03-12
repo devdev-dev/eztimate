@@ -1,11 +1,12 @@
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
+import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import { SessionUser } from '../../utils/types';
+import { CookieName } from '../../utils/types';
 
 const Dashboard = ({ user }) => {
   const classes = useStyles();
@@ -23,7 +24,9 @@ const Dashboard = ({ user }) => {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const session = await getSession(context);
-  if (!session || !(session.user as SessionUser).teamSession) {
+  const cookies = new Cookies(context.req, context.res);
+
+  if (!session || !cookies.get(CookieName.TEAM_ID)) {
     context.res.writeHead(302, { Location: '/' });
     context.res.end();
     return { props: {} };

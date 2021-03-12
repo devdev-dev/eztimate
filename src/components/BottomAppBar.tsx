@@ -1,10 +1,10 @@
 import { AppBar, createStyles, fade, IconButton, makeStyles, Menu, MenuItem, Theme, Toolbar, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
+import Cookies from 'js-cookie';
 import { signOut, useSession } from 'next-auth/client';
 import router from 'next/router';
 import React from 'react';
-import { useMutation } from 'react-fetching-library';
-import { SwitchTeamAction } from '../utils/mongodb/mongodb.actions';
+import { CookieName } from '../utils/types';
 
 export default function BottomAppBar() {
   const [session] = useSession();
@@ -16,25 +16,16 @@ export default function BottomAppBar() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
     signOut();
     handleClose();
   };
-
-  const { loading, mutate } = useMutation(SwitchTeamAction);
   const handleSwitchTeam = () => {
-    mutate({})
-      .then(_ => {
-        router.push('/');
-      })
-      .catch(error => console.error(JSON.stringify(error)));
+    Cookies.remove(CookieName.TEAM_ID);
+    router.push('/');
     handleClose();
   };
-
   return (
     <React.Fragment>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
