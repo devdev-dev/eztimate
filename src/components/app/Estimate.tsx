@@ -1,33 +1,12 @@
-import { Avatar, Card, CardContent, Container, createStyles, Grid, Link, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import { Card, CardContent, Container, createStyles, Grid, Link, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import React from 'react';
+import UserPanel from './UserPanel';
 
 const Estimate = () => {
   const classes = useStyles();
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={2} direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.header}>
-        <Grid item xs={8}>
-          <Typography component="h2" variant="h6" gutterBottom>
-            Estimate with your Team
-          </Typography>
-        </Grid>
-        <Grid item xs={4} className={classes.avatar}>
-          <Avatar>
-            <PersonIcon />
-          </Avatar>
-          <Avatar>
-            <PersonIcon />
-          </Avatar>
-          <Avatar>
-            <PersonIcon />
-          </Avatar>
-          <Avatar>
-            <PersonAddIcon />
-          </Avatar>
-        </Grid>
-      </Grid>
+      <UserPanel />
       <Paper elevation={3} className={classes.story}>
         <Grid container>
           <Grid item md={10} className={classes.storyContent}>
@@ -147,19 +126,6 @@ const Estimate = () => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {},
-    header: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(2)
-    },
-    avatar: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      '& > *': {
-        margin: theme.spacing(1),
-        marginLeft: theme.spacing(-2),
-        border: '3px solid white'
-      }
-    },
     story: {
       marginBottom: theme.spacing(2)
     },
