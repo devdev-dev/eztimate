@@ -7,18 +7,19 @@ import { useQuery } from 'react-fetching-library';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import { FetchTeamAction } from '../../utils/mongodb/mongodb.actions';
-import { CookieName } from '../../utils/types';
+import { FetchTeamAction, FetchUsersAction } from '../../utils/mongodb/mongodb.actions';
+import { CookieName, UApp, UTeam, UUsers } from '../../utils/types';
 
-export const EstimationContext = React.createContext({ users: [] });
+export const AppContext = React.createContext<UApp>(undefined);
 
 const Dashboard = () => {
   const classes = useStyles();
 
-  const { loading, payload, error, query } = useQuery(FetchTeamAction);
+  const { loading: teamLoading, payload: team } = useQuery<UTeam>(FetchTeamAction);
+  const { loading: usersLoading, payload: users } = useQuery<UUsers[]>(FetchUsersAction);
 
   return (
-    <EstimationContext.Provider value={{ users: payload }}>
+    <AppContext.Provider value={{ team, users }}>
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} md={8}>
           <Estimate />
@@ -27,7 +28,7 @@ const Dashboard = () => {
           <Sidebar />
         </Grid>
       </Grid>
-    </EstimationContext.Provider>
+    </AppContext.Provider>
   );
 };
 

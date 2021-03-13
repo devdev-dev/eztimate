@@ -10,13 +10,12 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
 import React, { useContext } from 'react';
-import { EstimationContext } from '../../pages/app';
+import { AppContext } from '../../pages/app';
 import { CookieName } from '../../utils/types';
 
 export default function UserPanel() {
   const classes = useStyles();
-  const context = useContext(EstimationContext);
-  console.log(context);
+  const context = useContext(AppContext);
 
   const [open, setOpen] = React.useState(false);
 

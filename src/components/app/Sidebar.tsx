@@ -1,13 +1,15 @@
 import { Container, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../pages/app';
 
 const Estimate = () => {
   const classes = useStyles();
+  const context = useContext(AppContext);
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Typography variant="h6" component="h2" gutterBottom>
-        Timeline
+        {`Timeline of ${context.team.name}`}
       </Typography>
 
       <Timeline align="left">
