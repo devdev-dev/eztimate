@@ -23,3 +23,10 @@ export const FetchUsersAction = {
   method: 'GET',
   endpoint: '/api/app/users'
 } as Action;
+
+export const CreateIssueAction = data =>
+  ({
+    method: 'POST',
+    endpoint: '/api/app/issue-create',
+    body: data
+  } as Action);
