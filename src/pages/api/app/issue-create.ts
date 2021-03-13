@@ -1,11 +1,11 @@
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
-import { connectDatabase, disconnectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
+import { connectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 import { CookieName, IssueState } from '../../../utils/types';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db: database } = await connectDatabase();
+  const { client, db } = await connectDatabase();
   const session = await getSession({ req: request });
   const teamId = new Cookies(request, response).get(CookieName.TEAM_ID);
 
@@ -19,14 +19,14 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const teamIdObject = getObjectId(teamId);
   if (teamIdObject) {
-    const { insertedId: insertedIssueId } = await database.collection('issues').insertOne({
+    const { insertedId: insertedIssueId } = await db.collection('issues').insertOne({
       name: request.body.issueName,
       state: IssueState.OPEN,
       dateCreated: Date.now()
     });
 
     if (insertedIssueId) {
-      await database.collection('teams').updateOne(
+      await db.collection('teams').updateOne(
         { _id: teamIdObject },
         {
           $addToSet: {
@@ -43,5 +43,5 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(400).send({ error: 'INVALID_TEAM_ID' });
   }
 
-  await disconnectDatabase();
+  client.close();
 };
