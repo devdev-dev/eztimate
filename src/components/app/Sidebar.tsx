@@ -45,6 +45,7 @@ const Estimate = () => {
           placeholder="Create a new issue"
           fullWidth={true}
           inputRef={textFieldRef}
+          autoComplete="off"
           InputProps={{
             endAdornment: (
               <IconButton onClick={() => handleAddIssue()}>
