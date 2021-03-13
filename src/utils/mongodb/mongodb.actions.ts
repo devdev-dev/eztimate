@@ -30,3 +30,8 @@ export const CreateIssueAction = data =>
     endpoint: '/api/app/issue-create',
     body: data
   } as Action);
+
+export const FetchIssuesAction = {
+  method: 'GET',
+  endpoint: '/api/app/issues'
+} as Action;

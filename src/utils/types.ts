@@ -3,7 +3,9 @@ export enum CookieName {
 }
 
 export enum IssueState {
-  OPEN = 'open'
+  OPEN = 'open',
+  ESTIMATED = 'estimated',
+  UNFINISHED = 'unfinished'
 }
 export interface UApp {
   team: UTeam;
@@ -16,4 +18,10 @@ export interface UTeam {
 export interface UUsers {
   id: string;
   email: string;
+}
+export interface UIssues {
+  id: string;
+  name: string;
+  state: IssueState;
+  estimate: string;
 }
