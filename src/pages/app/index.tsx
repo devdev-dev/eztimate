@@ -21,10 +21,10 @@ const Dashboard = () => {
   return (
     <AppContext.Provider value={{ team, users }}>
       <Grid container component="main" className={classes.root}>
-        <Grid item xs={12} sm={8} md={8}>
+        <Grid item xs={12} sm={8} lg={8}>
           <Estimate />
         </Grid>
-        <Grid item xs={12} sm={4} md={3} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={4} lg={3} component={Paper} elevation={6} square>
           <Sidebar />
         </Grid>
       </Grid>
