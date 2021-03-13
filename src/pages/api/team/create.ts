@@ -14,7 +14,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const { insertedId: insertedTeamId } = await database.collection('teams').insertOne({
     name: request.body.teamName,
-    members: [loggedInUserID]
+    users: [loggedInUserID]
   });
 
   await database.collection('users').updateOne(

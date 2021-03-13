@@ -1,4 +1,4 @@
-import { Avatar, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, Grid, makeStyles, Theme, Tooltip, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EmailIcon from '@material-ui/icons/Email';
 import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
@@ -9,24 +9,16 @@ import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
-import React from 'react';
+import React, { useContext } from 'react';
+import { EstimationContext } from '../../pages/app';
 import { CookieName } from '../../utils/types';
 
 export default function UserPanel() {
   const classes = useStyles();
+  const context = useContext(EstimationContext);
+  console.log(context);
 
   const [open, setOpen] = React.useState(false);
-
-  const handleOpenClose = () => setOpen(!open);
-  const handleCopy = () => {
-    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
-    const el = document.createElement('textarea');
-    el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-  };
 
   const handleEMail = () => {};
 
@@ -40,22 +32,20 @@ export default function UserPanel() {
         </Typography>
       </Grid>
       <Grid item xs className={classes.avatars}>
-        <Avatar className={classes.avatar}>
-          <PersonIcon />
-        </Avatar>
-        <Avatar className={classes.avatar}>
-          <PersonIcon />
-        </Avatar>
-        <Avatar className={classes.avatar}>
-          <PersonIcon />
-        </Avatar>
+        {context.users?.map(u => (
+          <Tooltip title={u.email} key={u._id}>
+            <Avatar className={classes.avatar}>
+              <PersonIcon />
+            </Avatar>
+          </Tooltip>
+        ))}
         <div className={classes.invite}>
           <SpeedDial
             ariaLabel="ShareSpeedDial"
             FabProps={{ size: 'small' }}
             className={classes.speedDial}
             icon={<SpeedDialIcon icon={<PersonAddIcon />} openIcon={<CloseIcon />} />}
-            onClick={handleOpenClose}
+            onClick={() => setOpen(!open)}
             onClose={() => setOpen(false)}
             open={open}
             direction="down"
@@ -68,6 +58,16 @@ export default function UserPanel() {
       </Grid>
     </Grid>
   );
+}
+
+function handleCopy() {
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+  const el = document.createElement('textarea');
+  el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }
 
 const useStyles = makeStyles((theme: Theme) =>

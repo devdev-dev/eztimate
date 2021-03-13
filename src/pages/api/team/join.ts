@@ -6,6 +6,11 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { db: database } = await connectToDatabase();
   const session = await getSession({ req: request });
 
+  if (!session) {
+    response.status(400).send({ error: 'UNAUTHORIZED' });
+    return;
+  }
+
   const teamIdObject = getObjectId(request.body.teamId);
   if (teamIdObject) {
     const result = await database.collection('teams').findOne({ _id: teamIdObject });
@@ -17,6 +22,14 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
         {
           $addToSet: {
             teams: teamIdObject
+          }
+        }
+      );
+      await database.collection('teams').updateOne(
+        { _id: teamIdObject },
+        {
+          $addToSet: {
+            users: loggedInUserID
           }
         }
       );

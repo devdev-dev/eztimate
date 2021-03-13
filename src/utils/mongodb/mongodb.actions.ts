@@ -13,3 +13,8 @@ export const CreateTeamAction = data =>
     endpoint: '/api/team/create',
     body: data
   } as Action);
+
+export const FetchTeamAction = {
+  method: 'GET',
+  endpoint: '/api/app/users'
+} as Action;
