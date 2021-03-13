@@ -20,7 +20,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const teamIdObject = getObjectId(teamId);
   if (teamIdObject) {
     const { insertedId: insertedIssueId } = await database.collection('issues').insertOne({
-      name: request.body.storyName,
+      name: request.body.issueName,
       state: IssueState.OPEN,
       dateCreated: Date.now()
     });

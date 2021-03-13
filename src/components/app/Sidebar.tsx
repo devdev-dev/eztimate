@@ -19,6 +19,17 @@ const Estimate = () => {
   const { loading: createIssueLoading, mutate: mutateCreateIssue } = useMutation(CreateIssueAction);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
+
+  const handleAddIssue = () => {
+    mutateCreateIssue({
+      issueName: textFieldRef.current?.value
+    })
+      .then(result => {
+        queryIssues();
+      })
+      .catch(error => console.error(JSON.stringify(error)));
+  };
+
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Typography variant="h6" component="h2" gutterBottom>
@@ -72,7 +83,7 @@ const Estimate = () => {
               inputRef={textFieldRef}
               InputProps={{
                 endAdornment: (
-                  <IconButton onClick={() => handleAddIssue(mutateCreateIssue, textFieldRef.current?.value)}>
+                  <IconButton onClick={() => handleAddIssue()}>
                     <PlaylistAddIcon />
                   </IconButton>
                 )
@@ -84,16 +95,6 @@ const Estimate = () => {
     </Container>
   );
 };
-
-function handleAddIssue(mutate, storyName: string) {
-  mutate({
-    storyName
-  })
-    .then(result => {
-      console.log(result);
-    })
-    .catch(error => console.error(JSON.stringify(error)));
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
