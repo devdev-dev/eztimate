@@ -31,6 +31,13 @@ export const CreateIssueAction = data =>
     body: data
   } as Action);
 
+export const SetActiveIssueAction = data =>
+  ({
+    method: 'POST',
+    endpoint: '/api/app/issue-set-active',
+    body: data
+  } as Action);
+
 export const FetchIssuesAction = {
   method: 'GET',
   endpoint: '/api/app/issues'

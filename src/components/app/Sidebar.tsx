@@ -1,4 +1,4 @@
-import { Box, createStyles, IconButton, makeStyles, TextField, Theme, Typography } from '@material-ui/core';
+import { Box, createStyles, IconButton, makeStyles, Paper, TextField, Theme, Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import FlagIcon from '@material-ui/icons/Flag';
@@ -8,14 +8,16 @@ import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem
 import React, { useContext, useRef } from 'react';
 import { useMutation, useQuery } from 'react-fetching-library';
 import { AppContext } from '../../pages/app';
-import { CreateIssueAction, FetchIssuesAction } from '../../utils/mongodb/mongodb.actions';
+import { CreateIssueAction, FetchIssuesAction, SetActiveIssueAction } from '../../utils/mongodb/mongodb.actions';
 import { IssueState, UIssues } from '../../utils/types';
+
 const Estimate = () => {
   const classes = useStyles();
   const context = useContext(AppContext);
 
   const { loading: issuesLoading, payload: issues, query: queryIssues } = useQuery<UIssues[]>(FetchIssuesAction);
   const { loading: createIssueLoading, mutate: mutateCreateIssue } = useMutation(CreateIssueAction);
+  const { loading: setActiveIssueLoading, mutate: mutateSetActiveIssue } = useMutation(SetActiveIssueAction);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
 
@@ -25,6 +27,16 @@ const Estimate = () => {
     })
       .then(result => {
         queryIssues();
+      })
+      .catch(error => console.error(JSON.stringify(error)));
+  };
+
+  const handleSetActiveIssue = (issueId: string) => {
+    mutateSetActiveIssue({
+      issueId: issueId
+    })
+      .then(result => {
+        console.log('set active');
       })
       .catch(error => console.error(JSON.stringify(error)));
   };
@@ -58,7 +70,7 @@ const Estimate = () => {
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <Timeline align="left" className={classes.timeline}>
           {issues?.map(issue => (
-            <TimelineItem key={issue.id}>
+            <TimelineItem key={issue._id}>
               <TimelineOppositeContent className={classes.oppositeContent} />
               <TimelineSeparator>
                 <TimelineDot color="primary" variant="outlined" className={classes.issueDot}>
@@ -69,9 +81,11 @@ const Estimate = () => {
                 <TimelineConnector className={classes.secondaryTail} />
               </TimelineSeparator>
               <TimelineContent>
-                {issue.name}
-                {issue.estimate && <br />}
-                {issue.estimate && `Estimated Value was ${issue.estimate}`}
+                <Paper elevation={0} className={classes.timelineItemContent} onClick={e => handleSetActiveIssue(issue._id)}>
+                  {issue.name}
+                  {issue.estimate && <br />}
+                  {issue.estimate && `Estimated Value was ${issue.estimate}`}
+                </Paper>
               </TimelineContent>
             </TimelineItem>
           ))}
@@ -114,6 +128,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     secondaryTail: {
       backgroundColor: theme.palette.secondary.main
+    },
+    timelineItemContent: {
+      padding: theme.spacing(1),
+      cursor: 'pointer',
+      '&:hover': {
+        background: 'rgba(0,0,0,0.1)'
+      }
     },
     issueDot: {
       borderColor: 'transparent'
