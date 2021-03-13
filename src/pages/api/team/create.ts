@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
-import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
+import { connectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db: database } = await connectToDatabase();
+  const { client, db } = await connectDatabase();
   const session = await getSession({ req: request });
 
   if (!session) {
@@ -12,12 +12,12 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   }
   const loggedInUserID = getObjectId((session.user as any).objectID);
 
-  const { insertedId: insertedTeamId } = await database.collection('teams').insertOne({
+  const { insertedId: insertedTeamId } = await db.collection('teams').insertOne({
     name: request.body.teamName,
     users: [loggedInUserID]
   });
 
-  await database.collection('users').updateOne(
+  await db.collection('users').updateOne(
     { _id: loggedInUserID },
     {
       $addToSet: {
@@ -31,4 +31,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   } else {
     response.status(400).send({ error: 'SESSION_NOT_CREATED' });
   }
+
+  client.close();
 };

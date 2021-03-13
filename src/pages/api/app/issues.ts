@@ -1,11 +1,11 @@
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
-import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
+import { connectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 import { CookieName } from '../../../utils/types';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db: database } = await connectToDatabase();
+  const { client, db } = await connectDatabase();
   const session = await getSession({ req: request });
   const teamId = new Cookies(request, response).get(CookieName.TEAM_ID);
 
@@ -19,8 +19,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const teamIdObject = getObjectId(teamId);
   if (teamIdObject) {
-    const team = await database.collection('teams').findOne({ _id: teamIdObject });
-    const issues = await database
+    const team = await db.collection('teams').findOne({ _id: teamIdObject });
+    const issues = await db
       .collection('issues')
       .find({ _id: { $in: team.issues } })
       .sort({ dateCreated: -1 })
@@ -34,4 +34,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   } else {
     response.status(400).send({ error: 'INVALID_TEAM_ID' });
   }
+
+  client.close();
 };

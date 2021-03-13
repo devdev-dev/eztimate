@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
-import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
+import { connectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db: database } = await connectToDatabase();
+  const { client, db } = await connectDatabase();
   const session = await getSession({ req: request });
 
   if (!session) {
@@ -13,11 +13,11 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const teamIdObject = getObjectId(request.body.teamId);
   if (teamIdObject) {
-    const result = await database.collection('teams').findOne({ _id: teamIdObject });
+    const result = await db.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
       const loggedInUserID = getObjectId((session.user as any).objectID);
-      await database.collection('users').updateOne(
+      await db.collection('users').updateOne(
         { _id: loggedInUserID },
         {
           $addToSet: {
@@ -25,7 +25,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
           }
         }
       );
-      await database.collection('teams').updateOne(
+      await db.collection('teams').updateOne(
         { _id: teamIdObject },
         {
           $addToSet: {
@@ -41,4 +41,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   } else {
     response.status(400).send({ error: 'SESSION_ID_INVALID' });
   }
+
+  client.close();
 };

@@ -1,11 +1,11 @@
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
-import { connectToDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
+import { connectDatabase, disconnectDatabase, getObjectId } from '../../../utils/mongodb/mongodb';
 import { CookieName, IssueState } from '../../../utils/types';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-  const { db: database } = await connectToDatabase();
+  const { db: database } = await connectDatabase();
   const session = await getSession({ req: request });
   const teamId = new Cookies(request, response).get(CookieName.TEAM_ID);
 
@@ -42,4 +42,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   } else {
     response.status(400).send({ error: 'INVALID_TEAM_ID' });
   }
+
+  await disconnectDatabase();
 };
