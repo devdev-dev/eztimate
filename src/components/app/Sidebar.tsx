@@ -1,5 +1,4 @@
-import { Container, createStyles, IconButton, makeStyles, TextField, Theme, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Box, createStyles, IconButton, makeStyles, TextField, Theme, Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import FlagIcon from '@material-ui/icons/Flag';
@@ -31,76 +30,78 @@ const Estimate = () => {
   };
 
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <Typography variant="h6" component="h2" gutterBottom>
-        {`Timeline of ${context.team?.name ?? ''}`}
-      </Typography>
-
-      <Timeline align="left" className={classes.timeline}>
-        <TimelineItem>
-          <TimelineOppositeContent className={classes.oppositeContent} />
-          <TimelineSeparator>
-            <TimelineDot color="primary">
-              <FlagIcon />
-            </TimelineDot>
-            <TimelineConnector className={classes.secondaryTail} />
-          </TimelineSeparator>
-          <TimelineContent>This is the beginning of your estimation history! Create a new story to start estimating.</TimelineContent>
-        </TimelineItem>
-        {issues?.map(issue => (
-          <TimelineItem key={issue.id}>
+    <Box display="flex" flexDirection="column" className={classes.root}>
+      <Box flexGrow={0} className={classes.header}>
+        <Typography component="h2" variant="h5" gutterBottom>
+          {`Timeline ${context.team?.name ? 'of ' + context.team?.name : ''}`}
+        </Typography>
+      </Box>
+      <Box flexGrow={0} className={classes.buttons}>
+        <TextField
+          className={classes.createIssue}
+          size="small"
+          id="outlined-basic"
+          variant="outlined"
+          placeholder="Create a new issue"
+          fullWidth={true}
+          inputRef={textFieldRef}
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={() => handleAddIssue()}>
+                <PlaylistAddIcon />
+              </IconButton>
+            )
+          }}
+        />
+      </Box>
+      <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
+        <Timeline align="left" className={classes.timeline}>
+          {issues?.map(issue => (
+            <TimelineItem key={issue.id}>
+              <TimelineOppositeContent className={classes.oppositeContent} />
+              <TimelineSeparator>
+                <TimelineDot color="primary" variant="outlined" className={classes.issueDot}>
+                  {issue.state === IssueState.OPEN && <RadioButtonUncheckedIcon />}
+                  {issue.state === IssueState.ESTIMATED && <CheckIcon />}
+                  {issue.state === IssueState.UNFINISHED && <ErrorIcon />}
+                </TimelineDot>
+                <TimelineConnector className={classes.secondaryTail} />
+              </TimelineSeparator>
+              <TimelineContent>
+                {issue.name}
+                {issue.estimate && <br />}
+                {issue.estimate && `Estimated Value was ${issue.estimate}`}
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+          <TimelineItem>
             <TimelineOppositeContent className={classes.oppositeContent} />
             <TimelineSeparator>
-              <TimelineDot color="primary" variant="outlined" className={classes.issueDot}>
-                {issue.state === IssueState.OPEN && <RadioButtonUncheckedIcon />}
-                {issue.state === IssueState.ESTIMATED && <CheckIcon />}
-                {issue.state === IssueState.UNFINISHED && <ErrorIcon />}
+              <TimelineDot>
+                <FlagIcon />
               </TimelineDot>
-              <TimelineConnector className={classes.secondaryTail} />
             </TimelineSeparator>
-            <TimelineContent>
-              {issue.name}
-              {issue.estimate && <br />}
-              {issue.estimate && `Estimated Value was ${issue.estimate}`}
-            </TimelineContent>
+            <TimelineContent>This is the beginning of your estimation history! Create a new story to start estimating.</TimelineContent>
           </TimelineItem>
-        ))}
-        <TimelineItem>
-          <TimelineOppositeContent className={classes.oppositeContent} />
-          <TimelineSeparator>
-            <TimelineDot>
-              <AddIcon />
-            </TimelineDot>
-          </TimelineSeparator>
-          <TimelineContent>
-            <TextField
-              className={classes.createIssue}
-              size="small"
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Create a new issue"
-              fullWidth={true}
-              inputRef={textFieldRef}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={() => handleAddIssue()}>
-                    <PlaylistAddIcon />
-                  </IconButton>
-                )
-              }}
-            />
-          </TimelineContent>
-        </TimelineItem>
-      </Timeline>
-    </Container>
+        </Timeline>
+      </Box>
+    </Box>
   );
 };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
+    root: {
+      height: '100%',
+      paddingLeft: theme.spacing(1)
+    },
+    header: {
       paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(1)
+      paddingBottom: theme.spacing(2)
+    },
+    buttons: {
+      paddingRight: theme.spacing(1),
+      paddingBottom: theme.spacing(2)
     },
     timeline: {
       paddingLeft: 0,

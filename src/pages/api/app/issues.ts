@@ -23,6 +23,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const issues = await database
       .collection('issues')
       .find({ _id: { $in: team.issues } })
+      .sort({ dateCreated: -1 })
       .toArray();
 
     if (issues) {

@@ -21,10 +21,10 @@ const Dashboard = () => {
   return (
     <AppContext.Provider value={{ team, users }}>
       <Grid container component="main" className={classes.root}>
-        <Grid item xs={12} sm={8} lg={8}>
+        <Grid item xs={12} sm={8} lg={8} className={classes.parts}>
           <Estimate />
         </Grid>
-        <Grid item xs={12} sm={4} lg={3} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={4} lg={3} className={classes.parts} component={Paper} elevation={6} square>
           <Sidebar />
         </Grid>
       </Grid>
@@ -35,9 +35,10 @@ const Dashboard = () => {
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      height: 'calc(100vh - 50px)'
+      height: 'calc(100vh - 63px)',
+      overflow: 'hidden'
     },
-    image: {}
+    parts: { height: '100%' }
   })
 );
 
