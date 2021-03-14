@@ -8,17 +8,17 @@ import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem
 import React, { useContext, useRef } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { AppContext } from '../../pages/app';
-import { mutateCreateIssue, mutateSetActiveIssue, queryIssuesAction } from '../../utils/mongodb/mongodb.actions';
+import { createIssueMutation, setActiveIssuesMutation, issueQuery } from '../../utils/mongodb/mongodb.actions';
 import { IssueState } from '../../utils/types';
 
 const Estimate = () => {
   const classes = useStyles();
   const context = useContext(AppContext);
 
-  const issueQuery = useQuery('issues', queryIssuesAction);
+  const issueQuery = useQuery('issues', issueQuery);
 
-  const activeIssueMutation = useMutation(mutateSetActiveIssue);
-  const createIssueMutation = useMutation(mutateCreateIssue, {
+  const activeIssueMutation = useMutation(setActiveIssuesMutation);
+  const createIssueMutation = useMutation(createIssueMutation, {
     onSuccess: async () => {
       issueQuery.refetch();
     }

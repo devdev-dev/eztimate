@@ -5,14 +5,14 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { mutateCreateTeam } from '../../../utils/mongodb/mongodb.actions';
+import { createTeamMutation } from '../../../utils/mongodb/mongodb.actions';
 import { CookieName } from '../../../utils/types';
 import Copyright from '../Copyright';
 
 export default function CreateNewTeam() {
   const classes = useStyles();
   const router = useRouter();
-  const createTeamMutation = useMutation(mutateCreateTeam, {
+  const createTeamMutation = useMutation(createTeamMutation, {
     onSuccess: data => {
       console.log(data);
       Cookies.set(CookieName.TEAM_ID, data);

@@ -1,13 +1,15 @@
-export const mutateJoinTeam = teamId => fetch('/api/team/join', teamId);
+export const joinTeamMutation = teamId => fetch('/api/team/join', teamId);
 
-export const mutateCreateTeam = teamName => fetch('/api/team/create', teamName);
+export const createTeamMutation = teamName => fetch('/api/team/create', teamName);
 
-export const mutateCreateIssue = issueName => fetch('/api/app/issue-create', issueName);
+export const createIssueMutation = issueName => fetch('/api/app/issue-create', issueName);
 
-export const mutateSetActiveIssue = issueId => fetch('/api/app/issue-set-active', issueId);
+export const setActiveIssuesMutation = issueId => fetch('/api/app/issue-set-active', issueId);
 
-export const queryIssuesAction = () => fetch('/api/app/issues').then(res => res.json());
+export const issueQuery = () => fetch('/api/app/issues').then(res => res.json());
 
-export const queryTeamAction = () => fetch('/api/app/team').then(res => res.json());
+export const teamQuery = () => fetch('/api/app/team').then(res => res.json());
 
-export const queryUsersAction = () => fetch('/api/app/users').then(res => res.json());
+export const userByTeamQuery = () => fetch('/api/users/team').then(res => res.json());
+
+export const userSelfQuery = () => fetch('/api/users/team').then(res => res.json());
