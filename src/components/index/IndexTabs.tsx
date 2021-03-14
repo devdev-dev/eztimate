@@ -1,3 +1,4 @@
+import { Container } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -10,8 +11,9 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { useSession } from 'next-auth/client';
 import React from 'react';
-import CreateTeamTabContent from './CreateTeamTabContent';
-import JoinTeamTabContent from './JoinTeamTabContent';
+import CreateNewTeam from './create/CreteNewTeam';
+import JoinKnownTeam from './join/JoinKnownTeam';
+import JoinNewTeam from './join/JoinNewTeam';
 import SignInOut from './SignInOut';
 export interface IndexTabsProps {
   teamId: string;
@@ -37,14 +39,21 @@ export default function IndexTabs(props: IndexTabsProps) {
           <Tab icon={session ? <LockOpenIcon /> : <LockIcon />} label="Profile" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} dir={theme.direction}>
-        <CreateTeamTabContent />
+      <TabPanel value={value} index={0}>
+        <Container className={classes.joinTab}>
+          <CreateNewTeam />
+        </Container>
       </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
-        <JoinTeamTabContent teamId={props.teamId} />
+      <TabPanel value={value} index={1}>
+        <Container className={classes.joinTab}>
+          <JoinNewTeam teamId={props.teamId} />
+          <JoinKnownTeam />
+        </Container>
       </TabPanel>
-      <TabPanel value={value} index={2} dir={theme.direction}>
-        <SignInOut />
+      <TabPanel value={value} index={2}>
+        <Container className={classes.joinTab}>
+          <SignInOut />
+        </Container>
       </TabPanel>
     </div>
   );
@@ -82,7 +91,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper
   },
-  settingsTab: {
-    width: '32px'
+  joinTab: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   }
 }));

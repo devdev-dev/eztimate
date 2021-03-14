@@ -33,7 +33,7 @@ function SignIn() {
   };
 
   return (
-    <div className={classes.paper}>
+    <>
       <Avatar className={classes.avatar}>
         <LockIcon />
       </Avatar>
@@ -62,7 +62,7 @@ function SignIn() {
           {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </form>
-    </div>
+    </>
   );
 }
 
@@ -76,7 +76,7 @@ function SignOut() {
   };
 
   return (
-    <div className={classes.paper}>
+    <>
       <Avatar className={classes.avatar}>
         <LockOpenIcon />
       </Avatar>
@@ -91,17 +91,11 @@ function SignOut() {
           {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </form>
-    </div>
+    </>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
