@@ -32,7 +32,7 @@ export default function UserPanel() {
       </Grid>
       <Grid item xs className={classes.avatars}>
         {context.users?.map(u => (
-          <Tooltip title={u.email} key={u.id}>
+          <Tooltip title={u.email} key={u._id}>
             <Avatar className={classes.avatar}>
               <PersonIcon />
             </Avatar>

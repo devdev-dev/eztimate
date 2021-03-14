@@ -3,11 +3,11 @@ import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
-import { useQuery } from 'react-fetching-library';
+import { useQuery } from 'react-query';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import { FetchTeamAction, FetchUsersAction } from '../../utils/mongodb/mongodb.actions';
+import { queryTeamAction, queryUsersAction } from '../../utils/mongodb/mongodb.actions';
 import { CookieName, UApp, UTeam, UUser } from '../../utils/types';
 
 export const AppContext = React.createContext<UApp>(undefined);
@@ -15,11 +15,11 @@ export const AppContext = React.createContext<UApp>(undefined);
 const Dashboard = () => {
   const classes = useStyles();
 
-  const { loading: teamLoading, payload: team } = useQuery<UTeam>(FetchTeamAction);
-  const { loading: usersLoading, payload: users } = useQuery<UUser[]>(FetchUsersAction);
+  const teamQuery = useQuery<UTeam[]>('team', queryTeamAction);
+  const usersQuery = useQuery<UUser[]>('users', queryUsersAction);
 
   return (
-    <AppContext.Provider value={{ team, users }}>
+    <AppContext.Provider value={{ team: teamQuery.data ? teamQuery.data[0] : undefined, users: usersQuery.data }}>
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} lg={8} className={classes.parts}>
           <Estimate />

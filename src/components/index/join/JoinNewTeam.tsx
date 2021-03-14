@@ -3,9 +3,9 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { JoinTeamAction } from '../../../utils/mongodb/mongodb.actions';
+import { useMutation } from 'react-query';
+import { mutateJoinTeam } from '../../../utils/mongodb/mongodb.actions';
 import { CookieName } from '../../../utils/types';
 
 export interface JoinSessionProps {
@@ -15,18 +15,19 @@ export interface JoinSessionProps {
 export default function JoinNewTeam(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
-  const { loading, mutate } = useMutation(JoinTeamAction);
+  const joinTeamMutation = useMutation(mutateJoinTeam, {
+    onSuccess: data => {
+      console.log(data);
+      Cookies.set(CookieName.TEAM_ID, data);
+      router.push('/app');
+    }
+  });
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
-    mutate({
+    joinTeamMutation.mutate({
       teamId: data.teamId
-    })
-      .then(result => {
-        Cookies.set(CookieName.TEAM_ID, result.payload.teamId);
-        router.push('/app');
-      })
-      .catch(error => console.error(error));
+    });
   };
 
   return (
@@ -50,10 +51,10 @@ export default function JoinNewTeam(props: JoinSessionProps) {
           defaultValue={props.teamId}
         />
         <div className={classes.buttonProgressWrapper}>
-          <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
+          <Button type="submit" fullWidth variant="contained" color="primary" disabled={joinTeamMutation.isLoading}>
             Join
           </Button>
-          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          {joinTeamMutation.isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </form>
     </>

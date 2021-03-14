@@ -1,44 +1,13 @@
-import { Action } from 'react-fetching-library';
+export const mutateJoinTeam = teamId => fetch('/api/team/join', teamId);
 
-export const CreateTeamAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/team/create',
-    body: data
-  } as Action);
+export const mutateCreateTeam = teamName => fetch('/api/team/create', teamName);
 
-export const JoinTeamAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/team/join',
-    body: data
-  } as Action);
+export const mutateCreateIssue = issueName => fetch('/api/app/issue-create', issueName);
 
-export const FetchTeamAction = {
-  method: 'GET',
-  endpoint: '/api/app/team'
-} as Action;
+export const mutateSetActiveIssue = issueId => fetch('/api/app/issue-set-active', issueId);
 
-export const FetchUsersAction = {
-  method: 'GET',
-  endpoint: '/api/app/users'
-} as Action;
+export const queryIssuesAction = () => fetch('/api/app/issues').then(res => res.json());
 
-export const CreateIssueAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/app/issue-create',
-    body: data
-  } as Action);
+export const queryTeamAction = () => fetch('/api/app/team').then(res => res.json());
 
-export const SetActiveIssueAction = data =>
-  ({
-    method: 'POST',
-    endpoint: '/api/app/issue-set-active',
-    body: data
-  } as Action);
-
-export const FetchIssuesAction = {
-  method: 'GET',
-  endpoint: '/api/app/issues'
-} as Action;
+export const queryUsersAction = () => fetch('/api/app/users').then(res => res.json());

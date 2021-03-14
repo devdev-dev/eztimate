@@ -6,39 +6,35 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from '@material-ui/lab';
 import React, { useContext, useRef } from 'react';
-import { useMutation, useQuery } from 'react-fetching-library';
+import { useMutation, useQuery } from 'react-query';
 import { AppContext } from '../../pages/app';
-import { CreateIssueAction, FetchIssuesAction, SetActiveIssueAction } from '../../utils/mongodb/mongodb.actions';
-import { IssueState, UIssue } from '../../utils/types';
+import { mutateCreateIssue, mutateSetActiveIssue, queryIssuesAction } from '../../utils/mongodb/mongodb.actions';
+import { IssueState } from '../../utils/types';
 
 const Estimate = () => {
   const classes = useStyles();
   const context = useContext(AppContext);
 
-  const { loading: issuesLoading, payload: issues, query: queryIssues } = useQuery<UIssue[]>(FetchIssuesAction);
-  const { loading: createIssueLoading, mutate: mutateCreateIssue } = useMutation(CreateIssueAction);
-  const { loading: setActiveIssueLoading, mutate: mutateSetActiveIssue } = useMutation(SetActiveIssueAction);
+  const issueQuery = useQuery('issues', queryIssuesAction);
+
+  const activeIssueMutation = useMutation(mutateSetActiveIssue);
+  const createIssueMutation = useMutation(mutateCreateIssue, {
+    onSuccess: async () => {
+      issueQuery.refetch();
+    }
+  });
 
   const textFieldRef = useRef<HTMLInputElement>(null);
-
   const handleAddIssue = () => {
-    mutateCreateIssue({
+    createIssueMutation.mutate({
       issueName: textFieldRef.current?.value
-    })
-      .then(result => {
-        queryIssues();
-      })
-      .catch(error => console.error(JSON.stringify(error)));
+    });
   };
 
   const handleSetActiveIssue = (issueId: string) => {
-    mutateSetActiveIssue({
-      issueId: issueId
-    })
-      .then(result => {
-        console.log('set active');
-      })
-      .catch(error => console.error(JSON.stringify(error)));
+    activeIssueMutation.mutate({
+      issueId
+    });
   };
 
   return (
@@ -69,7 +65,7 @@ const Estimate = () => {
       </Box>
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <Timeline align="left" className={classes.timeline}>
-          {issues?.map(issue => (
+          {issueQuery.data?.map(issue => (
             <TimelineItem key={issue._id}>
               <TimelineOppositeContent className={classes.oppositeContent} />
               <TimelineSeparator>

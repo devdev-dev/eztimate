@@ -3,27 +3,28 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useMutation } from 'react-fetching-library';
 import { useForm } from 'react-hook-form';
-import { CreateTeamAction } from '../../../utils/mongodb/mongodb.actions';
+import { useMutation } from 'react-query';
+import { mutateCreateTeam } from '../../../utils/mongodb/mongodb.actions';
 import { CookieName } from '../../../utils/types';
 import Copyright from '../Copyright';
 
 export default function CreateNewTeam() {
   const classes = useStyles();
   const router = useRouter();
-  const { loading: mutationLoading, mutate } = useMutation(CreateTeamAction);
+  const createTeamMutation = useMutation(mutateCreateTeam, {
+    onSuccess: data => {
+      console.log(data);
+      Cookies.set(CookieName.TEAM_ID, data);
+      router.push('/app');
+    }
+  });
 
   const { register, handleSubmit } = useForm();
   const submitForm = data => {
-    mutate({
+    createTeamMutation.mutate({
       teamName: data.teamName
-    })
-      .then(result => {
-        Cookies.set(CookieName.TEAM_ID, result.payload.teamId);
-        router.push('/app');
-      })
-      .catch(error => console.error(JSON.stringify(error)));
+    });
   };
 
   return (
@@ -49,10 +50,10 @@ export default function CreateNewTeam() {
           }}
         />
         <div className={classes.buttonProgressWrapper}>
-          <Button type="submit" fullWidth variant="contained" color="primary" disabled={mutationLoading}>
+          <Button type="submit" fullWidth variant="contained" color="primary" disabled={createTeamMutation.isLoading}>
             Create
           </Button>
-          {mutationLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          {createTeamMutation.isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </form>
       <Box mt={5}>
