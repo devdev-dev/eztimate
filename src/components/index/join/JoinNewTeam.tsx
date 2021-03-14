@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { joinTeamMutation } from '../../../utils/mongodb/mongodb.actions';
+import { JoinTeamMutation } from '../../../utils/mongodb/mongodb.actions';
 import { CookieName } from '../../../utils/types';
 
 export interface JoinSessionProps {
@@ -15,7 +15,7 @@ export interface JoinSessionProps {
 export default function JoinNewTeam(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
-  const joinTeamMutation = useMutation(joinTeamMutation, {
+  const joinTeamMutation = useMutation(JoinTeamMutation, {
     onSuccess: data => {
       console.log(data);
       Cookies.set(CookieName.TEAM_ID, data);

@@ -12,7 +12,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { useSession } from 'next-auth/client';
 import React from 'react';
 import CreateNewTeam from './create/CreteNewTeam';
-import JoinKnownTeam from './join/JoinKnownTeam';
+import TeamHistory from './join/TeamHistory';
 import JoinNewTeam from './join/JoinNewTeam';
 import SignInOut from './SignInOut';
 export interface IndexTabsProps {
@@ -47,7 +47,7 @@ export default function IndexTabs(props: IndexTabsProps) {
       <TabPanel value={value} index={1}>
         <Container className={classes.joinTab}>
           <JoinNewTeam teamId={props.teamId} />
-          <JoinKnownTeam />
+          <TeamHistory />
         </Container>
       </TabPanel>
       <TabPanel value={value} index={2}>

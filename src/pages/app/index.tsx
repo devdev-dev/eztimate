@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import { teamQuery, userByTeamQuery } from '../../utils/mongodb/mongodb.actions';
+import { TeamQuery, UserByTeamQuery } from '../../utils/mongodb/mongodb.actions';
 import { CookieName, UApp, UTeam, UUser } from '../../utils/types';
 
 export const AppContext = React.createContext<UApp>(undefined);
@@ -15,8 +15,8 @@ export const AppContext = React.createContext<UApp>(undefined);
 const Dashboard = () => {
   const classes = useStyles();
 
-  const teamQuery = useQuery<UTeam[]>('team', teamQuery);
-  const usersQuery = useQuery<UUser[]>('users', userByTeamQuery);
+  const teamQuery = useQuery<UTeam[]>('team', TeamQuery);
+  const usersQuery = useQuery<UUser[]>('users', UserByTeamQuery);
 
   return (
     <AppContext.Provider value={{ team: teamQuery.data ? teamQuery.data[0] : undefined, users: usersQuery.data }}>

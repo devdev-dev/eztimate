@@ -34,7 +34,7 @@ const options: InitOptions = {
     },
     async jwt(token, user: User) {
       if (user) {
-        token.objectId = user.id;
+        token.id = user.id;
       }
 
       return token;

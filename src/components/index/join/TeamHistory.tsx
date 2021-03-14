@@ -1,28 +1,18 @@
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import React from 'react';
+import { useQuery } from 'react-query';
+import { UserSelfQuery } from '../../../utils/mongodb/mongodb.actions';
+import { UUser } from '../../../utils/types';
 
-export default function JoinKnownTeam() {
+export default function TeamHistory() {
   const classes = useStyles();
+
+  const userSelfQuery = useQuery<UUser>('issues', UserSelfQuery);
+  console.log(userSelfQuery.data);
 
   return (
     <>
-      <List
-        component="nav"
-        subheader={
-          <ListSubheader component="div" disableGutters>
-            Favorite Teams
-          </ListSubheader>
-        }
-        className={classes.root}
-        disablePadding
-      >
-        <ListItem button>
-          <ListItemText primary="Team Name" />
-          <AccountCircleIcon />
-        </ListItem>
-      </List>
-
       <List
         component="nav"
         subheader={
@@ -33,10 +23,12 @@ export default function JoinKnownTeam() {
         className={classes.root}
         disablePadding
       >
-        <ListItem button>
-          <ListItemText primary="Team Name" />
-          <AccountCircleIcon />
-        </ListItem>
+        {userSelfQuery.data?.teams.map((team, index) => (
+          <ListItem key={index} button>
+            <ListItemText primary={team.name} />
+            <AccountCircleIcon />
+          </ListItem>
+        ))}
       </List>
     </>
   );

@@ -12,15 +12,16 @@ export interface UApp {
   users: UUser[];
 }
 export interface UTeam {
-  _id: string;
+  id: string;
   name: string;
 }
 export interface UUser {
-  _id: string;
+  id: string;
   email: string;
+  teams: UTeam[];
 }
 export interface UIssue {
-  _id: string;
+  id: string;
   name: string;
   state: IssueState;
   estimate: string;
