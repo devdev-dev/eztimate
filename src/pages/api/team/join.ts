@@ -16,7 +16,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const result = await db.collection('teams').findOne({ _id: teamIdObject });
 
     if (result) {
-      const loggedInUserID = getObjectId((session.user as any).objectID);
+      const loggedInUserID = getObjectId(session.user.id);
       await db.collection('users').updateOne(
         { _id: loggedInUserID },
         {

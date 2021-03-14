@@ -1,8 +1,8 @@
-import NextAuth, { InitOptions } from 'next-auth';
+import NextAuth, { InitOptions, User } from 'next-auth';
 import Providers from 'next-auth/providers';
+import { SessionBase } from 'next-auth/_utils';
 
-const options = {
-  site: process.env.NEXTAUTH_URL,
+const options: InitOptions = {
   providers: [
     Providers.Email({
       server: {
@@ -27,15 +27,14 @@ const options = {
     async redirect(_, baseUrl) {
       return baseUrl;
     },
-    async session(session, user) {
-      session.user.objectID = user.objectID;
+    async session(sessionBase: SessionBase, user: User) {
+      sessionBase.user.id = user.id;
 
-      return session;
+      return sessionBase;
     },
-    async jwt(token, user) {
+    async jwt(token, user: User) {
       if (user) {
-        token.objectID = user.id;
-        token.teamSession = null;
+        token.objectId = user.id;
       }
 
       return token;
@@ -45,4 +44,4 @@ const options = {
   debug: process.env.IS_PROD === 'false'
 };
 
-export default (req, res) => NextAuth(req, res, options as InitOptions);
+export default (req, res) => NextAuth(req, res, options);

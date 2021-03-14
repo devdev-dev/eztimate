@@ -10,7 +10,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(400).send({ error: 'UNAUTHORIZED' });
     return;
   }
-  const loggedInUserID = getObjectId((session.user as any).objectID);
+  const loggedInUserID = getObjectId(session.user.id);
 
   const { insertedId: insertedTeamId } = await db.collection('teams').insertOne({
     name: request.body.teamName,
