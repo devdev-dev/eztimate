@@ -9,17 +9,17 @@ export enum IssueState {
 }
 export interface UApp {
   team: UTeam;
-  users: UUsers[];
+  users: UUser[];
 }
 export interface UTeam {
   _id: string;
   name: string;
 }
-export interface UUsers {
+export interface UUser {
   _id: string;
   email: string;
 }
-export interface UIssues {
+export interface UIssue {
   _id: string;
   name: string;
   state: IssueState;

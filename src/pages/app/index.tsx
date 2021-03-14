@@ -8,7 +8,7 @@ import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
 import { FetchTeamAction, FetchUsersAction } from '../../utils/mongodb/mongodb.actions';
-import { CookieName, UApp, UTeam, UUsers } from '../../utils/types';
+import { CookieName, UApp, UTeam, UUser } from '../../utils/types';
 
 export const AppContext = React.createContext<UApp>(undefined);
 
@@ -16,7 +16,7 @@ const Dashboard = () => {
   const classes = useStyles();
 
   const { loading: teamLoading, payload: team } = useQuery<UTeam>(FetchTeamAction);
-  const { loading: usersLoading, payload: users } = useQuery<UUsers[]>(FetchUsersAction);
+  const { loading: usersLoading, payload: users } = useQuery<UUser[]>(FetchUsersAction);
 
   return (
     <AppContext.Provider value={{ team, users }}>

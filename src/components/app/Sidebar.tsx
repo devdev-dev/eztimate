@@ -9,13 +9,13 @@ import React, { useContext, useRef } from 'react';
 import { useMutation, useQuery } from 'react-fetching-library';
 import { AppContext } from '../../pages/app';
 import { CreateIssueAction, FetchIssuesAction, SetActiveIssueAction } from '../../utils/mongodb/mongodb.actions';
-import { IssueState, UIssues } from '../../utils/types';
+import { IssueState, UIssue } from '../../utils/types';
 
 const Estimate = () => {
   const classes = useStyles();
   const context = useContext(AppContext);
 
-  const { loading: issuesLoading, payload: issues, query: queryIssues } = useQuery<UIssues[]>(FetchIssuesAction);
+  const { loading: issuesLoading, payload: issues, query: queryIssues } = useQuery<UIssue[]>(FetchIssuesAction);
   const { loading: createIssueLoading, mutate: mutateCreateIssue } = useMutation(CreateIssueAction);
   const { loading: setActiveIssueLoading, mutate: mutateSetActiveIssue } = useMutation(SetActiveIssueAction);
 

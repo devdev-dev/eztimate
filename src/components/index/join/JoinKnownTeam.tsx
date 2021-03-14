@@ -1,9 +1,12 @@
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import React from 'react';
+import { useQuery } from 'react-fetching-library';
 
 export default function JoinKnownTeam() {
   const classes = useStyles();
+
+  const { loading, payload, query } = useQuery<UUser>(FetchUserAction);
 
   return (
     <>
