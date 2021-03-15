@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server-micro';
 import { getSession } from 'next-auth/client';
-import { connectDatabase, getObjectId } from '../../utils/mongodb/mongodb';
+import getDatabase, { getObjectId } from '../../utils/mongodb/mongodb';
 
 const typeDefs = gql`
   type Query {
@@ -37,7 +37,8 @@ const apolloServer = new ApolloServer({
   },
   context: async ({ req }) => {
     const session = await getSession({ req });
-    const { db } = await connectDatabase();
+    const { db } = await getDatabase();
+
     return {
       session,
       db
