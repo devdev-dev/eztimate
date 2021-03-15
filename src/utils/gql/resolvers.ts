@@ -1,6 +1,7 @@
-import { getObjectId } from '../../utils/mongodb/mongodb';
+import { IResolvers } from 'graphql-tools';
+import { getObjectId } from '../mongodb/mongodb';
 
-export const resolvers = {
+export const resolvers: IResolvers = {
   Query: {
     async loggedInUser(parent, args, context) {
       const loggedInUser = await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });

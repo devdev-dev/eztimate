@@ -3,22 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run clean:gql && next dev",
     "build": "next build",
     "start": "next start",
     "prettier": "npx prettier --check \"**/*.{ts,tsx,css,json,js,jsx}\"",
     "prettier:write": "npx prettier --write \"**/*.{ts,tsx,json}\"",
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
-    "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\""
+    "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
+    "clean:gql": "rm -rf ./node_modules/.cache/babel-loader"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@types/cookies": "^0.7.6",
+    "@types/graphql": "^14.5.0",
     "@types/js-cookie": "^2.2.6",
     "@types/lodash": "^4.14.168",
     "apollo-server-micro": "^2.21.1",
+    "babel-plugin-import-graphql": "^2.8.1",
     "cookies": "^0.8.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",

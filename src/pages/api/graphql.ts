@@ -1,12 +1,10 @@
 import { ApolloServer } from 'apollo-server-micro';
 import { getSession } from 'next-auth/client';
+import schema from '../../utils/gql/schema';
 import getDatabase from '../../utils/mongodb/mongodb';
-import { resolvers } from './resolvers';
-import { typeDefs } from './typeDefs';
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   playground: {
     settings: {
       'request.credentials': 'include'
