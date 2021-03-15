@@ -12,8 +12,8 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { useSession } from 'next-auth/client';
 import React from 'react';
 import CreateNewTeam from './create/CreteNewTeam';
-import TeamHistory from './join/TeamHistory';
 import JoinNewTeam from './join/JoinNewTeam';
+import TeamHistory from './join/TeamHistory';
 import SignInOut from './SignInOut';
 export interface IndexTabsProps {
   teamId: string;
@@ -33,7 +33,7 @@ export default function IndexTabs(props: IndexTabsProps) {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="index-tabs">
+        <Tabs className={classes.tabs} value={value} onChange={handleChange} variant="fullWidth" aria-label="index-tabs" centered>
           <Tab icon={<GroupIcon />} label="Create Team" {...a11yProps(0)} disabled={!session} />
           <Tab icon={<GroupAddIcon />} label="Join Team" {...a11yProps(1)} disabled={!session} />
           <Tab icon={session ? <LockOpenIcon /> : <LockIcon />} label="Profile" {...a11yProps(2)} />
@@ -90,6 +90,11 @@ function a11yProps(index: any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper
+  },
+  tabs: {
+    '& .MuiTab-root': {
+      minWidth: 100
+    }
   },
   joinTab: {
     display: 'flex',

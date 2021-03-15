@@ -17,8 +17,8 @@ const Index: NextPage<IndexProps> = props => {
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
-      <Grid item xs={false} md={7} />
-      <Grid item xs={12} md={4} component={Paper} elevation={6} square>
+      <Grid item xs={false} sm={4} md={6} lg={7} />
+      <Grid item xs={12} sm={8} md={6} lg={4} component={Paper} elevation={6} square>
         <IndexTabs teamId={props.teamId} />
       </Grid>
     </Grid>
