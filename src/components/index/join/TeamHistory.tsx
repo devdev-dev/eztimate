@@ -1,5 +1,6 @@
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { gql, request } from 'graphql-request';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { UserSelfQuery } from '../../../utils/mongodb/mongodb.actions';
@@ -8,8 +9,24 @@ import { UUser } from '../../../utils/types';
 export default function TeamHistory() {
   const classes = useStyles();
 
+  const user = useQuery('user', async () => {
+    const {
+      posts: { data }
+    } = await request(
+      '/api/graphql',
+      gql`
+        query {
+          loggedInUser {
+            _id
+          }
+        }
+      `
+    );
+    return data;
+  });
+  console.log(user);
+
   const userSelfQuery = useQuery<UUser>('issues', UserSelfQuery);
-  console.log(userSelfQuery.data);
 
   return (
     <>
