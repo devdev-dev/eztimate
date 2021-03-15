@@ -1,10 +1,38 @@
-export const JoinTeamMutation = teamId => fetch('/api/team/join', teamId);
+export const JoinTeamMutation = teamId =>
+  fetch('/api/team/join', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(teamId)
+  });
 
-export const CreateTeamMutation = teamName => fetch('/api/team/create', teamName);
+export const CreateTeamMutation = teamName =>
+  fetch('/api/team/create', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(teamName)
+  });
 
-export const CreateIssueMutation = issueName => fetch('/api/app/issue-create', issueName);
+export const CreateIssueMutation = issueName =>
+  fetch('/api/app/issue-create', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(issueName)
+  });
 
-export const SetActiveIssuesMutation = issueId => fetch('/api/app/issue-set-active', issueId);
+export const SetActiveIssuesMutation = issueId =>
+  fetch('/api/app/issue-set-active', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(issueId)
+  });
 
 export const IssueQuery = () => fetch('/api/app/issues').then(res => res.json());
 

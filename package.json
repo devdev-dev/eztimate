@@ -10,7 +10,7 @@
     "prettier:write": "npx prettier --write \"**/*.{ts,tsx,json}\"",
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
-    "clean:gql": "rm -rf ./node_modules/.cache/babel-loader"
+    "clean:gql": "rm -rf ./.next/.cache/next-babel-loader"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.2",

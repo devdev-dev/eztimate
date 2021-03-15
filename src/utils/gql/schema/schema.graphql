@@ -1,3 +1,7 @@
+type Mutation {
+  userAddTeam(teamId: String!): Team!
+}
+
 type Query {
   loggedInUser: User
 }

@@ -1,11 +1,10 @@
 import { Avatar, IconButton, makeStyles, TextField, Typography } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
-import { useMutation } from 'react-query';
-import { JoinTeamMutation } from '../../../utils/mongodb/mongodb.actions';
 import { CookieName } from '../../../utils/types';
 
 export interface JoinSessionProps {
@@ -16,17 +15,20 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
 
-  const joinTeamMutation = useMutation(JoinTeamMutation, {
-    onSuccess: data => {
-      Cookies.set(CookieName.TEAM_ID, data);
-      router.push('/app');
+  const mutation = gql`
+    mutation AddUserToTeam($teamId: String!) {
+      userAddTeam(teamId: $teamId) {
+        _id
+      }
     }
-  });
+  `;
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleJoinTeam = () => {
-    joinTeamMutation.mutate({
-      teamId: textFieldRef.current?.value
+    request('/api/graphql', mutation, { teamId: textFieldRef.current?.value }).then(data => {
+      console.log(data.userAddTeam._id);
+      Cookies.set(CookieName.TEAM_ID, data.userAddTeam._id);
+      router.push('/app');
     });
   };
 
