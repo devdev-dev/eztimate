@@ -1,11 +1,11 @@
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import router from 'next/router';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { CookieName } from '../../../utils/types';
+import UserAvatar from '../../shared/UserAvatar';
 
 export default function TeamHistory() {
   const classes = useStyles();
@@ -51,7 +51,9 @@ export default function TeamHistory() {
         {data?.loggedInUser?.teams?.map((team, index) => (
           <ListItem key={index} onClick={() => handleTeamSelect(team._id)} button>
             <ListItemText primary={team.name} />
-            <AccountCircleIcon />
+            {team.users?.map((user, userIndex) => (
+              <UserAvatar key={userIndex} user={user} />
+            ))}
           </ListItem>
         ))}
       </List>

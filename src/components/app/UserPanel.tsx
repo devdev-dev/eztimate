@@ -1,8 +1,7 @@
-import { Avatar, createStyles, Grid, makeStyles, Theme, Tooltip, Typography } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EmailIcon from '@material-ui/icons/Email';
 import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -12,6 +11,7 @@ import Cookies from 'js-cookie';
 import React, { useContext } from 'react';
 import { AppContext } from '../../pages/app';
 import { CookieName } from '../../utils/types';
+import UserAvatar from '../shared/UserAvatar';
 
 export default function UserPanel() {
   const classes = useStyles();
@@ -31,12 +31,8 @@ export default function UserPanel() {
         </Typography>
       </Grid>
       <Grid item xs className={classes.avatars}>
-        {context.users?.map(u => (
-          <Tooltip title={u.email} key={u.id}>
-            <Avatar className={classes.avatar}>
-              <PersonIcon />
-            </Avatar>
-          </Tooltip>
+        {context.users?.map((user, userIndex) => (
+          <UserAvatar key={userIndex} user={user} />
         ))}
         <div className={classes.invite}>
           <SpeedDial
