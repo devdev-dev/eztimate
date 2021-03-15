@@ -17,7 +17,6 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const router = useRouter();
   const joinTeamMutation = useMutation(JoinTeamMutation, {
     onSuccess: data => {
-      console.log(data);
       Cookies.set(CookieName.TEAM_ID, data);
       router.push('/app');
     }

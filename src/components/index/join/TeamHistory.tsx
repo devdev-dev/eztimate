@@ -1,8 +1,11 @@
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { gql, request } from 'graphql-request';
+import Cookies from 'js-cookie';
+import router from 'next/router';
 import React from 'react';
 import { useQuery } from 'react-query';
+import { CookieName } from '../../../utils/types';
 
 export default function TeamHistory() {
   const classes = useStyles();
@@ -28,6 +31,11 @@ export default function TeamHistory() {
     return data;
   });
 
+  const handleTeamSelect = teamId => {
+    Cookies.set(CookieName.TEAM_ID, teamId);
+    router.push('/app');
+  };
+
   return (
     <>
       <List
@@ -41,7 +49,7 @@ export default function TeamHistory() {
         disablePadding
       >
         {data?.loggedInUser?.teams?.map((team, index) => (
-          <ListItem key={index} button>
+          <ListItem key={index} onClick={() => handleTeamSelect(team._id)} button>
             <ListItemText primary={team.name} />
             <AccountCircleIcon />
           </ListItem>
