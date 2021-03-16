@@ -32,6 +32,25 @@ export const resolvers: IResolvers = {
       );
 
       return team;
+    },
+    teamCreate: async (_, { teamName }, { db, session }) => {
+      const loggedInUserIdObject = getObjectId(session.user.id);
+
+      const teamInsertResult = await db.collection('teams').insertOne({
+        name: teamName,
+        users: [loggedInUserIdObject]
+      });
+
+      await db.collection('users').updateOne(
+        { _id: loggedInUserIdObject },
+        {
+          $addToSet: {
+            teams: teamInsertResult.insertedId
+          }
+        }
+      );
+
+      return teamInsertResult.ops[0];
     }
   },
   User: {

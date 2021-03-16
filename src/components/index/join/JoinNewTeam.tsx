@@ -26,7 +26,6 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleJoinTeam = () => {
     request('/api/graphql', mutation, { teamId: textFieldRef.current?.value }).then(data => {
-      console.log(data.userAddTeam._id);
       Cookies.set(CookieName.TEAM_ID, data.userAddTeam._id);
       router.push('/app');
     });

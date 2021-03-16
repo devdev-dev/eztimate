@@ -1,5 +1,6 @@
 type Mutation {
   userAddTeam(teamId: String!): Team!
+  teamCreate(teamName: String!): Team!
 }
 
 type Query {

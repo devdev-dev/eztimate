@@ -1,30 +1,29 @@
-import { Avatar, Box, Button, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Avatar, IconButton, makeStyles, TextField, Typography } from '@material-ui/core';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
-import { CreateTeamMutation } from '../../../utils/mongodb/mongodb.actions';
+import React, { useRef } from 'react';
 import { CookieName } from '../../../utils/types';
-import Copyright from '../Copyright';
 
 export default function CreateNewTeam() {
   const classes = useStyles();
   const router = useRouter();
 
-  const createTeamMutation = useMutation(CreateTeamMutation, {
-    onSuccess: data => {
-      console.log(data);
-      Cookies.set(CookieName.TEAM_ID, data);
-      router.push('/app');
+  const mutation = gql`
+    mutation CreateTeam($teamName: String!) {
+      teamCreate(teamName: $teamName) {
+        _id
+      }
     }
-  });
+  `;
 
-  const { register, handleSubmit } = useForm();
-  const submitForm = data => {
-    createTeamMutation.mutate({
-      teamName: data.teamName
+  const textFieldRef = useRef<HTMLInputElement>(null);
+  const handleCreateTeam = () => {
+    request('/api/graphql', mutation, { teamName: textFieldRef.current?.value }).then(data => {
+      Cookies.set(CookieName.TEAM_ID, data.teamCreate._id);
+      router.push('/app');
     });
   };
 
@@ -36,30 +35,25 @@ export default function CreateNewTeam() {
       <Typography component="h1" variant="h5">
         Create a new team
       </Typography>
-      <form onSubmit={handleSubmit(submitForm)} className={classes.form}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          inputRef={register}
-          id="teamName"
-          label="Team Name"
-          name="teamName"
-          inputProps={{
-            autoComplete: 'off'
-          }}
-        />
-        <div className={classes.buttonProgressWrapper}>
-          <Button type="submit" fullWidth variant="contained" color="primary" disabled={createTeamMutation.isLoading}>
-            Create
-          </Button>
-          {createTeamMutation.isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-        </div>
-      </form>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
+
+      <TextField
+        className={classes.teamInput}
+        size="small"
+        margin="normal"
+        id="joinTeam"
+        variant="outlined"
+        placeholder="Join a new team (ID)"
+        fullWidth={true}
+        inputRef={textFieldRef}
+        autoComplete="off"
+        InputProps={{
+          endAdornment: (
+            <IconButton onClick={handleCreateTeam}>
+              <ArrowForwardIosIcon />
+            </IconButton>
+          )
+        }}
+      />
     </>
   );
 }
@@ -69,20 +63,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  buttonProgressWrapper: {
-    margin: theme.spacing(3, 0, 2),
-    position: 'relative',
-    width: '100%'
-  },
-  buttonProgress: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
+  teamInput: {
+    '& .MuiOutlinedInput-adornedEnd': {
+      paddingRight: 0
+    }
   }
 }));
