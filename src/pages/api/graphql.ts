@@ -10,13 +10,14 @@ const apolloServer = new ApolloServer({
       'request.credentials': 'include'
     }
   },
-  context: async ({ req }) => {
+  context: async ({ req, res }) => {
     const session = await getSession({ req });
     const { db } = await getDatabase();
 
     return {
       session,
-      db
+      db,
+      context: { req, res }
     };
   }
 });

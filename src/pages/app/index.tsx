@@ -1,25 +1,36 @@
+import { gql, useQuery } from '@apollo/client';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
-import { useQuery } from 'react-query';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Sidebar';
 import withAppLayout from '../../components/withAppLayout';
-import { TeamQuery, UserByTeamQuery } from '../../utils/mongodb/mongodb.actions';
-import { CookieName, UApp, UTeam, UUser } from '../../utils/types';
+import { CookieName, UApp } from '../../utils/types';
 
 export const AppContext = React.createContext<UApp>(undefined);
 
 const Dashboard = () => {
   const classes = useStyles();
 
-  const teamQuery = useQuery<UTeam[]>('team', TeamQuery);
-  const usersQuery = useQuery<UUser[]>('users', UserByTeamQuery);
+  const GET_USERS = gql`
+    query GetUsers {
+      activeTeam {
+        _id
+        name
+        users {
+          _id
+          email
+        }
+      }
+    }
+  `;
+
+  const { loading, error, data } = useQuery(GET_USERS);
 
   return (
-    <AppContext.Provider value={{ team: teamQuery.data ? teamQuery.data[0] : undefined, users: usersQuery.data }}>
+    <AppContext.Provider value={{ team: data?.activeTeam, users: data?.activeTeam.users }}>
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} lg={8} className={classes.parts}>
           <Estimate />

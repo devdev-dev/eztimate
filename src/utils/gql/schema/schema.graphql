@@ -5,6 +5,7 @@ type Mutation {
 
 type Query {
   loggedInUser: User
+  activeTeam: Team
 }
 
 type User {

@@ -1,11 +1,16 @@
+import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../mongodb/mongodb';
+import { CookieName } from '../types';
 
 export const resolvers: IResolvers = {
   Query: {
     async loggedInUser(parent, args, context) {
-      const loggedInUser = await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
-      return loggedInUser;
+      return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
+    },
+    activeTeam: async (parent, args, { db, context: { req, res } }) => {
+      const teamIdObject = getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID));
+      return await db.collection('teams').findOne({ _id: teamIdObject });
     }
   },
   Mutation: {

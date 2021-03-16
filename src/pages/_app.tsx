@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { Provider } from 'next-auth/client';
 import Head from 'next/head';
@@ -6,6 +7,11 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import theme from '../utils/mui/theme';
 
 const queryClient = new QueryClient();
+
+const apolloClient = new ApolloClient({
+  uri: '/api/graphql',
+  cache: new InMemoryCache()
+});
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -26,14 +32,16 @@ export default function MyApp(props) {
         <title>My page</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <Provider session={pageProps.session}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {getLayout(<Component {...pageProps} />)}
-          </ThemeProvider>
-        </Provider>
-      </QueryClientProvider>
+      <ApolloProvider client={apolloClient}>
+        <QueryClientProvider client={queryClient}>
+          <Provider session={pageProps.session}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              {getLayout(<Component {...pageProps} />)}
+            </ThemeProvider>
+          </Provider>
+        </QueryClientProvider>
+      </ApolloProvider>
       ,
     </>
   );
