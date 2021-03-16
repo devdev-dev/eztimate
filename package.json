@@ -21,7 +21,6 @@
     "@types/js-cookie": "^2.2.6",
     "@types/lodash": "^4.14.168",
     "apollo-server-micro": "^2.21.1",
-    "babel-plugin-import-graphql": "^2.8.1",
     "cookies": "^0.8.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
