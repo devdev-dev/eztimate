@@ -14,7 +14,7 @@ export const resolvers: IResolvers = {
     }
   },
   Mutation: {
-    userAddTeam: async (_, { teamId }, { db, session }) => {
+    userJoinTeam: async (_, { teamId }, { db, session }) => {
       const teamIdObject = getObjectId(teamId);
       const loggedInUserIdObject = getObjectId(session.user.id);
 

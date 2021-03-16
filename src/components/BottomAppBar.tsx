@@ -18,6 +18,7 @@ export default function BottomAppBar() {
 
   const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
+    Cookies.remove(CookieName.TEAM_ID);
     signOut();
     handleClose();
   };

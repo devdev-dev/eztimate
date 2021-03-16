@@ -1,7 +1,7 @@
+import { gql, useMutation } from '@apollo/client';
 import { Avatar, Box, IconButton, makeStyles, TextField } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
@@ -15,18 +15,20 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
 
-  const mutation = gql`
-    mutation AddUserToTeam($teamId: String!) {
-      userAddTeam(teamId: $teamId) {
+  const USER_JOIN_TEAM = gql`
+    mutation UserJoinTeam($teamId: String!) {
+      userJoinTeam(teamId: $teamId) {
         _id
       }
     }
   `;
 
+  const [userJoinTeam] = useMutation(USER_JOIN_TEAM);
+
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleJoinTeam = () => {
-    request('/api/graphql', mutation, { teamId: textFieldRef.current?.value }).then(data => {
-      Cookies.set(CookieName.TEAM_ID, data.userAddTeam._id);
+    userJoinTeam({ variables: { teamId: textFieldRef.current?.value } }).then(result => {
+      Cookies.set(CookieName.TEAM_ID, result.data.userJoinTeam._id);
       router.push('/app');
     });
   };

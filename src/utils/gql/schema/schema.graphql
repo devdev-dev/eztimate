@@ -1,5 +1,5 @@
 type Mutation {
-  userAddTeam(teamId: String!): Team!
+  userJoinTeam(teamId: String!): Team!
   teamCreate(teamName: String!): Team!
 }
 

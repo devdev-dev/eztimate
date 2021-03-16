@@ -1,35 +1,30 @@
+import { gql, useQuery } from '@apollo/client';
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
-import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import router from 'next/router';
 import React from 'react';
-import { useQuery } from 'react-query';
 import { CookieName } from '../../../utils/types';
 import UserAvatar from '../../shared/UserAvatar';
 
 export default function TeamHistory() {
   const classes = useStyles();
 
-  const { data } = useQuery('user', async () => {
-    const data = await request(
-      '/api/graphql',
-      gql`
-        query {
-          loggedInUser {
-            _id
-            teams {
-              _id
-              name
-              users {
-                email
-              }
-            }
+  const GET_LOGGED_IN_USER = gql`
+    query {
+      loggedInUser {
+        _id
+        teams {
+          _id
+          name
+          users {
+            email
           }
         }
-      `
-    );
-    return data;
-  });
+      }
+    }
+  `;
+
+  const { data } = useQuery(GET_LOGGED_IN_USER);
 
   const handleTeamSelect = teamId => {
     Cookies.set(CookieName.TEAM_ID, teamId);

@@ -1,57 +1,45 @@
 import { Avatar, Box, IconButton, makeStyles, TextField } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { gql, request } from 'graphql-request';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/router';
+import LockIcon from '@material-ui/icons/Lock';
+import { signIn } from 'next-auth/client';
 import React, { useRef } from 'react';
-import { CookieName } from '../../../utils/types';
 
-export default function CreateNewTeam() {
+export default function SignIn() {
   const classes = useStyles();
-  const router = useRouter();
-
-  const mutation = gql`
-    mutation CreateTeam($teamName: String!) {
-      teamCreate(teamName: $teamName) {
-        _id
-      }
-    }
-  `;
 
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const handleCreateTeam = () => {
-    request('/api/graphql', mutation, { teamName: textFieldRef.current?.value }).then(data => {
-      Cookies.set(CookieName.TEAM_ID, data.teamCreate._id);
-      router.push('/app');
-    });
+  const handleSignIn = () => {
+    signIn('email', { redirect: true, email: textFieldRef.current.value })
+      .then(data => {
+        console.log(JSON.stringify(data));
+      })
+      .catch(error => console.error(JSON.stringify(error)));
   };
 
   return (
-    <>
+    <form>
       <Box display="flex" alignItems="center">
         <Avatar className={classes.avatar}>
-          <AddIcon />
+          <LockIcon />
         </Avatar>
         <TextField
           className={classes.textField}
-          id="createTeam"
+          id="signIn"
           variant="outlined"
-          placeholder="Team Name"
-          label="Create a new team"
+          placeholder="Email Address"
+          label="Sign In to get started"
           fullWidth={true}
           inputRef={textFieldRef}
-          autoComplete="off"
           InputProps={{
             endAdornment: (
-              <IconButton onClick={handleCreateTeam}>
+              <IconButton onClick={handleSignIn}>
                 <ArrowForwardIosIcon />
               </IconButton>
             )
           }}
         />
       </Box>
-    </>
+    </form>
   );
 }
 
