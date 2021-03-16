@@ -42,7 +42,7 @@ export default function TeamHistory() {
         component="nav"
         subheader={
           <ListSubheader component="div" disableGutters>
-            History of Teams
+            Recently visited Teams
           </ListSubheader>
         }
         className={classes.root}

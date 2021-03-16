@@ -1,6 +1,6 @@
-import { Avatar, IconButton, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Avatar, Box, IconButton, makeStyles, TextField } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import LaunchIcon from '@material-ui/icons/Launch';
 import { gql, request } from 'graphql-request';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
@@ -29,41 +29,38 @@ export default function CreateNewTeam() {
 
   return (
     <>
-      <Avatar className={classes.avatar}>
-        <LaunchIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        Create a new team
-      </Typography>
-
-      <TextField
-        className={classes.teamInput}
-        size="small"
-        margin="normal"
-        id="joinTeam"
-        variant="outlined"
-        placeholder="Join a new team (ID)"
-        fullWidth={true}
-        inputRef={textFieldRef}
-        autoComplete="off"
-        InputProps={{
-          endAdornment: (
-            <IconButton onClick={handleCreateTeam}>
-              <ArrowForwardIosIcon />
-            </IconButton>
-          )
-        }}
-      />
+      <Box display="flex" alignItems="center">
+        <Avatar className={classes.avatar}>
+          <AddIcon />
+        </Avatar>
+        <TextField
+          className={classes.textField}
+          id="createTeam"
+          variant="outlined"
+          placeholder="Team Name"
+          label="Create a new team"
+          fullWidth={true}
+          inputRef={textFieldRef}
+          autoComplete="off"
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={handleCreateTeam}>
+                <ArrowForwardIosIcon />
+              </IconButton>
+            )
+          }}
+        />
+      </Box>
     </>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   avatar: {
-    margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
-  teamInput: {
+  textField: {
+    margin: theme.spacing(2),
     '& .MuiOutlinedInput-adornedEnd': {
       paddingRight: 0
     }

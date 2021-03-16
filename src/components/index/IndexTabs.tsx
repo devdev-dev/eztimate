@@ -1,30 +1,28 @@
-import { Container } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { useSession } from 'next-auth/client';
 import React from 'react';
-import CreateNewTeam from './create/CreteNewTeam';
-import JoinNewTeam from './join/JoinNewTeam';
-import TeamHistory from './join/TeamHistory';
 import SignInOut from './SignInOut';
+import CreateNewTeam from './tabs/CreteNewTeam';
+import JoinNewTeam from './tabs/JoinNewTeam';
+import TeamHistory from './tabs/TeamHistory';
+
 export interface IndexTabsProps {
   teamId: string;
 }
 
 export default function IndexTabs(props: IndexTabsProps) {
-  const [session, loading] = useSession();
+  const [session] = useSession();
   const classes = useStyles();
-  const theme = useTheme();
 
-  const [value, setValue] = React.useState(!session ? 2 : props.teamId ? 1 : 0);
+  const [value, setValue] = React.useState(!session ? 1 : props.teamId ? 2 : 0);
 
   const handleChange = (_, newValue: number) => {
     setValue(newValue);
@@ -34,26 +32,21 @@ export default function IndexTabs(props: IndexTabsProps) {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs className={classes.tabs} value={value} onChange={handleChange} variant="fullWidth" aria-label="index-tabs" centered>
-          <Tab icon={<GroupIcon />} label="Create Team" {...a11yProps(0)} disabled={!session} />
-          <Tab icon={<GroupAddIcon />} label="Join Team" {...a11yProps(1)} disabled={!session} />
-          <Tab icon={session ? <LockOpenIcon /> : <LockIcon />} label="Profile" {...a11yProps(2)} />
+          <Tab icon={<DashboardIcon />} label="Home" {...a11yProps(0)} />
+          <Tab icon={<GroupIcon />} label="Eztimate" {...a11yProps(1)} disabled={!session} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Container className={classes.joinTab}>
-          <CreateNewTeam />
-        </Container>
+        <SignInOut />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Container className={classes.joinTab}>
-          <JoinNewTeam teamId={props.teamId} />
-          <TeamHistory />
-        </Container>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Container className={classes.joinTab}>
-          <SignInOut />
-        </Container>
+        <Typography component="h1" variant="h5">
+          Create or join your team
+        </Typography>
+        <CreateNewTeam />
+        <Divider />
+        <JoinNewTeam teamId={props.teamId} />
+        <TeamHistory />
       </TabPanel>
     </div>
   );
@@ -95,10 +88,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiTab-root': {
       minWidth: 100
     }
-  },
-  joinTab: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
   }
 }));
