@@ -113,11 +113,6 @@ const Estimate = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="This is the beginning of your estimation history! Create a new story to start estimating." />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
           </ListItem>
         </List>
       </Box>
