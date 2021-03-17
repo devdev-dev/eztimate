@@ -10,7 +10,17 @@ const queryClient = new QueryClient();
 
 const apolloClient = new ApolloClient({
   uri: '/api/graphql',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore'
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all'
+    }
+  }
 });
 
 export default function MyApp(props) {
