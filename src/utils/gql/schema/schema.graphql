@@ -1,6 +1,9 @@
 type Mutation {
   userJoinTeam(teamId: String!): Team!
+
   teamCreate(teamName: String!): Team!
+
+  issueDelete(issueId: String!): Boolean
 }
 
 type Query {

@@ -6,25 +6,19 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction,
   ListItemText,
   makeStyles,
   TextField,
   Theme,
-  Tooltip,
   Typography
 } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ErrorIcon from '@material-ui/icons/Error';
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useContext, useRef } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { AppContext } from '../../pages/app';
-import { CreateIssueMutation, IssueQuery, SetActiveIssuesMutation } from '../../utils/mongodb/mongodb.actions';
-import { IssueState } from '../../utils/types';
+import { CreateIssueMutation, IssueQuery } from '../../utils/mongodb/mongodb.actions';
+import IssueListItem from './IssueListItem';
 
 const Estimate = () => {
   const classes = useStyles();
@@ -32,7 +26,6 @@ const Estimate = () => {
 
   const issueQuery = useQuery('issues', IssueQuery);
 
-  const activeIssueMutation = useMutation(SetActiveIssuesMutation);
   const createIssueMutation = useMutation(CreateIssueMutation, {
     onSuccess: async () => {
       issueQuery.refetch();
@@ -43,13 +36,6 @@ const Estimate = () => {
   const handleAddIssue = () => {
     createIssueMutation.mutate({
       issueName: textFieldRef.current?.value
-    });
-  };
-
-  const handleSetActiveIssue = (issueId: string) => {
-    console.log(issueId);
-    activeIssueMutation.mutate({
-      issueId
     });
   };
 
@@ -82,28 +68,7 @@ const Estimate = () => {
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <List component="nav">
           {issueQuery.data?.map((issue, issueIndex) => (
-            <>
-              <ListItem key={issueIndex} button disableGutters>
-                <ListItemAvatar>
-                  <Tooltip title={issue.state}>
-                    <Avatar className={classes.issueDot}>
-                      <>
-                        {issue.state === IssueState.OPEN && <RadioButtonUncheckedIcon />}
-                        {issue.state === IssueState.ESTIMATED && <CheckIcon />}
-                        {issue.state === IssueState.UNFINISHED && <ErrorIcon />}
-                      </>
-                    </Avatar>
-                  </Tooltip>
-                </ListItemAvatar>
-                <ListItemText primary={issue.name} secondary={issue._id} />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <div className={classes.vertical}></div>
-            </>
+            <IssueListItem issue={issue} key={issueIndex} />
           ))}
 
           <ListItem disableGutters>
@@ -154,6 +119,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiOutlinedInput-adornedEnd': {
         paddingRight: 0
       }
+    },
+    typography: {
+      padding: theme.spacing(2)
     }
   })
 );

@@ -56,6 +56,10 @@ export const resolvers: IResolvers = {
       );
 
       return teamInsertResult.ops[0];
+    },
+    issueDelete: async (_, { issueId }, { db }) => {
+      await db.collection('issues').deleteOne({ _id: getObjectId(issueId) });
+      return true;
     }
   },
   User: {
