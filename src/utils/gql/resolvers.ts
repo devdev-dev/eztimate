@@ -1,7 +1,7 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../mongodb/mongodb';
-import { CookieName } from '../types';
+import { CookieName, IssueState } from '../types';
 
 export const resolvers: IResolvers = {
   Query: {
@@ -56,6 +56,26 @@ export const resolvers: IResolvers = {
 
       return teamInsertResult.ops[0];
     },
+    issueCreate: async (_, { issueName }, { db, context: { req, res } }) => {
+      const issueInsertResult = await db.collection('issues').insertOne({
+        name: issueName,
+        state: IssueState.OPEN,
+        dateCreated: Date.now()
+      });
+
+      if (issueInsertResult.insertedId) {
+        await db.collection('teams').updateOne(
+          { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
+          {
+            $addToSet: {
+              issues: issueInsertResult.insertedId
+            }
+          }
+        );
+      }
+
+      return issueInsertResult.ops[0];
+    },
     issueDelete: async (_, { issueId }, { db }) => {
       await db.collection('issues').deleteOne({ _id: getObjectId(issueId) });
       return true;
@@ -73,8 +93,8 @@ export const resolvers: IResolvers = {
     }
   },
   User: {
-    async teams(parent, args, context) {
-      const teams = await context.db
+    async teams(parent, args, { db }) {
+      const teams = await db
         .collection('teams')
         .find({ _id: { $in: parent.teams } })
         .toArray();
@@ -83,13 +103,22 @@ export const resolvers: IResolvers = {
     }
   },
   Team: {
-    async users(parent, args, context) {
-      const users = await context.db
+    async users(parent, args, { db }) {
+      const users = await db
         .collection('users')
         .find({ _id: { $in: parent.users } })
         .toArray();
 
       return users;
+    },
+    async issues(parent, args, { db }) {
+      const issues = await db
+        .collection('issues')
+        .find({ _id: { $in: parent.issues } })
+        .sort({ dateCreated: -1 })
+        .toArray();
+
+      return issues;
     }
   }
 };

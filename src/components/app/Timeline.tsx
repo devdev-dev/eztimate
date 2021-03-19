@@ -1,4 +1,4 @@
-import { gql, useQuery as useApolloQuery } from '@apollo/client';
+import { gql, useMutation, useQuery as useApolloQuery } from '@apollo/client';
 import {
   Avatar,
   Box,
@@ -16,42 +16,46 @@ import {
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import React, { useRef } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { CreateIssueMutation, IssueQuery } from '../../utils/mongodb/mongodb.actions';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
 
-  const { data } = useApolloQuery(gql`
+  const { data, refetch } = useApolloQuery(gql`
     query {
       activeTeam {
+        _id
         name
         estimatedIssue
+        issues {
+          _id
+          name
+          state
+        }
       }
     }
   `);
 
-  const issueQuery = useQuery('issues', IssueQuery);
-
-  const createIssueMutation = useMutation(CreateIssueMutation, {
-    onSuccess: async () => {
-      issueQuery.refetch();
+  const [issueCreate] = useMutation(gql`
+    mutation IssueCreate($issueId: String!) {
+      issueCreate(issueId: $issueId) {
+        _id
+      }
     }
-  });
+  `);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {
-    createIssueMutation.mutate({
-      issueName: textFieldRef.current?.value
-    });
+    issueCreate({ variables: { issueId: textFieldRef.current?.value } }).then(i => refetch());
   };
+
+  console.log(data);
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
         <Typography component="h2" variant="h5" gutterBottom>
-          {`Timeline ${data?.activeTeam?.name ? 'of ' + data?.activeTeam?.name : ''}`}
+          {`Timeline ${data?.activeTeam.name ? 'of ' + data?.activeTeam.name : ''}`}
         </Typography>
       </Box>
       <Box flexGrow={0} className={classes.buttons}>
@@ -75,8 +79,8 @@ const Timeline = () => {
       </Box>
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <List component="nav">
-          {issueQuery.data?.map((issue, issueIndex) => (
-            <IssueListItem issue={issue} selected={issue._id === data?.activeTeam.estimatedIssue} key={issueIndex} />
+          {data?.activeTeam.issues.map((issue, issueIndex) => (
+            <IssueListItem issue={issue} selected={issue?._id === data?.activeTeam.estimatedIssue} key={issueIndex} />
           ))}
 
           <ListItem disableGutters>
