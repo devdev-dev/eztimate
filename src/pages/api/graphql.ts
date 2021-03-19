@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro';
 import { getSession } from 'next-auth/client';
-import schema from '../../utils/gql/schema';
+import schema from '../../apollo/schema';
 import getDatabase from '../../utils/mongodb/mongodb';
 
 const apolloServer = new ApolloServer({

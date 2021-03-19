@@ -10,14 +10,15 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
 import React from 'react';
+import { GetUsers } from '../../apollo/__generated__/GetUsers';
 import { CookieName } from '../../utils/types';
 import UserAvatar from '../shared/UserAvatar';
-import { GET_TEAM_USERS_QUERY } from './app.gql';
+import { GET_TEAM_USERS_QUERY as GET_USERS } from './app.gql';
 
 export default function UserPanel() {
   const classes = useStyles();
 
-  const { data } = useQuery(GET_TEAM_USERS_QUERY);
+  const { data } = useQuery<GetUsers>(GET_USERS);
 
   const [open, setOpen] = React.useState(false);
 

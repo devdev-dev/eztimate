@@ -5,14 +5,15 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
+import { CreateTeam } from '../../../apollo/__generated__/CreateTeam';
 import { CookieName } from '../../../utils/types';
-import { USER_CREATE_TEAM_MUTATION } from '../index.gql';
+import { TEAM_CREATE_MUTATION } from '../index.gql';
 
 export default function CreateNewTeam() {
   const classes = useStyles();
   const router = useRouter();
 
-  const [createTeam] = useMutation(USER_CREATE_TEAM_MUTATION);
+  const [createTeam] = useMutation<CreateTeam>(TEAM_CREATE_MUTATION);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleCreateTeam = () => {

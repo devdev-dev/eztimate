@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@materi
 import Cookies from 'js-cookie';
 import router from 'next/router';
 import React from 'react';
+import { LoggedInUser } from '../../../apollo/__generated__/LoggedInUser';
 import { CookieName } from '../../../utils/types';
 import UserAvatar from '../../shared/UserAvatar';
 import { LOGGED_IN_USER_QUERY } from '../index.gql';
@@ -10,8 +11,7 @@ import { LOGGED_IN_USER_QUERY } from '../index.gql';
 export default function TeamHistory() {
   const classes = useStyles();
 
-  const { data } = useQuery(LOGGED_IN_USER_QUERY);
-
+  const { data } = useQuery<LoggedInUser>(LOGGED_IN_USER_QUERY);
   const handleTeamSelect = teamId => {
     Cookies.set(CookieName.TEAM_ID, teamId);
     router.push('/app');

@@ -18,6 +18,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
+import { IssueDelete } from '../../apollo/__generated__/IssueDelete';
+import { IssueEstimate } from '../../apollo/__generated__/IssueEstimate';
 import { IssueState } from '../../utils/types';
 import { ISSUE_DELETE_MUTATION, ISSUE_ESTIMATE_MUTATION } from './app.gql';
 
@@ -31,13 +33,13 @@ export type IssueListItemProps = {
 export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const classes = useStyles();
 
-  const [issueDelete] = useMutation(ISSUE_DELETE_MUTATION);
+  const [issueDelete] = useMutation<IssueDelete>(ISSUE_DELETE_MUTATION);
   const handleDeleteIssue = () => {
     setOpen(false);
     issueDelete({ variables: { issueId: issue._id } });
   };
 
-  const [issueEstimate] = useMutation(ISSUE_ESTIMATE_MUTATION);
+  const [issueEstimate] = useMutation<IssueEstimate>(ISSUE_ESTIMATE_MUTATION);
   const handleIssueEstimate = () => {
     setOpen(false);
     issueEstimate({ variables: { issueId: issue._id } });

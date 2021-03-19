@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const USER_CREATE_TEAM_MUTATION = gql`
+export const TEAM_CREATE_MUTATION = gql`
   mutation CreateTeam($teamName: String!) {
     teamCreate(teamName: $teamName) {
       _id

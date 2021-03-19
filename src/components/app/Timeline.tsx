@@ -16,15 +16,17 @@ import {
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import React, { useRef } from 'react';
+import { ActiveTeamQuery } from '../../apollo/__generated__/ActiveTeamQuery';
+import { IssueCreate } from '../../apollo/__generated__/IssueCreate';
 import { ACTIVE_TEAM_QUERY, ISSUE_CREATE_MUTATION } from './app.gql';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery(ACTIVE_TEAM_QUERY);
+  const { data, refetch } = useQuery<ActiveTeamQuery>(ACTIVE_TEAM_QUERY);
 
-  const [issueCreate] = useMutation(ISSUE_CREATE_MUTATION);
+  const [issueCreate] = useMutation<IssueCreate>(ISSUE_CREATE_MUTATION);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {
