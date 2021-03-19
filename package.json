@@ -11,7 +11,7 @@
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
     "clean:gql": "rm -rf ./.next/.cache/next-babel-loader",
-    "codegen": "npx apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --localSchemaFile=./src/apollo/schema.graphql --outputFlat --addTypename",
+    "codegen": "npx apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --outputFlat",
     "precodegen": "rimraf \"**/__generated__\"",
     "postcodegen": "prettier --write src/**/__generated__/**/*.ts"
   },

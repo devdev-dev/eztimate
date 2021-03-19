@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const ACTIVE_TEAM_QUERY = gql`
-  query ActiveTeamQuery {
+export const GET_ACTIVE_TEAM = gql`
+  query GetActiveTeam {
     activeTeam {
       _id
       name
