@@ -24,30 +24,40 @@ const ITEM_HEIGHT = 48;
 
 export type IssueListItemProps = {
   issue: any;
+  selected: boolean;
 };
 
-export default function IssueListItem({ issue }: IssueListItemProps) {
+export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const classes = useStyles();
 
-  const ISSUE_DELETE = gql`
+  const [issueDelete] = useMutation(gql`
     mutation IssueDelete($issueId: String!) {
       issueDelete(issueId: $issueId)
     }
-  `;
-
-  const [issueDelete] = useMutation(ISSUE_DELETE);
+  `);
   const handleDeleteIssue = () => {
+    setOpen(false);
     issueDelete({ variables: { issueId: issue._id } });
+  };
+
+  const [issueEstimate] = useMutation(gql`
+    mutation IssueEstimate($issueId: String!) {
+      issueEstimate(issueId: $issueId) {
+        _id
+      }
+    }
+  `);
+  const handleIssueEstimate = () => {
+    setOpen(false);
+    issueEstimate({ variables: { issueId: issue._id } });
   };
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
-  const handleOpenMenu = () => setOpen(true);
-  const handleCloseMenu = () => setOpen(false);
 
   return (
     <>
-      <ListItem button disableGutters>
+      <ListItem button disableGutters selected={selected}>
         <ListItemAvatar>
           <Tooltip title={issue.state}>
             <Avatar className={classes.issueAvatar}>
@@ -61,13 +71,13 @@ export default function IssueListItem({ issue }: IssueListItemProps) {
         </ListItemAvatar>
         <ListItemText primary={issue.name} secondary={issue._id} />
         <ListItemSecondaryAction>
-          <IconButton edge="end" onClick={handleOpenMenu} ref={moreButtonRef}>
+          <IconButton edge="end" onClick={() => setOpen(true)} ref={moreButtonRef}>
             <MoreVertIcon />
           </IconButton>
           <Menu
             anchorEl={moreButtonRef.current}
             open={open}
-            onClose={handleCloseMenu}
+            onClose={() => setOpen(false)}
             PaperProps={{
               style: {
                 maxHeight: ITEM_HEIGHT * 4.5,
@@ -76,7 +86,7 @@ export default function IssueListItem({ issue }: IssueListItemProps) {
             }}
             keepMounted
           >
-            <MenuItem onClick={handleCloseMenu}>Estimate</MenuItem>
+            <MenuItem onClick={handleIssueEstimate}>Estimate</MenuItem>
             <MenuItem onClick={handleDeleteIssue}>Delete</MenuItem>
           </Menu>
         </ListItemSecondaryAction>

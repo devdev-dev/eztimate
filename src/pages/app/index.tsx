@@ -19,6 +19,7 @@ const Dashboard = () => {
       activeTeam {
         _id
         name
+        estimatedIssue
         users {
           _id
           email

@@ -4,6 +4,7 @@ type Mutation {
   teamCreate(teamName: String!): Team!
 
   issueDelete(issueId: String!): Boolean
+  issueEstimate(issueId: String!): Issue!
 }
 
 type Query {
@@ -19,6 +20,14 @@ type User {
 
 type Team {
   _id: String!
-  name: String
+  name: String!
   users: [User]!
+  estimatedIssue: String
+}
+
+type Issue {
+  _id: String!
+  name: String!
+  state: String!
+  dateCreated: String!
 }

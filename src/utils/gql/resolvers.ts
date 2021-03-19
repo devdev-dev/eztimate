@@ -9,8 +9,7 @@ export const resolvers: IResolvers = {
       return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
     },
     activeTeam: async (parent, args, { db, context: { req, res } }) => {
-      const teamIdObject = getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID));
-      return await db.collection('teams').findOne({ _id: teamIdObject });
+      return await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
     }
   },
   Mutation: {
@@ -60,6 +59,17 @@ export const resolvers: IResolvers = {
     issueDelete: async (_, { issueId }, { db }) => {
       await db.collection('issues').deleteOne({ _id: getObjectId(issueId) });
       return true;
+    },
+    issueEstimate: async (_, { issueId }, { db, context: { req, res } }) => {
+      const { value: issue } = await db.collection('teams').findOneAndUpdate(
+        { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
+        {
+          $set: {
+            estimatedIssue: getObjectId(issueId)
+          }
+        }
+      );
+      return issue;
     }
   },
   User: {

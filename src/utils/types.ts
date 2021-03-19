@@ -14,6 +14,8 @@ export interface UApp {
 export interface UTeam {
   id: string;
   name: string;
+  dateCreated: number;
+  estimatedIssue: string;
 }
 export interface UUser {
   id: string;

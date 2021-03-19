@@ -39,6 +39,9 @@ const Estimate = () => {
     });
   };
 
+  console.log(issueQuery.data);
+  console.log(context.team);
+
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
@@ -68,7 +71,7 @@ const Estimate = () => {
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <List component="nav">
           {issueQuery.data?.map((issue, issueIndex) => (
-            <IssueListItem issue={issue} key={issueIndex} />
+            <IssueListItem issue={issue} selected={issue._id === context.team.estimatedIssue} key={issueIndex} />
           ))}
 
           <ListItem disableGutters>
