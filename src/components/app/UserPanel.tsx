@@ -1,3 +1,4 @@
+import { gql, useQuery } from '@apollo/client';
 import { createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EmailIcon from '@material-ui/icons/Email';
@@ -8,19 +9,27 @@ import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
-import React, { useContext } from 'react';
-import { AppContext } from '../../pages/app';
+import React from 'react';
 import { CookieName } from '../../utils/types';
 import UserAvatar from '../shared/UserAvatar';
 
 export default function UserPanel() {
   const classes = useStyles();
-  const context = useContext(AppContext);
+
+  const { data } = useQuery(gql`
+    query GetUsers {
+      activeTeam {
+        users {
+          _id
+          email
+        }
+      }
+    }
+  `);
 
   const [open, setOpen] = React.useState(false);
 
   const handleEMail = () => {};
-
   const handleShare = () => {};
 
   return (
@@ -31,7 +40,7 @@ export default function UserPanel() {
         </Typography>
       </Grid>
       <Grid item xs className={classes.avatars}>
-        {context.users?.map((user, userIndex) => (
+        {data?.activeTeam.users?.map((user, userIndex) => (
           <UserAvatar key={userIndex} user={user} />
         ))}
         <div className={classes.invite}>

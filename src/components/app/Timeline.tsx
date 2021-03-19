@@ -1,3 +1,4 @@
+import { gql, useQuery as useApolloQuery } from '@apollo/client';
 import {
   Avatar,
   Box,
@@ -14,15 +15,22 @@ import {
 } from '@material-ui/core';
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { AppContext } from '../../pages/app';
 import { CreateIssueMutation, IssueQuery } from '../../utils/mongodb/mongodb.actions';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
-  const context = useContext(AppContext);
+
+  const { data } = useApolloQuery(gql`
+    query {
+      activeTeam {
+        name
+        estimatedIssue
+      }
+    }
+  `);
 
   const issueQuery = useQuery('issues', IssueQuery);
 
@@ -39,14 +47,11 @@ const Timeline = () => {
     });
   };
 
-  console.log(issueQuery.data);
-  console.log(context.team);
-
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
         <Typography component="h2" variant="h5" gutterBottom>
-          {`Timeline ${context.team?.name ? 'of ' + context.team?.name : ''}`}
+          {`Timeline ${data?.activeTeam?.name ? 'of ' + data?.activeTeam?.name : ''}`}
         </Typography>
       </Box>
       <Box flexGrow={0} className={classes.buttons}>
@@ -71,7 +76,7 @@ const Timeline = () => {
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <List component="nav">
           {issueQuery.data?.map((issue, issueIndex) => (
-            <IssueListItem issue={issue} selected={issue._id === context.team.estimatedIssue} key={issueIndex} />
+            <IssueListItem issue={issue} selected={issue._id === data?.activeTeam.estimatedIssue} key={issueIndex} />
           ))}
 
           <ListItem disableGutters>

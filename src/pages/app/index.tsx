@@ -1,4 +1,3 @@
-import { gql, useQuery } from '@apollo/client';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
@@ -7,31 +6,15 @@ import React from 'react';
 import Estimate from '../../components/app/Estimate';
 import Sidebar from '../../components/app/Timeline';
 import withAppLayout from '../../components/withAppLayout';
-import { CookieName, UApp } from '../../utils/types';
+import { CookieName } from '../../utils/types';
 
-export const AppContext = React.createContext<UApp>(undefined);
+export const AppContext = React.createContext(undefined);
 
 const Dashboard = () => {
   const classes = useStyles();
 
-  const GET_USERS = gql`
-    query GetUsers {
-      activeTeam {
-        _id
-        name
-        estimatedIssue
-        users {
-          _id
-          email
-        }
-      }
-    }
-  `;
-
-  const { loading, error, data } = useQuery(GET_USERS);
-
   return (
-    <AppContext.Provider value={{ team: data?.activeTeam, users: data?.activeTeam.users }}>
+    <AppContext.Provider value={{}}>
       <Grid container component="main" className={classes.root}>
         <Grid item xs={12} sm={8} lg={8} className={classes.parts}>
           <Estimate />
