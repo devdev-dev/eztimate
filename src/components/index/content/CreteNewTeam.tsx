@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Avatar, Box, IconButton, makeStyles, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -6,20 +6,13 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
 import { CookieName } from '../../../utils/types';
+import { USER_CREATE_TEAM_MUTATION } from '../index.gql';
 
 export default function CreateNewTeam() {
   const classes = useStyles();
   const router = useRouter();
 
-  const USER_CREATE_TEAM = gql`
-    mutation CreateTeam($teamName: String!) {
-      teamCreate(teamName: $teamName) {
-        _id
-      }
-    }
-  `;
-
-  const [createTeam] = useMutation(USER_CREATE_TEAM);
+  const [createTeam] = useMutation(USER_CREATE_TEAM_MUTATION);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleCreateTeam = () => {

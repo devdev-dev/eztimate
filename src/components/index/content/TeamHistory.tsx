@@ -1,30 +1,16 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { List, ListItem, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import Cookies from 'js-cookie';
 import router from 'next/router';
 import React from 'react';
 import { CookieName } from '../../../utils/types';
 import UserAvatar from '../../shared/UserAvatar';
+import { LOGGED_IN_USER_QUERY } from '../index.gql';
 
 export default function TeamHistory() {
   const classes = useStyles();
 
-  const GET_LOGGED_IN_USER = gql`
-    query {
-      loggedInUser {
-        _id
-        teams {
-          _id
-          name
-          users {
-            email
-          }
-        }
-      }
-    }
-  `;
-
-  const { data } = useQuery(GET_LOGGED_IN_USER);
+  const { data } = useQuery(LOGGED_IN_USER_QUERY);
 
   const handleTeamSelect = teamId => {
     Cookies.set(CookieName.TEAM_ID, teamId);

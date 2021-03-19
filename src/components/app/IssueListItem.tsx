@@ -1,17 +1,17 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
-    Avatar,
-    createStyles,
-    IconButton,
-    ListItem,
-    ListItemAvatar,
-    ListItemSecondaryAction,
-    ListItemText,
-    makeStyles,
-    Menu,
-    MenuItem,
-    Theme,
-    Tooltip
+  Avatar,
+  createStyles,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Theme,
+  Tooltip
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -19,6 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
 import { IssueState } from '../../utils/types';
+import { ISSUE_DELETE_MUTATION, ISSUE_ESTIMATE_MUTATION } from './app.gql';
 
 const ITEM_HEIGHT = 48;
 
@@ -30,23 +31,13 @@ export type IssueListItemProps = {
 export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const classes = useStyles();
 
-  const [issueDelete] = useMutation(gql`
-    mutation IssueDelete($issueId: String!) {
-      issueDelete(issueId: $issueId)
-    }
-  `);
+  const [issueDelete] = useMutation(ISSUE_DELETE_MUTATION);
   const handleDeleteIssue = () => {
     setOpen(false);
     issueDelete({ variables: { issueId: issue._id } });
   };
 
-  const [issueEstimate] = useMutation(gql`
-    mutation IssueEstimate($issueId: String!) {
-      issueEstimate(issueId: $issueId) {
-        _id
-      }
-    }
-  `);
+  const [issueEstimate] = useMutation(ISSUE_ESTIMATE_MUTATION);
   const handleIssueEstimate = () => {
     setOpen(false);
     issueEstimate({ variables: { issueId: issue._id } });

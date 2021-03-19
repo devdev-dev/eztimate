@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EmailIcon from '@material-ui/icons/Email';
@@ -12,20 +12,12 @@ import Cookies from 'js-cookie';
 import React from 'react';
 import { CookieName } from '../../utils/types';
 import UserAvatar from '../shared/UserAvatar';
+import { GET_TEAM_USERS_QUERY } from './app.gql';
 
 export default function UserPanel() {
   const classes = useStyles();
 
-  const { data } = useQuery(gql`
-    query GetUsers {
-      activeTeam {
-        users {
-          _id
-          email
-        }
-      }
-    }
-  `);
+  const { data } = useQuery(GET_TEAM_USERS_QUERY);
 
   const [open, setOpen] = React.useState(false);
 

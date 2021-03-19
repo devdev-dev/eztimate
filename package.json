@@ -11,8 +11,8 @@
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
     "clean:gql": "rm -rf ./.next/.cache/next-babel-loader",
+    "codegen": "npx apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --localSchemaFile=./src/apollo/schema.graphql --outputFlat",
     "precodegen": "rimraf \"**/__generated__\"",
-    "codegen": "apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --localSchemaFile=./src/apollo/meisterplan.schema.json --outputFlat",
     "postcodegen": "prettier --write src/**/__generated__/**/*.ts"
   },
   "dependencies": {
@@ -43,6 +43,7 @@
     "@types/react": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
+    "apollo-codegen": "^0.20.2",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-config-standard": "^16.0.2",
