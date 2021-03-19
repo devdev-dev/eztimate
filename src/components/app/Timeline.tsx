@@ -20,7 +20,7 @@ import { AppContext } from '../../pages/app';
 import { CreateIssueMutation, IssueQuery } from '../../utils/mongodb/mongodb.actions';
 import IssueListItem from './IssueListItem';
 
-const Estimate = () => {
+const Timeline = () => {
   const classes = useStyles();
   const context = useContext(AppContext);
 
@@ -129,4 +129,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default Estimate;
+export default Timeline;

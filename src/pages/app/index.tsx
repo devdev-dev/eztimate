@@ -5,7 +5,7 @@ import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
 import Estimate from '../../components/app/Estimate';
-import Sidebar from '../../components/app/Sidebar';
+import Sidebar from '../../components/app/Timeline';
 import withAppLayout from '../../components/withAppLayout';
 import { CookieName, UApp } from '../../utils/types';
 
