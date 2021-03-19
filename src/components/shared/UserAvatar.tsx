@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   userAvatar: {
+    marginTop: theme.spacing(1.5),
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(-2),
     border: '3px solid white'

@@ -16,10 +16,10 @@ const Dashboard = () => {
   return (
     <AppContext.Provider value={{}}>
       <Grid container component="main" className={classes.root}>
-        <Grid item xs={12} sm={8} lg={8} className={classes.parts}>
+        <Grid item sm={12} md={8} lg={8} className={classes.parts}>
           <Estimate />
         </Grid>
-        <Grid item xs={12} sm={4} lg={3} className={classes.parts} component={Paper} elevation={6} square>
+        <Grid item sm={12} md={4} lg={3} className={classes.parts} component={Paper} elevation={6} square>
           <Sidebar />
         </Grid>
       </Grid>

@@ -1,25 +1,32 @@
-import { createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import EmailIcon from '@material-ui/icons/Email';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import { Avatar, Box, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ShareIcon from '@material-ui/icons/Share';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useGetUsersQuery } from '../../apollo/types.grapqhl';
 import { CookieName } from '../../utils/types';
 import UserAvatar from '../shared/UserAvatar';
+
+const ITEM_HEIGHT = 48;
 
 export default function UserPanel() {
   const classes = useStyles();
 
   const { data } = useGetUsersQuery();
 
-  const [open, setOpen] = React.useState(false);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
 
+  const handleCopy = () => {
+    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+    const el = document.createElement('textarea');
+    el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+
+    setOpen(false);
+  };
   const handleEMail = () => {};
   const handleShare = () => {};
 
@@ -34,35 +41,32 @@ export default function UserPanel() {
         {data?.activeTeam.users?.map((user, userIndex) => (
           <UserAvatar key={userIndex} user={user} />
         ))}
-        <div className={classes.invite}>
-          <SpeedDial
-            ariaLabel="ShareSpeedDial"
-            FabProps={{ size: 'small' }}
-            className={classes.speedDial}
-            icon={<SpeedDialIcon icon={<PersonAddIcon />} openIcon={<CloseIcon />} />}
-            onClick={() => setOpen(!open)}
-            onClose={() => setOpen(false)}
+        <Box className={classes.inviteButton}>
+          <IconButton onClick={() => setOpen(true)} ref={moreButtonRef}>
+            <Avatar>
+              <PersonAddIcon />
+            </Avatar>
+          </IconButton>
+          <Menu
+            anchorEl={moreButtonRef.current}
             open={open}
-            direction="down"
+            onClose={() => setOpen(false)}
+            PaperProps={{
+              style: {
+                maxHeight: ITEM_HEIGHT * 4.5,
+                width: '20ch'
+              }
+            }}
+            keepMounted
           >
-            <SpeedDialAction key="Copy" icon={<FileCopyIcon />} tooltipTitle="Copy" onClick={handleCopy} />
-            <SpeedDialAction key="EMail" icon={<EmailIcon />} tooltipTitle="EMail" onClick={handleEMail} />
-            <SpeedDialAction key="Share" icon={<ShareIcon />} tooltipTitle="Share" onClick={handleShare} />
-          </SpeedDial>
-        </div>
+            <MenuItem onClick={handleCopy}>Copy Link</MenuItem>
+            <MenuItem onClick={handleEMail}>Send Email</MenuItem>
+            <MenuItem onClick={handleShare}>Share with ...</MenuItem>
+          </Menu>
+        </Box>
       </Grid>
     </Grid>
   );
-}
-
-function handleCopy() {
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
-  const el = document.createElement('textarea');
-  el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,16 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-end'
     },
-    avatar: {
-      marginRight: theme.spacing(1),
-      marginLeft: theme.spacing(-2),
-      border: '3px solid white'
-    },
-    invite: {
-      height: 40,
-      width: 40,
-      position: 'relative'
-    },
+    inviteButton: {},
     speedDial: {
       position: 'absolute',
       '& button': {
