@@ -1,7 +1,7 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
-import { getObjectId } from '../mongodb/mongodb';
-import { CookieName, IssueState } from '../types';
+import { getObjectId } from '../utils/mongodb/mongodb';
+import { CookieName, IssueState } from '../utils/types';
 
 export const resolvers: IResolvers = {
   Query: {

@@ -10,7 +10,10 @@
     "prettier:write": "npx prettier --write \"**/*.{ts,tsx,json}\"",
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
-    "clean:gql": "rm -rf ./.next/.cache/next-babel-loader"
+    "clean:gql": "rm -rf ./.next/.cache/next-babel-loader",
+    "precodegen": "rimraf \"**/__generated__\"",
+    "codegen": "apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --localSchemaFile=./src/apollo/meisterplan.schema.json --outputFlat",
+    "postcodegen": "prettier --write src/**/__generated__/**/*.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
