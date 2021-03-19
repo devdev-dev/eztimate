@@ -34,4 +34,4 @@ yarn-error.log*
 .vercel
 
 # grapqhl
-/src/apollo/__generated__
+/src/apollo/types.grapqhl.ts

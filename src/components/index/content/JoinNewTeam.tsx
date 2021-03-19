@@ -1,13 +1,11 @@
-import { useMutation } from '@apollo/client';
 import { Avatar, Box, IconButton, makeStyles, TextField } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef } from 'react';
-import { UserJoinTeam } from '../../../apollo/__generated__/UserJoinTeam';
+import { useUserJoinTeamMutation } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils/types';
-import { USER_JOIN_TEAM_MUTATION } from '../index.gql';
 
 export interface JoinSessionProps {
   teamId: string;
@@ -17,7 +15,7 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const classes = useStyles();
   const router = useRouter();
 
-  const [userJoinTeam] = useMutation<UserJoinTeam>(USER_JOIN_TEAM_MUTATION);
+  const [userJoinTeam] = useUserJoinTeamMutation();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleJoinTeam = () => {

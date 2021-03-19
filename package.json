@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run clean:gql && next dev",
+    "postinstall": "npm run codegen",
+    "predev": "npm run clean:gql",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "prettier": "npx prettier --check \"**/*.{ts,tsx,css,json,js,jsx}\"",
@@ -11,9 +13,7 @@
     "lint": "npx eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
     "clean:gql": "rm -rf ./.next/.cache/next-babel-loader",
-    "codegen": "npx apollo client:codegen src/apollo/__generated__ --target typescript --includes=**/*.gql.ts* --outputFlat",
-    "precodegen": "rimraf \"**/__generated__\"",
-    "postcodegen": "prettier --write src/**/__generated__/**/*.ts"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
@@ -33,6 +33,10 @@
     "react-hook-form": "^6.15.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.3",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-operations": "^1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.3",
     "@types/cookies": "^0.7.6",
     "@types/graphql": "^14.5.0",
     "@types/js-cookie": "^2.2.6",
@@ -43,7 +47,6 @@
     "@types/react": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
-    "apollo-codegen": "^0.20.2",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-config-standard": "^16.0.2",

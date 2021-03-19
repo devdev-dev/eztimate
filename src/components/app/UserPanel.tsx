@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import EmailIcon from '@material-ui/icons/Email';
@@ -10,15 +9,14 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Cookies from 'js-cookie';
 import React from 'react';
-import { GetUsers } from '../../apollo/__generated__/GetUsers';
+import { useGetUsersQuery } from '../../apollo/types.grapqhl';
 import { CookieName } from '../../utils/types';
 import UserAvatar from '../shared/UserAvatar';
-import { GET_TEAM_USERS_QUERY as GET_USERS } from './app.gql';
 
 export default function UserPanel() {
   const classes = useStyles();
 
-  const { data } = useQuery<GetUsers>(GET_USERS);
+  const { data } = useGetUsersQuery();
 
   const [open, setOpen] = React.useState(false);
 

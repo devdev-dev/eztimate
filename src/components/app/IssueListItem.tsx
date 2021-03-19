@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import {
   Avatar,
   createStyles,
@@ -18,29 +17,26 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
-import { GetActiveTeam_activeTeam_issues as Issue } from '../../apollo/__generated__/GetActiveTeam';
-import { IssueDelete } from '../../apollo/__generated__/IssueDelete';
-import { IssueEstimate } from '../../apollo/__generated__/IssueEstimate';
+import { GetActiveTeamQuery, useIssueDeleteMutation, useIssueEstimateMutation } from '../../apollo/types.grapqhl';
 import { IssueState } from '../../utils/types';
-import { ISSUE_DELETE_MUTATION, ISSUE_ESTIMATE_MUTATION } from './app.gql';
 
 const ITEM_HEIGHT = 48;
 
 export type IssueListItemProps = {
-  issue: Issue;
+  issue: GetActiveTeamQuery['activeTeam']['issues'][0];
   selected: boolean;
 };
 
 export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const classes = useStyles();
 
-  const [issueDelete] = useMutation<IssueDelete>(ISSUE_DELETE_MUTATION);
+  const [issueDelete] = useIssueDeleteMutation();
   const handleDeleteIssue = () => {
     setOpen(false);
     issueDelete({ variables: { issueId: issue._id } });
   };
 
-  const [issueEstimate] = useMutation<IssueEstimate>(ISSUE_ESTIMATE_MUTATION);
+  const [issueEstimate] = useIssueEstimateMutation();
   const handleIssueEstimate = () => {
     setOpen(false);
     issueEstimate({ variables: { issueId: issue._id } });

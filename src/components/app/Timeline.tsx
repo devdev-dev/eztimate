@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from '@apollo/client';
 import {
   Avatar,
   Box,
@@ -16,17 +15,15 @@ import {
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import React, { useRef } from 'react';
-import { GetActiveTeam } from '../../apollo/__generated__/GetActiveTeam';
-import { IssueCreate } from '../../apollo/__generated__/IssueCreate';
-import { GET_ACTIVE_TEAM, ISSUE_CREATE_MUTATION } from './app.gql';
+import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../apollo/types.grapqhl';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery<GetActiveTeam>(GET_ACTIVE_TEAM);
+  const { data, refetch } = useGetActiveTeamQuery();
 
-  const [issueCreate] = useMutation<IssueCreate>(ISSUE_CREATE_MUTATION);
+  const [issueCreate] = useIssueCreateMutation();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {

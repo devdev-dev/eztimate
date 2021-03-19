@@ -1,0 +1,37 @@
+query GetActiveTeam {
+  activeTeam {
+    _id
+    name
+    estimatedIssue
+    issues {
+      _id
+      name
+      state
+    }
+  }
+}
+
+query GetUsers {
+  activeTeam {
+    users {
+      _id
+      email
+    }
+  }
+}
+
+mutation IssueCreate($issueId: String!) {
+  issueCreate(issueId: $issueId) {
+    _id
+  }
+}
+
+mutation IssueEstimate($issueId: String!) {
+  issueEstimate(issueId: $issueId) {
+    _id
+  }
+}
+
+mutation IssueDelete($issueId: String!) {
+  issueDelete(issueId: $issueId)
+}
