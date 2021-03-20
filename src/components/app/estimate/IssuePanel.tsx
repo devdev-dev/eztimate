@@ -7,8 +7,8 @@ export default function IssuePanel() {
   const classes = useStyles();
 
   const { data } = useGetEstimatedIssueQuery();
-  const [issueUpdate] = useIssueUpdateMutation();
 
+  const [issueUpdate] = useIssueUpdateMutation();
   const handleIssueUpdate = (id, name) => {
     issueUpdate({ variables: { id, name } });
   };

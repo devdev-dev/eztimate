@@ -47,7 +47,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
     setOpen(false);
     issueEstimate({
       variables: { id: issue._id }
-    }).then(t => console.log(t));
+    });
   };
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);

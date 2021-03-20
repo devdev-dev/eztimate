@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface EditableTextFieldProps {
   inputValue: string;
@@ -14,6 +14,9 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
   const classes = useStyles();
 
   const [value, setValue] = useState(inputValue);
+  useEffect(() => {
+    setValue(inputValue);
+  }, [inputValue]);
 
   const [disabled, setDisabled] = useState<boolean>(true);
 
