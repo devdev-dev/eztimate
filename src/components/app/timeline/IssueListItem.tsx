@@ -33,13 +33,13 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const [issueDelete] = useIssueDeleteMutation();
   const handleDeleteIssue = () => {
     setOpen(false);
-    issueDelete({ variables: { issueId: issue._id } });
+    issueDelete({ variables: { id: issue._id } });
   };
 
   const [issueEstimate] = useIssueEstimateMutation();
   const handleIssueEstimate = () => {
     setOpen(false);
-    issueEstimate({ variables: { issueId: issue._id } });
+    issueEstimate({ variables: { id: issue._id } });
   };
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);

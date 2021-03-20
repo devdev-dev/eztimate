@@ -16,22 +16,22 @@ export const CreateTeamMutation = teamName =>
     body: JSON.stringify(teamName)
   });
 
-export const CreateIssueMutation = issueName =>
+export const CreateIssueMutation = name =>
   fetch('/api/app/issue-create', {
     method: 'POST', // or 'PUT'
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(issueName)
+    body: JSON.stringify(name)
   });
 
-export const SetActiveIssuesMutation = issueId =>
+export const SetActiveIssuesMutation = id =>
   fetch('/api/app/issue-set-active', {
     method: 'POST', // or 'PUT'
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(issueId)
+    body: JSON.stringify(id)
   });
 
 export const IssueQuery = () => fetch('/api/app/issues').then(res => res.json());

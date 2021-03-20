@@ -35,8 +35,8 @@ query GetUsers {
   }
 }
 
-mutation IssueCreate($issueId: String!) {
-  issueCreate(issueId: $issueId) {
+mutation IssueCreate($name: String!) {
+  issueCreate(name: $name) {
     _id
   }
 }
@@ -48,12 +48,12 @@ mutation IssueUpdate($id: String!, $name: String) {
   }
 }
 
-mutation IssueEstimate($issueId: String!) {
-  issueEstimate(issueId: $issueId) {
+mutation IssueEstimate($id: String!) {
+  issueEstimate(id: $id) {
     _id
   }
 }
 
-mutation IssueDelete($issueId: String!) {
-  issueDelete(issueId: $issueId)
+mutation IssueDelete($id: String!) {
+  issueDelete(id: $id)
 }

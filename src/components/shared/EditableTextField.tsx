@@ -45,6 +45,7 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
       variant={'outlined'}
       fullWidth
       inputRef={textFieldRef}
+      autoComplete="off"
       InputProps={{
         className: classes.nameFieldInput,
         classes: {

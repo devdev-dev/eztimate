@@ -3,10 +3,10 @@ type Mutation {
 
   teamCreate(teamName: String!): Team!
 
-  issueCreate(issueId: String!): Issue
+  issueCreate(name: String!): Issue
   issueUpdate(id: String!, name: String): Issue
-  issueDelete(issueId: String!): Boolean
-  issueEstimate(issueId: String!): Issue!
+  issueDelete(id: String!): Boolean
+  issueEstimate(id: String!): Issue!
 }
 
 type Query {

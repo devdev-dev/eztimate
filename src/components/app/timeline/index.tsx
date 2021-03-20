@@ -27,7 +27,7 @@ const Timeline = () => {
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {
-    issueCreate({ variables: { issueId: textFieldRef.current?.value } }).then(i => refetch());
+    issueCreate({ variables: { name: textFieldRef.current.value } }).then(() => refetch());
   };
 
   return (
@@ -40,8 +40,6 @@ const Timeline = () => {
       <Box flexGrow={0} className={classes.buttons}>
         <TextField
           className={classes.createIssue}
-          size="small"
-          id="outlined-basic"
           variant="outlined"
           placeholder="Create a new issue"
           fullWidth={true}

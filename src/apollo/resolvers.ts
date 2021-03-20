@@ -10,7 +10,8 @@ export const resolvers: IResolvers = {
       return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
     },
     activeTeam: async (parent, args, { db, context: { req, res } }) => {
-      return await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
+      const team = await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
+      return team;
     }
   },
   Mutation: {
@@ -57,9 +58,10 @@ export const resolvers: IResolvers = {
 
       return teamInsertResult.ops[0];
     },
-    issueCreate: async (_, { issueName }, { db, context: { req, res } }) => {
+    issueCreate: async (_, { name }, { db, context: { req, res } }) => {
+      console.log(name);
       const issueInsertResult = await db.collection('issues').insertOne({
-        name: issueName,
+        name: name,
         state: IssueState.OPEN,
         dateCreated: Date.now()
       });
@@ -74,6 +76,8 @@ export const resolvers: IResolvers = {
           }
         );
       }
+
+      console.log(issueInsertResult.ops[0]);
 
       return issueInsertResult.ops[0];
     },
@@ -91,16 +95,16 @@ export const resolvers: IResolvers = {
 
       return issue;
     },
-    issueDelete: async (_, { issueId }, { db }) => {
-      await db.collection('issues').deleteOne({ _id: getObjectId(issueId) });
+    issueDelete: async (_, { id }, { db }) => {
+      await db.collection('issues').deleteOne({ _id: getObjectId(id) });
       return true;
     },
-    issueEstimate: async (_, { issueId }, { db, context: { req, res } }) => {
+    issueEstimate: async (_, { id }, { db, context: { req, res } }) => {
       const { value: issue } = await db.collection('teams').findOneAndUpdate(
         { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
         {
           $set: {
-            estimatedIssue: getObjectId(issueId)
+            estimatedIssue: getObjectId(id)
           }
         }
       );
