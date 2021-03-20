@@ -17,8 +17,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
-import { GetActiveTeamQuery, useIssueDeleteMutation, useIssueEstimateMutation } from '../../apollo/types.grapqhl';
-import { IssueState } from '../../utils/types';
+import { GetActiveTeamQuery, useIssueDeleteMutation, useIssueEstimateMutation } from '../../../apollo/types.grapqhl';
+import { IssueState } from '../../../utils/types';
 
 const ITEM_HEIGHT = 48;
 

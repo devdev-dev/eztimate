@@ -15,7 +15,7 @@ import {
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import React, { useRef } from 'react';
-import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../apollo/types.grapqhl';
+import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {

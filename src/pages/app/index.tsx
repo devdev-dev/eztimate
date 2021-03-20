@@ -3,8 +3,8 @@ import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
 import React from 'react';
-import Estimate from '../../components/app/Estimate';
-import Sidebar from '../../components/app/Timeline';
+import Estimate from '../../components/app/estimate';
+import Sidebar from '../../components/app/timeline';
 import withAppLayout from '../../components/withAppLayout';
 import { CookieName } from '../../utils/types';
 

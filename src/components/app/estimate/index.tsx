@@ -1,5 +1,6 @@
-import { Card, CardContent, Container, createStyles, Grid, Link, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
+import { Card, CardContent, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import React from 'react';
+import IssuePanel from './IssuePanel';
 import UserPanel from './UserPanel';
 
 const Estimate = () => {
@@ -7,24 +8,7 @@ const Estimate = () => {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <UserPanel />
-      <Paper elevation={3} className={classes.story}>
-        <Grid container>
-          <Grid item md={10} className={classes.storyContent}>
-            <Typography variant="h5" color="inherit" gutterBottom>
-              Name of the story
-            </Typography>
-            <Typography variant="body2" color="inherit" gutterBottom>
-              Description of the story
-            </Typography>
-            <Link variant="subtitle1" href="#">
-              Link to Jira
-            </Link>
-          </Grid>
-          <Grid item md={2} className={classes.storyContent}>
-            Some Controls here
-          </Grid>
-        </Grid>
-      </Paper>
+      <IssuePanel />
       <Paper elevation={0} className={classes.cards}>
         <Grid direction="row" justify="center" alignItems="stretch" container>
           <Grid item xs={3} md={2} className={classes.cardsContent}>

@@ -2,9 +2,9 @@ import { Avatar, Box, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
-import { useGetUsersQuery } from '../../apollo/types.grapqhl';
-import { CookieName } from '../../utils/types';
-import UserAvatar from '../shared/UserAvatar';
+import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
+import { CookieName } from '../../../utils/types';
+import UserAvatar from '../../shared/UserAvatar';
 
 const ITEM_HEIGHT = 48;
 
