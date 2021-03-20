@@ -85,7 +85,8 @@ export const resolvers: IResolvers = {
         { _id: getObjectId(id) },
         {
           $set: update
-        }
+        },
+        { returnOriginal: false }
       );
 
       return issue;

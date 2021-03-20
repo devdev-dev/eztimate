@@ -16,6 +16,7 @@ query GetActiveTeam {
 
 query GetEstimatedIssue {
   activeTeam {
+    _id
     estimatedIssue {
       _id
       name
@@ -26,6 +27,7 @@ query GetEstimatedIssue {
 
 query GetUsers {
   activeTeam {
+    _id
     users {
       _id
       email
@@ -42,6 +44,7 @@ mutation IssueCreate($issueId: String!) {
 mutation IssueUpdate($id: String!, $name: String) {
   issueUpdate(id: $id, name: $name) {
     _id
+    name
   }
 }
 

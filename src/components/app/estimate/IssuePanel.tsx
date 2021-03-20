@@ -10,7 +10,6 @@ export default function IssuePanel() {
   const [issueUpdate] = useIssueUpdateMutation();
 
   const handleIssueUpdate = (id, name) => {
-    console.log('Update');
     issueUpdate({ variables: { id, name } });
   };
 
