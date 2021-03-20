@@ -5,7 +5,7 @@ type Mutation {
 
   issueCreate(name: String!): Issue
   issueUpdate(id: String!, name: String): Issue
-  issueDelete(id: String!): Boolean
+  issueDelete(id: String!): Issue
   issueEstimate(id: String!): Issue!
 }
 

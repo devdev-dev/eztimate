@@ -3,13 +3,10 @@ query GetActiveTeam {
     _id
     name
     estimatedIssue {
-      _id
-      name
+      ...IssueFields
     }
     issues {
-      _id
-      name
-      state
+      ...IssueFields
     }
   }
 }
@@ -18,9 +15,7 @@ query GetEstimatedIssue {
   activeTeam {
     _id
     estimatedIssue {
-      _id
-      name
-      state
+      ...IssueFields
     }
   }
 }
@@ -37,7 +32,7 @@ query GetUsers {
 
 mutation IssueCreate($name: String!) {
   issueCreate(name: $name) {
-    _id
+    ...IssueFields
   }
 }
 
@@ -55,5 +50,13 @@ mutation IssueEstimate($id: String!) {
 }
 
 mutation IssueDelete($id: String!) {
-  issueDelete(id: $id)
+  issueDelete(id: $id) {
+    _id
+  }
+}
+
+fragment IssueFields on Issue {
+  _id
+  name
+  state
 }

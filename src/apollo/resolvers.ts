@@ -59,7 +59,6 @@ export const resolvers: IResolvers = {
       return teamInsertResult.ops[0];
     },
     issueCreate: async (_, { name }, { db, context: { req, res } }) => {
-      console.log(name);
       const issueInsertResult = await db.collection('issues').insertOne({
         name: name,
         state: IssueState.OPEN,
@@ -76,8 +75,6 @@ export const resolvers: IResolvers = {
           }
         );
       }
-
-      console.log(issueInsertResult.ops[0]);
 
       return issueInsertResult.ops[0];
     },
@@ -96,8 +93,8 @@ export const resolvers: IResolvers = {
       return issue;
     },
     issueDelete: async (_, { id }, { db }) => {
-      await db.collection('issues').deleteOne({ _id: getObjectId(id) });
-      return true;
+      const { value } = await db.collection('issues').findOneAndDelete({ _id: getObjectId(id) });
+      return value;
     },
     issueEstimate: async (_, { id }, { db, context: { req, res } }) => {
       const { value: issue } = await db.collection('teams').findOneAndUpdate(

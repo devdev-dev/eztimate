@@ -36,16 +36,8 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
     issueDelete({
       variables: { id: issue._id },
       update: (cache, { data }) => {
-        if (data) {
-          cache.evict({
-            id: cache.identify({
-              __typename: 'Issue',
-              id: issue._id
-            })
-          });
-        } else {
-          console.log('Something went wrong!');
-        }
+        cache.evict({ id: cache.identify({ id: data.issueDelete._id, __typename: 'Issue' }) });
+        cache.gc();
       }
     });
   };

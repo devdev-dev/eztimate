@@ -14,20 +14,35 @@ import {
 } from '@material-ui/core';
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
 
-  const { data, refetch } = useGetActiveTeamQuery();
+  const { data } = useGetActiveTeamQuery();
+  const [value, setValue] = useState('');
 
   const [issueCreate] = useIssueCreateMutation();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {
-    issueCreate({ variables: { name: textFieldRef.current.value } }).then(() => refetch());
+    issueCreate({
+      variables: { name: textFieldRef.current.value },
+      update: (cache, { data: issueCreated }) => {
+        cache.modify({
+          id: cache.identify(data.activeTeam),
+          fields: {
+            issues(cachedIssues, { toReference }) {
+              return [toReference(issueCreated.issueCreate), ...cachedIssues];
+            }
+          }
+        });
+      }
+    }).then(() => {
+      setValue('');
+    });
   };
 
   return (
@@ -45,6 +60,8 @@ const Timeline = () => {
           fullWidth={true}
           inputRef={textFieldRef}
           autoComplete="off"
+          value={value}
+          onChange={e => setValue(e.target.value)}
           InputProps={{
             endAdornment: (
               <IconButton onClick={() => handleAddIssue()}>
