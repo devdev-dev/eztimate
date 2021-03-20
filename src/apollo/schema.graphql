@@ -4,6 +4,7 @@ type Mutation {
   teamCreate(teamName: String!): Team!
 
   issueCreate(issueId: String!): Issue
+  issueUpdate(id: String!, name: String): Issue
   issueDelete(issueId: String!): Boolean
   issueEstimate(issueId: String!): Issue!
 }

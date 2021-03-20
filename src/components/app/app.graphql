@@ -5,8 +5,6 @@ query GetActiveTeam {
     estimatedIssue {
       _id
       name
-      description
-
     }
     issues {
       _id
@@ -21,8 +19,6 @@ query GetEstimatedIssue {
     estimatedIssue {
       _id
       name
-      description
-      link
       state
     }
   }
@@ -39,6 +35,12 @@ query GetUsers {
 
 mutation IssueCreate($issueId: String!) {
   issueCreate(issueId: $issueId) {
+    _id
+  }
+}
+
+mutation IssueUpdate($id: String!, $name: String) {
+  issueUpdate(id: $id, name: $name) {
     _id
   }
 }

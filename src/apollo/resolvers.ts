@@ -77,6 +77,19 @@ export const resolvers: IResolvers = {
 
       return issueInsertResult.ops[0];
     },
+    issueUpdate: async (_, { id, name }, { db }) => {
+      let update = {};
+      if (name) update = { ...update, name: name };
+
+      const { value: issue } = await db.collection('issues').findOneAndUpdate(
+        { _id: getObjectId(id) },
+        {
+          $set: update
+        }
+      );
+
+      return issue;
+    },
     issueDelete: async (_, { issueId }, { db }) => {
       await db.collection('issues').deleteOne({ _id: getObjectId(issueId) });
       return true;

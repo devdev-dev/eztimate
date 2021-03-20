@@ -7,9 +7,10 @@ import React, { useRef, useState } from 'react';
 
 export interface EditableTextFieldProps {
   inputValue: string;
+  onSave: (value: String) => void;
 }
 
-export default function EditableTextField({ inputValue }: EditableTextFieldProps) {
+export default function EditableTextField({ inputValue, onSave }: EditableTextFieldProps) {
   const classes = useStyles();
 
   const [value, setValue] = useState(inputValue);
@@ -23,6 +24,7 @@ export default function EditableTextField({ inputValue }: EditableTextFieldProps
   };
 
   const handleSave = () => {
+    onSave(textFieldRef.current.value);
     setDisabled(!disabled);
   };
 

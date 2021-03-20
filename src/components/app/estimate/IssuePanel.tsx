@@ -1,21 +1,28 @@
 import { createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
 import React from 'react';
-import { useGetEstimatedIssueQuery } from '../../../apollo/types.grapqhl';
+import { useGetEstimatedIssueQuery, useIssueUpdateMutation } from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
 
 export default function IssuePanel() {
   const classes = useStyles();
 
   const { data } = useGetEstimatedIssueQuery();
+  const [issueUpdate] = useIssueUpdateMutation();
 
-  const handleIssueSave = () => {};
+  const handleIssueUpdate = (id, name) => {
+    console.log('Update');
+    issueUpdate({ variables: { id, name } });
+  };
 
   return (
     <Paper elevation={3} className={classes.story}>
       {data && (
         <Grid container>
           <Grid item md={10} className={classes.storyContent}>
-            <EditableTextField inputValue={data.activeTeam.estimatedIssue?.name} />
+            <EditableTextField
+              inputValue={data.activeTeam?.estimatedIssue?.name}
+              onSave={name => handleIssueUpdate(data.activeTeam?.estimatedIssue?._id, name)}
+            />
           </Grid>
           <Grid item md={2} className={classes.storyContent}>
             Some Controls here
