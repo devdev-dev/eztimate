@@ -46,6 +46,9 @@ mutation IssueUpdate($id: String!, $name: String) {
 mutation IssueEstimate($id: String!) {
   issueEstimate(id: $id) {
     _id
+    estimatedIssue {
+      ...IssueFields
+    }
   }
 }
 

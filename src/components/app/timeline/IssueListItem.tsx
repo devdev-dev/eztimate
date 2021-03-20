@@ -45,7 +45,9 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const [issueEstimate] = useIssueEstimateMutation();
   const handleIssueEstimate = () => {
     setOpen(false);
-    issueEstimate({ variables: { id: issue._id } });
+    issueEstimate({
+      variables: { id: issue._id }
+    }).then(t => console.log(t));
   };
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);

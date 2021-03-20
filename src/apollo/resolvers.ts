@@ -97,15 +97,16 @@ export const resolvers: IResolvers = {
       return value;
     },
     issueEstimate: async (_, { id }, { db, context: { req, res } }) => {
-      const { value: issue } = await db.collection('teams').findOneAndUpdate(
+      const { value: team } = await db.collection('teams').findOneAndUpdate(
         { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
         {
           $set: {
             estimatedIssue: getObjectId(id)
           }
-        }
+        },
+        { returnOriginal: false }
       );
-      return issue;
+      return team;
     }
   },
   User: {
