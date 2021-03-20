@@ -30,8 +30,6 @@ const Timeline = () => {
     issueCreate({ variables: { issueId: textFieldRef.current?.value } }).then(i => refetch());
   };
 
-  console.log(data);
-
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
@@ -61,7 +59,7 @@ const Timeline = () => {
       <Box flexGrow={1} flexBasis={0} overflow={'auto'}>
         <List component="nav">
           {data?.activeTeam.issues.map((issue, issueIndex) => (
-            <IssueListItem issue={issue} selected={issue?._id === data?.activeTeam.estimatedIssue} key={issueIndex} />
+            <IssueListItem issue={issue} selected={issue?._id === data?.activeTeam.estimatedIssue?._id} key={issueIndex} />
           ))}
 
           <ListItem disableGutters>

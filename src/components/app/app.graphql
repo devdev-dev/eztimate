@@ -2,10 +2,27 @@ query GetActiveTeam {
   activeTeam {
     _id
     name
-    estimatedIssue
+    estimatedIssue {
+      _id
+      name
+      description
+
+    }
     issues {
       _id
       name
+      state
+    }
+  }
+}
+
+query GetEstimatedIssue {
+  activeTeam {
+    estimatedIssue {
+      _id
+      name
+      description
+      link
       state
     }
   }

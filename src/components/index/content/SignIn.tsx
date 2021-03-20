@@ -9,11 +9,7 @@ export default function SignIn() {
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleSignIn = () => {
-    signIn('email', { redirect: true, email: textFieldRef.current.value })
-      .then(data => {
-        console.log(JSON.stringify(data));
-      })
-      .catch(error => console.error(JSON.stringify(error)));
+    signIn('email', { redirect: true, email: textFieldRef.current.value }).catch(error => console.error(JSON.stringify(error)));
   };
 
   return (

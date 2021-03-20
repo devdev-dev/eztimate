@@ -24,7 +24,7 @@ type Team {
   name: String!
   users: [User]!
   issues: [Issue]!
-  estimatedIssue: String
+  estimatedIssue: Issue
 }
 
 type Issue {

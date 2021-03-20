@@ -1,27 +1,27 @@
-import { createStyles, Grid, Link, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
 import React from 'react';
+import { useGetEstimatedIssueQuery } from '../../../apollo/types.grapqhl';
+import EditableTextField from '../../shared/EditableTextField';
 
 export default function IssuePanel() {
   const classes = useStyles();
 
+  const { data } = useGetEstimatedIssueQuery();
+
+  const handleIssueSave = () => {};
+
   return (
     <Paper elevation={3} className={classes.story}>
-      <Grid container>
-        <Grid item md={10} className={classes.storyContent}>
-          <Typography variant="h5" color="inherit" gutterBottom>
-            Name of the story
-          </Typography>
-          <Typography variant="body2" color="inherit" gutterBottom>
-            Description of the story
-          </Typography>
-          <Link variant="subtitle1" href="#">
-            Link to Jira
-          </Link>
+      {data && (
+        <Grid container>
+          <Grid item md={10} className={classes.storyContent}>
+            <EditableTextField inputValue={data.activeTeam.estimatedIssue?.name} />
+          </Grid>
+          <Grid item md={2} className={classes.storyContent}>
+            Some Controls here
+          </Grid>
         </Grid>
-        <Grid item md={2} className={classes.storyContent}>
-          Some Controls here
-        </Grid>
-      </Grid>
+      )}
     </Paper>
   );
 }

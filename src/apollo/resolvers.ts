@@ -2,6 +2,7 @@ import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../utils/mongodb/mongodb';
 import { CookieName, IssueState } from '../utils/types';
+import { Team, User } from './types.grapqhl';
 
 export const resolvers: IResolvers = {
   Query: {
@@ -93,32 +94,36 @@ export const resolvers: IResolvers = {
     }
   },
   User: {
-    async teams(parent, args, { db }) {
+    async teams(user: User, args, { db }) {
       const teams = await db
         .collection('teams')
-        .find({ _id: { $in: parent.teams } })
+        .find({ _id: { $in: user.teams } })
         .toArray();
 
       return teams;
     }
   },
   Team: {
-    async users(parent, args, { db }) {
+    async users(team: Team, args, { db }) {
       const users = await db
         .collection('users')
-        .find({ _id: { $in: parent.users } })
+        .find({ _id: { $in: team.users } })
         .toArray();
 
       return users;
     },
-    async issues(parent, args, { db }) {
+    async issues(team: Team, args, { db }) {
       const issues = await db
         .collection('issues')
-        .find({ _id: { $in: parent.issues } })
+        .find({ _id: { $in: team.issues } })
         .sort({ dateCreated: -1 })
         .toArray();
 
       return issues;
+    },
+    async estimatedIssue(team: Team, args, { db }) {
+      const issue = await db.collection('issues').findOne({ _id: team.estimatedIssue });
+      return issue;
     }
   }
 };
