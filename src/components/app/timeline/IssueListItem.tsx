@@ -33,7 +33,21 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const [issueDelete] = useIssueDeleteMutation();
   const handleDeleteIssue = () => {
     setOpen(false);
-    issueDelete({ variables: { id: issue._id } });
+    issueDelete({
+      variables: { id: issue._id },
+      update: (cache, { data }) => {
+        if (data) {
+          cache.evict({
+            id: cache.identify({
+              __typename: 'Issue',
+              id: issue._id
+            })
+          });
+        } else {
+          console.log('Something went wrong!');
+        }
+      }
+    });
   };
 
   const [issueEstimate] = useIssueEstimateMutation();
