@@ -8,7 +8,7 @@ type Mutation {
   issueDelete(id: String!): Issue
   issueEstimate(id: String!): Team!
 
-  estimateIssue(issueId: String!, value: String!): Issue
+  estimateIssue(issueId: String!, value: String!): Estimate
 }
 
 type Query {

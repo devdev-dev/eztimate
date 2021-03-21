@@ -48,9 +48,10 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
       variant={'outlined'}
       fullWidth
       inputRef={textFieldRef}
+      className={classes.textField}
       autoComplete="off"
       InputProps={{
-        className: classes.nameFieldInput,
+        className: classes.textFieldInput,
         classes: {
           disabled: classes.disabled
         },
@@ -87,6 +88,13 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    textField: {
+      marginRight: theme.spacing(2)
+    },
+    textFieldInput: {
+      fontSize: theme.typography.h5.fontSize,
+      paddingLeft: 0
+    },
     disabled: {
       '& fieldset': {
         border: 'none'
@@ -102,9 +110,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiInputBase-root.Mui-focused fieldset, & .Mui-focused .MuiInputAdornment-root, & .MuiFormLabel-root.Mui-focused': {
         visibility: 'visible'
       }
-    },
-    nameFieldInput: {
-      fontSize: theme.typography.h5.fontSize
     }
   })
 );
