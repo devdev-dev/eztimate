@@ -24,8 +24,7 @@ query GetUsers {
   activeTeam {
     _id
     users {
-      _id
-      email
+      ...UserFields
     }
   }
 }
@@ -58,8 +57,33 @@ mutation IssueDelete($id: String!) {
   }
 }
 
+mutation EstimateIssue($issueId: String!, $value: String!) {
+  estimateIssue(issueId: $issueId, value: $value) {
+    _id
+    estimates {
+      user {
+        ...UserFields
+      }
+      value
+    }
+  }
+}
+
+fragment UserFields on User {
+  _id
+  email
+}
+
 fragment IssueFields on Issue {
   _id
   name
   state
+  estimate
+  estimates {
+    _id
+    value
+    user {
+      ...UserFields
+    }
+  }
 }

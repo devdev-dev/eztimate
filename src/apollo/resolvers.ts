@@ -2,18 +2,9 @@ import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../utils/mongodb/mongodb';
 import { CookieName, IssueState } from '../utils/types';
-import { Team, User } from './types.grapqhl';
+import { Estimate, Issue, Team, User } from './types.grapqhl';
 
 export const resolvers: IResolvers = {
-  Query: {
-    async loggedInUser(parent, args, context) {
-      return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
-    },
-    activeTeam: async (parent, args, { db, context: { req, res } }) => {
-      const team = await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
-      return team;
-    }
-  },
   Mutation: {
     userJoinTeam: async (_, { teamId }, { db, session }) => {
       const teamIdObject = getObjectId(teamId);
@@ -107,6 +98,38 @@ export const resolvers: IResolvers = {
         { returnOriginal: false }
       );
       return team;
+    },
+    estimateIssue: async (_, { issueId, value }, { db, session }) => {
+      const { value: estimate } = await db.collection('estimates').findOneAndReplace(
+        { user: getObjectId(session.user.id) },
+        {
+          user: getObjectId(session.user.id),
+          value
+        },
+        { upsert: true, returnOriginal: false }
+      );
+
+      if (estimate) {
+        await db.collection('issues').updateOne(
+          { _id: getObjectId(issueId) },
+          {
+            $addToSet: {
+              estimates: estimate._id
+            }
+          }
+        );
+      }
+
+      return estimate;
+    }
+  },
+  Query: {
+    async loggedInUser(parent, args, context) {
+      return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
+    },
+    activeTeam: async (parent, args, { db, context: { req, res } }) => {
+      const team = await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
+      return team;
     }
   },
   User: {
@@ -140,6 +163,23 @@ export const resolvers: IResolvers = {
     async estimatedIssue(team: Team, args, { db }) {
       const issue = await db.collection('issues').findOne({ _id: team.estimatedIssue });
       return issue;
+    }
+  },
+  Issue: {
+    async estimates(issue: Issue, args, { db }) {
+      if (issue.estimates) {
+        return await db
+          .collection('estimates')
+          .find({ _id: { $in: issue.estimates ?? [] } })
+          .toArray();
+      }
+      return [];
+    }
+  },
+  Estimate: {
+    async user(estimate: Estimate, args, { db }) {
+      const user = await db.collection('users').findOne({ _id: estimate.user });
+      return user;
     }
   }
 };
