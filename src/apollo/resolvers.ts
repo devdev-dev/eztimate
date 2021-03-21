@@ -1,8 +1,8 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../utils/mongodb/mongodb';
-import { CookieName, IssueState } from '../utils/types';
-import { Estimate, Issue, Team, User } from './types.grapqhl';
+import { CookieName } from '../utils/types';
+import { Estimate, Issue, IssueState, Team, User } from './types.grapqhl';
 
 export const resolvers: IResolvers = {
   Mutation: {
@@ -52,7 +52,7 @@ export const resolvers: IResolvers = {
     issueCreate: async (_, { name }, { db, context: { req, res } }) => {
       const issueInsertResult = await db.collection('issues').insertOne({
         name: name,
-        state: IssueState.OPEN,
+        state: IssueState.Open,
         dateCreated: Date.now()
       });
 
@@ -69,9 +69,10 @@ export const resolvers: IResolvers = {
 
       return issueInsertResult.ops[0];
     },
-    issueUpdate: async (_, { id, name }, { db }) => {
+    issueUpdate: async (_, { id, name, state }, { db }) => {
       let update = {};
       if (name) update = { ...update, name: name };
+      if (state) update = { ...update, state: state };
 
       const { value: issue } = await db.collection('issues').findOneAndUpdate(
         { _id: getObjectId(id) },

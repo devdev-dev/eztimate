@@ -2,11 +2,12 @@ type Mutation {
   userJoinTeam(teamId: String!): Team!
 
   teamCreate(teamName: String!): Team!
+  # TODO Rename to teamSetActiveIssue,
+  issueEstimate(id: String!): Team!
 
   issueCreate(name: String!): Issue
-  issueUpdate(id: String!, name: String): Issue
+  issueUpdate(id: String!, name: String, state: IssueState): Issue
   issueDelete(id: String!): Issue
-  issueEstimate(id: String!): Team!
 
   estimateIssue(issueId: String!, value: String!): Estimate
 }
@@ -33,10 +34,16 @@ type Team {
 type Issue {
   _id: String!
   name: String!
-  state: String!
+  state: IssueState!
   dateCreated: String!
   estimate: String
   estimates: [Estimate]!
+}
+
+enum IssueState {
+  OPEN
+  IN_PROGRESS
+  ESTIMATED
 }
 
 type Estimate {

@@ -13,12 +13,11 @@ import {
   Tooltip
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
-import ErrorIcon from '@material-ui/icons/Error';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
-import { GetActiveTeamQuery, useIssueDeleteMutation, useIssueEstimateMutation } from '../../../apollo/types.grapqhl';
-import { IssueState } from '../../../utils/types';
+import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useIssueEstimateMutation } from '../../../apollo/types.grapqhl';
 
 const ITEM_HEIGHT = 48;
 
@@ -60,9 +59,9 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
           <Tooltip title={issue.state}>
             <Avatar className={classes.issueAvatar}>
               <>
-                {issue.state === IssueState.OPEN && <RadioButtonUncheckedIcon />}
-                {issue.state === IssueState.ESTIMATED && <CheckIcon />}
-                {issue.state === IssueState.UNFINISHED && <ErrorIcon />}
+                {issue.state === IssueState.Open && <RadioButtonUncheckedIcon />}
+                {issue.state === IssueState.Estimated && <CheckIcon />}
+                {issue.state === IssueState.InProgress && <HourglassEmptyIcon />}
               </>
             </Avatar>
           </Tooltip>

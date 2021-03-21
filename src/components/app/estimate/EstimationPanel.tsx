@@ -1,8 +1,8 @@
 import { Avatar, Box, Chip, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import React, { useState } from 'react';
-import { useGetEstimatedIssueQuery, useIssueUpdateMutation } from '../../../apollo/types.grapqhl';
+import React, { useEffect, useState } from 'react';
+import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation } from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
 
@@ -15,23 +15,27 @@ export default function EstimationPanel() {
 
   const { data } = useGetEstimatedIssueQuery();
 
+  useEffect(() => {
+    data && setResultVisible(IssueState.Open !== data.activeTeam.estimatedIssue.state);
+  }, [data]);
+
   const [issueUpdate] = useIssueUpdateMutation();
-  const handleIssueUpdate = (id, name) => {
-    issueUpdate({ variables: { id, name } });
+  const handleIssueUpdate = name => {
+    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, name } });
+  };
+  const handleShowResults = () => {
+    setResultVisible(!resultVisible);
+    const state = resultVisible ? IssueState.Open : IssueState.InProgress;
+    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state } });
   };
 
   return (
     <Box>
       <Paper className={classes.results}>
         <Toolbar className={classes.resultsToolbar}>
-          {data && (
-            <EditableTextField
-              inputValue={data.activeTeam?.estimatedIssue?.name}
-              onSave={name => handleIssueUpdate(data.activeTeam?.estimatedIssue?._id, name)}
-            />
-          )}
-          <IconButton edge="start" onClick={() => setResultVisible(!resultVisible)}>
-            {resultVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          {data && <EditableTextField inputValue={data.activeTeam?.estimatedIssue?.name} onSave={name => handleIssueUpdate(name)} />}
+          <IconButton edge="start" onClick={handleShowResults}>
+            {resultVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
           </IconButton>
         </Toolbar>
         {resultVisible && (
