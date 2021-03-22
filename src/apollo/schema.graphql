@@ -2,8 +2,7 @@ type Mutation {
   userJoinTeam(teamId: String!): Team!
 
   teamCreate(teamName: String!): Team!
-  # TODO Rename to teamSetActiveIssue
-  issueEstimate(id: String!): Team!
+  teamSetActiveIssue(id: String!): Team!
 
   issueCreate(name: String!): Issue
   issueUpdate(id: String!, name: String, state: IssueState): Issue

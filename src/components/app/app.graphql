@@ -29,6 +29,15 @@ query GetUsers {
   }
 }
 
+mutation TeamSetActiveIssue($id: String!) {
+  teamSetActiveIssue(id: $id) {
+    _id
+    estimatedIssue {
+      ...IssueFields
+    }
+  }
+}
+
 mutation IssueCreate($name: String!) {
   issueCreate(name: $name) {
     ...IssueFields
@@ -38,15 +47,6 @@ mutation IssueCreate($name: String!) {
 mutation IssueUpdate($id: String!, $name: String, $state: IssueState) {
   issueUpdate(id: $id, name: $name, state: $state) {
     ...IssueFields
-  }
-}
-
-mutation IssueEstimate($id: String!) {
-  issueEstimate(id: $id) {
-    _id
-    estimatedIssue {
-      ...IssueFields
-    }
   }
 }
 

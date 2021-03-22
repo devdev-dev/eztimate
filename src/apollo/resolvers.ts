@@ -49,6 +49,18 @@ export const resolvers: IResolvers = {
 
       return teamInsertResult.ops[0];
     },
+    teamSetActiveIssue: async (_, { id }, { db, context: { req, res } }) => {
+      const { value: team } = await db.collection('teams').findOneAndUpdate(
+        { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
+        {
+          $set: {
+            estimatedIssue: getObjectId(id)
+          }
+        },
+        { returnOriginal: false }
+      );
+      return team;
+    },
     issueCreate: async (_, { name }, { db, context: { req, res } }) => {
       const issueInsertResult = await db.collection('issues').insertOne({
         name: name,
@@ -87,18 +99,6 @@ export const resolvers: IResolvers = {
     issueDelete: async (_, { id }, { db }) => {
       const { value } = await db.collection('issues').findOneAndDelete({ _id: getObjectId(id) });
       return value;
-    },
-    issueEstimate: async (_, { id }, { db, context: { req, res } }) => {
-      const { value: team } = await db.collection('teams').findOneAndUpdate(
-        { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
-        {
-          $set: {
-            estimatedIssue: getObjectId(id)
-          }
-        },
-        { returnOriginal: false }
-      );
-      return team;
     },
     estimateCreate: async (_, { issueId, value }, { db, session }) => {
       const { value: estimate } = await db.collection('estimates').findOneAndReplace(

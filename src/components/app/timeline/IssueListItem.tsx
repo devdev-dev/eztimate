@@ -17,7 +17,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
-import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useIssueEstimateMutation } from '../../../apollo/types.grapqhl';
+import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
 
 const ITEM_HEIGHT = 48;
 
@@ -41,10 +41,10 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
     });
   };
 
-  const [issueEstimate] = useIssueEstimateMutation();
-  const handleIssueEstimate = () => {
+  const [teamSetActiveIssue] = useTeamSetActiveIssueMutation();
+  const handleTeamSetActiveIssue = () => {
     setOpen(false);
-    issueEstimate({
+    teamSetActiveIssue({
       variables: { id: issue._id }
     });
   };
@@ -83,7 +83,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
             }}
             keepMounted
           >
-            <MenuItem onClick={handleIssueEstimate}>Estimate</MenuItem>
+            <MenuItem onClick={handleTeamSetActiveIssue}>Estimate</MenuItem>
             <MenuItem onClick={handleDeleteIssue}>Delete</MenuItem>
           </Menu>
         </ListItemSecondaryAction>
