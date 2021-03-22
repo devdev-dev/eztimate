@@ -42,6 +42,9 @@ export default function EstimationPanel() {
       issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, estimate: estimateValue } });
     }
   };
+  const handleEstimationFinished = () => {
+    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Estimated } });
+  };
 
   const userEstimate = data?.activeTeam.estimatedIssue.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
 
@@ -53,7 +56,7 @@ export default function EstimationPanel() {
           <Button variant="text" color="secondary" onClick={handleShowResults} endIcon={obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}>
             {obfuscated ? 'Show Results' : 'Hide Results'}
           </Button>
-          <IconButton edge="end" disabled={obfuscated}>
+          <IconButton edge="end" disabled={obfuscated} onClick={handleEstimationFinished}>
             <Badge
               anchorOrigin={{
                 vertical: 'bottom',
