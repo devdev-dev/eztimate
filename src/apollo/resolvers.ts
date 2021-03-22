@@ -81,10 +81,11 @@ export const resolvers: IResolvers = {
 
       return issueInsertResult.ops[0];
     },
-    issueUpdate: async (_, { id, name, state }, { db }) => {
+    issueUpdate: async (_, { id, name, state, estimate }, { db }) => {
       let update = {};
-      if (name) update = { ...update, name: name };
-      if (state) update = { ...update, state: state };
+      if (name !== undefined) update = { ...update, name: name };
+      if (state !== undefined) update = { ...update, state: state };
+      if (estimate !== undefined) update = { ...update, estimate: estimate };
 
       const { value: issue } = await db.collection('issues').findOneAndUpdate(
         { _id: getObjectId(id) },

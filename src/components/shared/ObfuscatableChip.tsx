@@ -7,9 +7,11 @@ export interface ObfuscatableChipProps {
   estimate: any;
   obfuscated: boolean;
   deleteable: boolean;
+  selected: boolean;
+  onSelect: (value: String) => void;
 }
 
-export default function ObfuscatableChip({ estimate, obfuscated, deleteable }: ObfuscatableChipProps) {
+export default function ObfuscatableChip({ estimate, obfuscated, deleteable, selected, onSelect }: ObfuscatableChipProps) {
   const classes = useStyles();
 
   const [estimateDelete] = useEstimateDeleteMutation();
@@ -26,7 +28,7 @@ export default function ObfuscatableChip({ estimate, obfuscated, deleteable }: O
 
   return (
     <Chip
-      variant="outlined"
+      variant={selected ? 'default' : 'outlined'}
       avatar={
         obfuscated ? (
           <Avatar>
@@ -37,10 +39,10 @@ export default function ObfuscatableChip({ estimate, obfuscated, deleteable }: O
         )
       }
       label={estimate.user.email}
-      clickable
       color="primary"
       className={classes.chip}
-      onClick={() => {}}
+      clickable={!obfuscated}
+      onClick={obfuscated ? undefined : () => onSelect(estimate.value)}
       onDelete={deleteable ? handleDelete : undefined}
     />
   );

@@ -1,4 +1,5 @@
-import { Box, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar } from '@material-ui/core';
+import { Badge, Box, Button, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar, withStyles } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/Send';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import React, { useEffect, useState } from 'react';
@@ -31,7 +32,14 @@ export default function EstimationPanel() {
       issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Discussed } });
     } else {
       setObfuscated(!obfuscated);
-      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Open } });
+      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Open, estimate: null } });
+    }
+  };
+  const handleEstimationSelect = estimateValue => {
+    if (data.activeTeam?.estimatedIssue?.estimate === estimateValue) {
+      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, estimate: null } });
+    } else {
+      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, estimate: estimateValue } });
     }
   };
 
@@ -42,13 +50,32 @@ export default function EstimationPanel() {
       <Paper className={classes.results}>
         <Toolbar className={classes.resultsToolbar}>
           {data && <EditableTextField inputValue={data.activeTeam?.estimatedIssue?.name} onSave={name => handleIssueUpdate(name)} />}
-          <IconButton edge="start" onClick={handleShowResults}>
-            {obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          <Button variant="text" color="secondary" onClick={handleShowResults} endIcon={obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}>
+            {obfuscated ? 'Show Results' : 'Hide Results'}
+          </Button>
+          <IconButton edge="end" disabled={obfuscated}>
+            <Badge
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+              }}
+              badgeContent={data?.activeTeam.estimatedIssue.estimate ?? 0}
+              color="secondary"
+            >
+              <SendIcon />
+            </Badge>
           </IconButton>
         </Toolbar>
         <Box className={classes.resultsChips} px={2} pb={2}>
           {data?.activeTeam.estimatedIssue.estimates.map((estimate, index) => (
-            <ObfuscatableChip key={index} estimate={estimate} obfuscated={obfuscated} deleteable={userEstimate?._id === estimate._id} />
+            <ObfuscatableChip
+              key={index}
+              estimate={estimate}
+              obfuscated={obfuscated}
+              deleteable={userEstimate?._id === estimate._id}
+              selected={data?.activeTeam?.estimatedIssue?.estimate === estimate.value}
+              onSelect={handleEstimationSelect}
+            />
           ))}
         </Box>
       </Paper>
@@ -64,6 +91,16 @@ export default function EstimationPanel() {
     </Box>
   );
 }
+const StyledBadge = withStyles((theme: Theme) =>
+  createStyles({
+    badge: {
+      left: 3,
+      top: 13,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: '0 4px'
+    }
+  })
+)(Badge);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

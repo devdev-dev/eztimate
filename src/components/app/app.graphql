@@ -44,8 +44,8 @@ mutation IssueCreate($name: String!) {
   }
 }
 
-mutation IssueUpdate($id: String!, $name: String, $state: IssueState) {
-  issueUpdate(id: $id, name: $name, state: $state) {
+mutation IssueUpdate($id: String!, $name: String, $state: IssueState, $estimate: String) {
+  issueUpdate(id: $id, name: $name, state: $state, estimate: $estimate) {
     ...IssueFields
   }
 }

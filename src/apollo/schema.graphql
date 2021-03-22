@@ -5,7 +5,7 @@ type Mutation {
   teamSetActiveIssue(id: String!): Team!
 
   issueCreate(name: String!): Issue
-  issueUpdate(id: String!, name: String, state: IssueState): Issue
+  issueUpdate(id: String!, name: String, state: IssueState, estimate: String): Issue
   issueDelete(id: String!): Issue
 
   estimateCreate(issueId: String!, value: String!): Estimate
