@@ -122,6 +122,13 @@ export const resolvers: IResolvers = {
       }
 
       return estimate;
+    },
+    estimateDelete: async (_, { id }, { db }) => {
+      const estimateIdObject = getObjectId(id);
+      const { value } = await db.collection('estimates').findOneAndDelete({ _id: estimateIdObject });
+      await db.collection('issues').updateOne({ estimates: { $elemMatch: { $eq: estimateIdObject } } }, { $pull: { estimates: estimateIdObject } });
+
+      return value;
     }
   },
   Query: {

@@ -66,6 +66,12 @@ mutation EstimateIssue($issueId: String!, $value: String!) {
   }
 }
 
+mutation EstimateDelete($id: String!) {
+  estimateDelete(id: $id) {
+    _id
+  }
+}
+
 fragment UserFields on User {
   _id
   email
