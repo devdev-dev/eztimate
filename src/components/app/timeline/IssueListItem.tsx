@@ -13,8 +13,8 @@ import {
   Tooltip
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
 import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useIssueEstimateMutation } from '../../../apollo/types.grapqhl';
@@ -60,8 +60,8 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
             <Avatar className={classes.issueAvatar}>
               <>
                 {issue.state === IssueState.Open && <RadioButtonUncheckedIcon />}
+                {issue.state === IssueState.Discussed && <QuestionAnswerIcon />}
                 {issue.state === IssueState.Estimated && <CheckIcon />}
-                {issue.state === IssueState.InProgress && <HourglassEmptyIcon />}
               </>
             </Avatar>
           </Tooltip>

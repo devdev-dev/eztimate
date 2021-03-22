@@ -1,9 +1,10 @@
-import { Avatar, Box, Chip, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar } from '@material-ui/core';
+import { Box, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import React, { useEffect, useState } from 'react';
 import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation } from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
+import ObfuscatableChip from '../../shared/ObfuscatableChip';
 import EstimationPanelCard from './EstimationPanelCard';
 
 const estimationValues = ['1', '2', '3', '5', '8', '13', '20', '40', '100'];
@@ -11,12 +12,12 @@ const estimationValues = ['1', '2', '3', '5', '8', '13', '20', '40', '100'];
 export default function EstimationPanel() {
   const classes = useStyles();
 
-  const [resultVisible, setResultVisible] = useState(false);
+  const [obfuscated, setObfuscated] = useState(true);
 
   const { data } = useGetEstimatedIssueQuery();
 
   useEffect(() => {
-    data && setResultVisible(IssueState.Open !== data.activeTeam.estimatedIssue.state);
+    data && setObfuscated(data.activeTeam.estimatedIssue.state === IssueState.Open);
   }, [data]);
 
   const [issueUpdate] = useIssueUpdateMutation();
@@ -24,9 +25,13 @@ export default function EstimationPanel() {
     issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, name } });
   };
   const handleShowResults = () => {
-    setResultVisible(!resultVisible);
-    const state = resultVisible ? IssueState.Open : IssueState.InProgress;
-    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state } });
+    if (obfuscated) {
+      setObfuscated(!obfuscated);
+      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Discussed } });
+    } else {
+      setObfuscated(!obfuscated);
+      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Open } });
+    }
   };
 
   return (
@@ -35,24 +40,14 @@ export default function EstimationPanel() {
         <Toolbar className={classes.resultsToolbar}>
           {data && <EditableTextField inputValue={data.activeTeam?.estimatedIssue?.name} onSave={name => handleIssueUpdate(name)} />}
           <IconButton edge="start" onClick={handleShowResults}>
-            {resultVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            {obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}
           </IconButton>
         </Toolbar>
-        {resultVisible && (
-          <Box className={classes.resultsChips} px={2} pb={2}>
-            {data.activeTeam.estimatedIssue.estimates.map((estimate, index) => (
-              <Chip
-                key={index}
-                variant="outlined"
-                avatar={<Avatar>{estimate.value}</Avatar>}
-                label={estimate.user.email}
-                clickable
-                color="primary"
-                className={classes.chip}
-              />
-            ))}
-          </Box>
-        )}
+        <Box className={classes.resultsChips} px={2} pb={2}>
+          {data?.activeTeam.estimatedIssue.estimates.map((estimate, index) => (
+            <ObfuscatableChip key={index} estimate={estimate} obfuscated={obfuscated} />
+          ))}
+        </Box>
       </Paper>
       <Paper elevation={0} className={classes.cards}>
         <Grid direction="row" justify="center" alignItems="stretch" container>

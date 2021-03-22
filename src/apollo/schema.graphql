@@ -42,7 +42,7 @@ type Issue {
 
 enum IssueState {
   OPEN
-  IN_PROGRESS
+  DISCUSSED
   ESTIMATED
 }
 
