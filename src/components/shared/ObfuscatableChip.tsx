@@ -12,10 +12,10 @@ export default function ObfuscatableChip({ estimate, obfuscated }: ObfuscatableC
   const classes = useStyles();
 
   const { data } = useLoggedInUserQuery();
-  const [estimateIssue] = useEstimateDeleteMutation();
+  const [estimateDelete] = useEstimateDeleteMutation();
 
   const handleDelete = () => {
-    estimateIssue({
+    estimateDelete({
       variables: { id: estimate._id },
       update: (cache, { data }) => {
         cache.evict({ id: cache.identify({ id: data.estimateDelete._id, __typename: 'Estimate' }) });

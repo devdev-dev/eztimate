@@ -100,7 +100,7 @@ export const resolvers: IResolvers = {
       );
       return team;
     },
-    estimateIssue: async (_, { issueId, value }, { db, session }) => {
+    estimateCreate: async (_, { issueId, value }, { db, session }) => {
       const { value: estimate } = await db.collection('estimates').findOneAndReplace(
         { user: getObjectId(session.user.id) },
         {

@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import React from 'react';
-import { GetActiveTeamQuery, useEstimateIssueMutation } from '../../../apollo/types.grapqhl';
+import { GetActiveTeamQuery, useEstimateCreateMutation } from '../../../apollo/types.grapqhl';
 
 export interface EstimationPanelCardProps {
   value: String;
@@ -10,9 +10,9 @@ export interface EstimationPanelCardProps {
 export default function EstimationPanelCard({ value, issue }: EstimationPanelCardProps) {
   const classes = useStyles();
 
-  const [estimateIssue] = useEstimateIssueMutation();
+  const [estimateCreate] = useEstimateCreateMutation();
   const handleClick = () => {
-    estimateIssue({ variables: { issueId: issue._id, value: `${value}` } });
+    estimateCreate({ variables: { issueId: issue._id, value: `${value}` } });
   };
 
   return (

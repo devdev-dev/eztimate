@@ -9,8 +9,7 @@ type Mutation {
   issueUpdate(id: String!, name: String, state: IssueState): Issue
   issueDelete(id: String!): Issue
 
-  # TODO Rename to estimateCreate
-  estimateIssue(issueId: String!, value: String!): Estimate
+  estimateCreate(issueId: String!, value: String!): Estimate
   estimateDelete(id: String!): Estimate
 }
 

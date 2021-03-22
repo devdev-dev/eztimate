@@ -56,8 +56,8 @@ mutation IssueDelete($id: String!) {
   }
 }
 
-mutation EstimateIssue($issueId: String!, $value: String!) {
-  estimateIssue(issueId: $issueId, value: $value) {
+mutation EstimateCreate($issueId: String!, $value: String!) {
+  estimateCreate(issueId: $issueId, value: $value) {
     _id
     user {
       ...UserFields
