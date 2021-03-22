@@ -5,6 +5,7 @@
   "scripts": {
     "predev": "npm run clean:gql && npm run codegen",
     "dev": "next dev",
+    "prebuild": "npm run clean:gql && npm run codegen",
     "build": "next build",
     "start": "next start",
     "prettier": "npx prettier --check \"**/*.{ts,tsx,css,json,js,jsx}\"",
