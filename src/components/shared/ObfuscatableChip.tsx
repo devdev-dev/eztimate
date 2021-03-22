@@ -1,17 +1,17 @@
 import { Avatar, Chip, createStyles, makeStyles, Theme } from '@material-ui/core';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import React from 'react';
-import { useEstimateDeleteMutation, useLoggedInUserQuery } from '../../apollo/types.grapqhl';
+import { useEstimateDeleteMutation } from '../../apollo/types.grapqhl';
 
 export interface ObfuscatableChipProps {
   estimate: any;
   obfuscated: boolean;
+  deleteable: boolean;
 }
 
-export default function ObfuscatableChip({ estimate, obfuscated }: ObfuscatableChipProps) {
+export default function ObfuscatableChip({ estimate, obfuscated, deleteable }: ObfuscatableChipProps) {
   const classes = useStyles();
 
-  const { data } = useLoggedInUserQuery();
   const [estimateDelete] = useEstimateDeleteMutation();
 
   const handleDelete = () => {
@@ -41,7 +41,7 @@ export default function ObfuscatableChip({ estimate, obfuscated }: ObfuscatableC
       color="primary"
       className={classes.chip}
       onClick={() => {}}
-      onDelete={data?.loggedInUser._id === estimate.user._id ? handleDelete : undefined}
+      onDelete={deleteable ? handleDelete : undefined}
     />
   );
 }

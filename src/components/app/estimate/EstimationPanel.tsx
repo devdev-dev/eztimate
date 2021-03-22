@@ -2,7 +2,7 @@ import { Box, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import React, { useEffect, useState } from 'react';
-import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation } from '../../../apollo/types.grapqhl';
+import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation, useLoggedInUserQuery } from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
 import ObfuscatableChip from '../../shared/ObfuscatableChip';
 import EstimationPanelCard from './EstimationPanelCard';
@@ -14,6 +14,7 @@ export default function EstimationPanel() {
 
   const [obfuscated, setObfuscated] = useState(true);
 
+  const { data: loggedInUser } = useLoggedInUserQuery();
   const { data } = useGetEstimatedIssueQuery();
 
   useEffect(() => {
@@ -34,6 +35,8 @@ export default function EstimationPanel() {
     }
   };
 
+  const userEstimate = data?.activeTeam.estimatedIssue.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
+
   return (
     <Box>
       <Paper className={classes.results}>
@@ -45,7 +48,7 @@ export default function EstimationPanel() {
         </Toolbar>
         <Box className={classes.resultsChips} px={2} pb={2}>
           {data?.activeTeam.estimatedIssue.estimates.map((estimate, index) => (
-            <ObfuscatableChip key={index} estimate={estimate} obfuscated={obfuscated} />
+            <ObfuscatableChip key={index} estimate={estimate} obfuscated={obfuscated} deleteable={userEstimate?._id === estimate._id} />
           ))}
         </Box>
       </Paper>
@@ -53,7 +56,7 @@ export default function EstimationPanel() {
         <Grid direction="row" justify="center" alignItems="stretch" container>
           {estimationValues.map((value, index) => (
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard value={value} issue={data?.activeTeam?.estimatedIssue} />
+              <EstimationPanelCard value={value} issue={data?.activeTeam?.estimatedIssue} raised={userEstimate?.value === value} />
             </Grid>
           ))}
         </Grid>
