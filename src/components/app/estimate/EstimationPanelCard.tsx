@@ -12,7 +12,23 @@ export default function EstimationPanelCard({ value, issue }: EstimationPanelCar
 
   const [estimateCreate] = useEstimateCreateMutation();
   const handleClick = () => {
-    estimateCreate({ variables: { issueId: issue._id, value: `${value}` } });
+    estimateCreate({
+      variables: { issueId: issue._id, value: `${value}` },
+      update: (cache, { data: estimateCreated }) => {
+        cache.modify({
+          id: cache.identify(issue),
+          fields: {
+            estimates(cachedEstimates, { toReference }) {
+              if (issue.estimates.find(e => e._id === estimateCreated.estimateCreate._id)) {
+                return cachedEstimates;
+              } else {
+                return [...cachedEstimates, toReference(estimateCreated.estimateCreate)];
+              }
+            }
+          }
+        });
+      }
+    });
   };
 
   return (
