@@ -19,7 +19,7 @@ export default function EstimationPanel() {
   const { data } = useGetEstimatedIssueQuery();
 
   useEffect(() => {
-    data && setObfuscated(data.activeTeam.estimatedIssue.state === IssueState.Open);
+    setObfuscated(data?.activeTeam?.estimatedIssue?.state === IssueState.Open);
   }, [data]);
 
   const [issueUpdate] = useIssueUpdateMutation();
@@ -46,7 +46,7 @@ export default function EstimationPanel() {
     issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Estimated } });
   };
 
-  const userEstimate = data?.activeTeam.estimatedIssue.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
+  const userEstimate = data?.activeTeam?.estimatedIssue?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
 
   return (
     <Box>
@@ -62,7 +62,7 @@ export default function EstimationPanel() {
                 vertical: 'bottom',
                 horizontal: 'right'
               }}
-              badgeContent={data?.activeTeam.estimatedIssue.estimate ?? 0}
+              badgeContent={data?.activeTeam.estimatedIssue?.estimate ?? 0}
               color="secondary"
             >
               <SendIcon />
@@ -70,7 +70,7 @@ export default function EstimationPanel() {
           </IconButton>
         </Toolbar>
         <Box className={classes.resultsChips} px={2} pb={2}>
-          {data?.activeTeam.estimatedIssue.estimates.map((estimate, index) => (
+          {data?.activeTeam.estimatedIssue?.estimates.map((estimate, index) => (
             <ObfuscatableChip
               key={index}
               estimate={estimate}
