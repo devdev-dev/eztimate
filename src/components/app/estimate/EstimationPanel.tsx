@@ -1,7 +1,8 @@
-import { Badge, Box, Button, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar, withStyles } from '@material-ui/core';
+import { Badge, Box, Button, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { Skeleton } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
 import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation, useLoggedInUserQuery } from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
@@ -13,70 +14,84 @@ const estimationValues = ['1', '2', '3', '5', '8', '13', '20', '40', '100'];
 export default function EstimationPanel() {
   const classes = useStyles();
 
-  const [obfuscated, setObfuscated] = useState(true);
-
   const { data: loggedInUser } = useLoggedInUserQuery();
-  const { data } = useGetEstimatedIssueQuery();
+  const { data: issueQuery, loading: loadingIssueQuery } = useGetEstimatedIssueQuery();
 
+  const [obfuscated, setObfuscated] = useState(true);
   useEffect(() => {
-    setObfuscated(data?.activeTeam?.estimatedIssue?.state === IssueState.Open);
-  }, [data]);
+    setObfuscated(issueUnderEstimation?.state === IssueState.Open);
+  }, [issueQuery]);
+
+  const [issueUnderEstimation, setIssueUnderEstimation] = useState(null);
+  useEffect(() => {
+    setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
+  }, [issueQuery]);
 
   const [issueUpdate] = useIssueUpdateMutation();
   const handleIssueUpdate = name => {
-    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, name } });
+    issueUpdate({ variables: { id: issueUnderEstimation?._id, name } });
   };
   const handleShowResults = () => {
     if (obfuscated) {
       setObfuscated(!obfuscated);
-      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Discussed } });
+      issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Discussed } });
     } else {
       setObfuscated(!obfuscated);
-      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Open, estimate: null } });
+      issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Open, estimate: null } });
     }
   };
   const handleEstimationSelect = estimateValue => {
-    if (data.activeTeam?.estimatedIssue?.estimate === estimateValue) {
-      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, estimate: null } });
+    if (issueUnderEstimation?.estimate === estimateValue) {
+      issueUpdate({ variables: { id: issueUnderEstimation?._id, estimate: null } });
     } else {
-      issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, estimate: estimateValue } });
+      issueUpdate({ variables: { id: issueUnderEstimation?._id, estimate: estimateValue } });
     }
   };
   const handleEstimationFinished = () => {
-    issueUpdate({ variables: { id: data.activeTeam?.estimatedIssue?._id, state: IssueState.Estimated } });
+    issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Estimated } });
   };
 
-  const userEstimate = data?.activeTeam?.estimatedIssue?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
+  const userEstimate = issueUnderEstimation?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
+
+  const EmptyToolbar = (
+    <Toolbar className={classes.resultsToolbar}>
+      {loadingIssueQuery ? <Skeleton animation="wave" width="100%" height="50px" /> : <Typography variant="h5">Choose an issue to start estimation</Typography>}
+    </Toolbar>
+  );
+
+  const EstimationToolbar = (
+    <Toolbar className={classes.resultsToolbar}>
+      <EditableTextField inputValue={issueUnderEstimation?.name} onSave={name => handleIssueUpdate(name)} />
+      <Button variant="text" color="secondary" onClick={handleShowResults} endIcon={obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}>
+        {obfuscated ? 'Show Results' : 'Hide Results'}
+      </Button>
+      <IconButton edge="end" disabled={obfuscated} onClick={handleEstimationFinished}>
+        <Badge
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          badgeContent={issueUnderEstimation?.estimate ?? 0}
+          color="secondary"
+        >
+          <SendIcon />
+        </Badge>
+      </IconButton>
+    </Toolbar>
+  );
 
   return (
     <Box>
       <Paper className={classes.results}>
-        <Toolbar className={classes.resultsToolbar}>
-          {data && <EditableTextField inputValue={data.activeTeam?.estimatedIssue?.name} onSave={name => handleIssueUpdate(name)} />}
-          <Button variant="text" color="secondary" onClick={handleShowResults} endIcon={obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}>
-            {obfuscated ? 'Show Results' : 'Hide Results'}
-          </Button>
-          <IconButton edge="end" disabled={obfuscated} onClick={handleEstimationFinished}>
-            <Badge
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              badgeContent={data?.activeTeam.estimatedIssue?.estimate ?? 0}
-              color="secondary"
-            >
-              <SendIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
+        {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
         <Box className={classes.resultsChips} px={2} pb={2}>
-          {data?.activeTeam.estimatedIssue?.estimates.map((estimate, index) => (
+          {issueUnderEstimation?.estimates.map((estimate, index) => (
             <ObfuscatableChip
               key={index}
               estimate={estimate}
               obfuscated={obfuscated}
               deleteable={userEstimate?._id === estimate._id}
-              selected={data?.activeTeam?.estimatedIssue?.estimate === estimate.value}
+              selected={issueUnderEstimation?.estimate === estimate.value}
               onSelect={handleEstimationSelect}
             />
           ))}
@@ -86,7 +101,12 @@ export default function EstimationPanel() {
         <Grid direction="row" justify="center" alignItems="stretch" container>
           {estimationValues.map((value, index) => (
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard value={value} issue={data?.activeTeam?.estimatedIssue} raised={userEstimate?.value === value} />
+              <EstimationPanelCard
+                value={value}
+                issue={issueUnderEstimation}
+                disabled={!issueUnderEstimation || loadingIssueQuery}
+                raised={userEstimate?.value === value}
+              />
             </Grid>
           ))}
         </Grid>
@@ -94,16 +114,6 @@ export default function EstimationPanel() {
     </Box>
   );
 }
-const StyledBadge = withStyles((theme: Theme) =>
-  createStyles({
-    badge: {
-      left: 3,
-      top: 13,
-      border: `2px solid ${theme.palette.background.paper}`,
-      padding: '0 4px'
-    }
-  })
-)(Badge);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

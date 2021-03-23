@@ -5,10 +5,11 @@ import { GetActiveTeamQuery, useEstimateCreateMutation } from '../../../apollo/t
 export interface EstimationPanelCardProps {
   value: String;
   issue: GetActiveTeamQuery['activeTeam']['issues'][0];
+  disabled: boolean
   raised: boolean;
 }
 
-export default function EstimationPanelCard({ value, issue, raised }: EstimationPanelCardProps) {
+export default function EstimationPanelCard({ value, issue, disabled, raised }: EstimationPanelCardProps) {
   const classes = useStyles();
 
   const [estimateCreate] = useEstimateCreateMutation();
@@ -34,7 +35,7 @@ export default function EstimationPanelCard({ value, issue, raised }: Estimation
 
   return (
     <Card className={classes.card} raised={raised}>
-      <CardActionArea className={classes.cardActionArea} onClick={handleClick}>
+      <CardActionArea className={classes.cardActionArea} onClick={handleClick} disabled={disabled}>
         <CardContent className={classes.cardContent}>
           <Typography variant="h4" color="textSecondary">
             {value}
