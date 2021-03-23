@@ -2,7 +2,7 @@ import { AppBar, Box, Divider, makeStyles, Tab, Tabs, Theme, Typography } from '
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
 import { useSession } from 'next-auth/client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreateNewTeam from './content/CreteNewTeam';
 import JoinNewTeam from './content/JoinNewTeam';
 import SignIn from './content/SignIn';
@@ -17,7 +17,10 @@ export default function IndexTabs(props: IndexTabsProps) {
   const [session] = useSession();
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(!session ? 0 : 1);
+  const [value, setValue] = React.useState(0);
+  useEffect(() => {
+    setValue(!session ? 0 : 1);
+  }, [session]);
 
   const handleChange = (_, newValue: number) => {
     setValue(newValue);

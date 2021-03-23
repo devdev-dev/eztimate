@@ -41,13 +41,8 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh',
-    backgroundImage: 'url(https://source.unsplash.com/random)',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
-  },
-  image: {}
+    backgroundColor: theme.palette.grey[100]
+  }
 }));
 
 export default withAppLayout(Index);
