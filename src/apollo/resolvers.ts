@@ -1,6 +1,6 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
-import { getObjectId } from '../utils/mongodb/mongodb';
+import { getObjectId } from '../utils/mongodb';
 import { CookieName } from '../utils/types';
 import { Estimate, Issue, IssueState, Team, User } from './types.grapqhl';
 
