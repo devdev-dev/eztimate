@@ -1,10 +1,14 @@
 import { Badge, Box, Button, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Skeleton } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
-import { IssueState, useGetEstimatedIssueQuery, useIssueUpdateMutation, useLoggedInUserQuery } from '../../../apollo/types.grapqhl';
+import {
+  IssueState,
+  IssueUpdateMutationVariables,
+  useGetEstimatedIssueQuery,
+  useIssueUpdateMutation,
+  useLoggedInUserQuery
+} from '../../../apollo/types.grapqhl';
 import EditableTextField from '../../shared/EditableTextField';
 import ObfuscatableChip from '../../shared/ObfuscatableChip';
 import EstimationPanelCard from './EstimationPanelCard';
@@ -32,13 +36,13 @@ export default function EstimationPanel() {
     issueUpdate({ variables: { id: issueUnderEstimation?._id, name } });
   };
   const handleShowResults = () => {
+    let variables: IssueUpdateMutationVariables = { id: issueUnderEstimation?._id };
     if (obfuscated) {
-      setObfuscated(!obfuscated);
-      issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Discussed } });
+      variables = { ...variables, state: IssueState.Discussed };
     } else {
-      setObfuscated(!obfuscated);
-      issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Open, estimate: null } });
+      variables = { ...variables, state: IssueState.Open, estimate: null };
     }
+    issueUpdate({ variables }).then(issue => setObfuscated(issue.data?.issueUpdate.state === IssueState.Open));
   };
   const handleEstimationSelect = estimateValue => {
     if (issueUnderEstimation?.estimate === estimateValue) {
@@ -62,7 +66,7 @@ export default function EstimationPanel() {
   const EstimationToolbar = (
     <Toolbar className={classes.resultsToolbar}>
       <EditableTextField inputValue={issueUnderEstimation?.name} onSave={name => handleIssueUpdate(name)} />
-      <Button variant="text" color="secondary" onClick={handleShowResults} endIcon={obfuscated ? <VisibilityIcon /> : <VisibilityOffIcon />}>
+      <Button variant="text" color="secondary" onClick={handleShowResults}>
         {obfuscated ? 'Show Results' : 'Hide Results'}
       </Button>
       <IconButton edge="end" disabled={obfuscated} onClick={handleEstimationFinished}>
