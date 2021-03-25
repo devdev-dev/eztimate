@@ -21,14 +21,14 @@ export default function EstimationPanel() {
   const { data: loggedInUser } = useLoggedInUserQuery();
   const { data: issueQuery, loading: loadingIssueQuery } = useGetEstimatedIssueQuery();
 
-  const [obfuscated, setObfuscated] = useState(true);
-  useEffect(() => {
-    setObfuscated(issueUnderEstimation?.state === IssueState.Open);
-  }, [issueQuery]);
-
   const [issueUnderEstimation, setIssueUnderEstimation] = useState(null);
   useEffect(() => {
     setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
+  }, [issueQuery]);
+
+  const [obfuscated, setObfuscated] = useState(true);
+  useEffect(() => {
+    setObfuscated(issueQuery?.activeTeam.estimatedIssue?.state === IssueState.Open);
   }, [issueQuery]);
 
   const [issueUpdate] = useIssueUpdateMutation();
