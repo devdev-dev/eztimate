@@ -1,7 +1,7 @@
 import { Avatar, Chip, createStyles, makeStyles, Theme } from '@material-ui/core';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import React from 'react';
-import { useEstimateDeleteMutation } from '../../apollo/types.grapqhl';
+import { useEstimateDeleteMutation } from '../../../apollo/types.grapqhl';
 
 export interface ObfuscatableChipProps {
   estimate: any;

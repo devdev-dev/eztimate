@@ -1,4 +1,4 @@
-import { Container, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Container, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
 import EstimationPanel from './EstimationPanel';
 import UserPanel from './UserPanel';
@@ -13,7 +13,7 @@ const Estimate = () => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     container: {}
   })

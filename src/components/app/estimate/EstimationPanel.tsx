@@ -9,8 +9,8 @@ import {
   useIssueUpdateMutation,
   useLoggedInUserQuery
 } from '../../../apollo/types.grapqhl';
-import EditableTextField from '../../shared/EditableTextField';
-import ObfuscatableChip from '../../shared/ObfuscatableChip';
+import EditableTextField from './EditableTextField';
+import ObfuscatableChip from './ObfuscatableChip';
 import EstimationPanelCard from './EstimationPanelCard';
 
 const estimationValues = ['1', '2', '3', '5', '8', '13', '20', '40', '100'];
