@@ -1,4 +1,4 @@
-import { useChannel, useEvent, useTrigger } from '@harelpls/use-pusher';
+import { useEvent, usePresenceChannel, useTrigger } from '@harelpls/use-pusher';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
@@ -15,11 +15,16 @@ const Dashboard = () => {
   const classes = useStyles();
 
   const [message, setMessages] = useState<string>('');
-  const channel = useChannel('testchannel');
-  useEvent(channel, 'testevent', ({ data }) => setMessages('Miau'));
+  const { channel } = usePresenceChannel('presence-awesome');
+  useEvent(channel, 'testevent', event => {
+    console.log(event);
+    console.log(channel);
+    setMessages('Miau');
+  });
 
-  const trigger = useTrigger('testchannel');
+  const trigger = useTrigger('presence-awesome');
   const handleCLick = () => {
+    console.log('trigger');
     trigger('testevent', 'hello');
   };
 
