@@ -1,3 +1,4 @@
+import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Avatar, Box, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Cookies from 'js-cookie';
@@ -15,6 +16,9 @@ export default function UserPanel() {
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+
+  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
+  console.log(channel?.members);
 
   const handleCopy = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
@@ -38,9 +42,7 @@ export default function UserPanel() {
         </Typography>
       </Grid>
       <Grid item xs className={classes.avatars}>
-        {data?.activeTeam.users?.map((user, userIndex) => (
-          <UserAvatar key={userIndex} user={user} />
-        ))}
+        {channel && data?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel.members.get(user._id)} />)}
         <Box className={classes.inviteButton}>
           <IconButton onClick={() => setOpen(true)} ref={moreButtonRef}>
             <Avatar>
@@ -79,17 +81,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-end'
     },
-    inviteButton: {},
-    speedDial: {
-      position: 'absolute',
-      '& button': {
-        zIndex: 1052
-      },
-      '& .MuiSpeedDial-actions': {
-        position: 'absolute',
-        margin: 0,
-        zIndex: 1051,
-        '&.MuiSpeedDial-actionsClosed': {}
+    inviteButton: {
+      '& .MuiIconButton-root': {
+        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(3)
       }
     }
   })

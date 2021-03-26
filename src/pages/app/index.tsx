@@ -1,9 +1,8 @@
-import { useEvent, usePresenceChannel, useTrigger } from '@harelpls/use-pusher';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
-import React, { useState } from 'react';
+import React from 'react';
 import Estimate from '../../components/app/estimate';
 import Sidebar from '../../components/app/timeline';
 import withAppLayout from '../../components/withAppLayout';
@@ -13,25 +12,8 @@ export const AppContext = React.createContext(undefined);
 
 const Dashboard = () => {
   const classes = useStyles();
-
-  const [message, setMessages] = useState<string>('');
-  const { channel } = usePresenceChannel('presence-awesome');
-  useEvent(channel, 'testevent', event => {
-    console.log(event);
-    console.log(channel);
-    setMessages('Miau');
-  });
-
-  const trigger = useTrigger('presence-awesome');
-  const handleCLick = () => {
-    console.log('trigger');
-    trigger('testevent', 'hello');
-  };
-
   return (
     <AppContext.Provider value={{}}>
-      <button onClick={handleCLick}>TEXT</button>
-      {message}
       <Grid container component="main" className={classes.root}>
         <Grid item sm={12} md={8} lg={8} className={classes.parts}>
           <Estimate />

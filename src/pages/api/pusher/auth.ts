@@ -24,7 +24,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   });
 
   try {
-
     const socketId = request.body.socket_id;
     const channel = request.body.channel_name;
 
