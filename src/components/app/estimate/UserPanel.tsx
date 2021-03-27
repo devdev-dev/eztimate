@@ -18,7 +18,6 @@ export default function UserPanel() {
   const [open, setOpen] = useState(false);
 
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-  console.log(channel?.members);
 
   const handleCopy = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';

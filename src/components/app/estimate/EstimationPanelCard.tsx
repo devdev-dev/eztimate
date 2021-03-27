@@ -1,16 +1,22 @@
+import { usePusher, useTrigger } from '@harelpls/use-pusher';
 import { Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import Cookies from 'js-cookie';
 import React from 'react';
 import { GetActiveTeamQuery, useEstimateCreateMutation } from '../../../apollo/types.grapqhl';
+import { CookieName } from '../../../utils/types';
 
 export interface EstimationPanelCardProps {
   value: String;
   issue: GetActiveTeamQuery['activeTeam']['issues'][0];
-  disabled: boolean
+  disabled: boolean;
   raised: boolean;
 }
 
 export default function EstimationPanelCard({ value, issue, disabled, raised }: EstimationPanelCardProps) {
   const classes = useStyles();
+
+  const { client } = usePusher();
+  const trigger = useTrigger(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
 
   const [estimateCreate] = useEstimateCreateMutation();
   const handleClick = () => {
@@ -30,6 +36,8 @@ export default function EstimationPanelCard({ value, issue, disabled, raised }: 
           }
         });
       }
+    }).then(estimateCreated => {
+      trigger('issue:estimate', { estimate: estimateCreated.data.estimateCreate, socketId: client.connection.socket_id });
     });
   };
 

@@ -23,7 +23,10 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     cluster: 'eu'
   });
 
-  pusher.trigger('presence-awesome', 'testevent', 'testdata');
+  const { channelName, eventName, data } = JSON.parse(request.body);
+  pusher.trigger(channelName, eventName, data, {
+    socket_id: data.socketId
+  });
 
   response.status(200).send({});
 };
