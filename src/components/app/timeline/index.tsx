@@ -1,3 +1,4 @@
+import { usePusher, useTrigger } from '@harelpls/use-pusher';
 import {
   Avatar,
   Box,
@@ -14,12 +15,18 @@ import {
 } from '@material-ui/core';
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
+import { useIssueCreateEvent } from '../../../utils/hooks';
+import { CookieName } from '../../../utils/types';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
   const classes = useStyles();
+
+  const { client } = usePusher();
+  const trigger = useTrigger(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
 
   const { data } = useGetActiveTeamQuery();
   const [value, setValue] = useState('');
@@ -40,10 +47,12 @@ const Timeline = () => {
           }
         });
       }
-    }).then(() => {
+    }).then(issueCreated => {
       setValue('');
+      trigger('issue:create', { issue: issueCreated.data.issueCreate, socketId: client.connection.socket_id });
     });
   };
+  useIssueCreateEvent(data?.activeTeam);
 
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
