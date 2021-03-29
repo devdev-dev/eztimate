@@ -58,11 +58,7 @@ mutation IssueDelete($id: String!) {
 
 mutation EstimateCreate($issueId: String!, $value: String!) {
   estimateCreate(issueId: $issueId, value: $value) {
-    _id
-    user {
-      ...UserFields
-    }
-    value
+    ...EstimateFields
   }
 }
 
@@ -89,4 +85,12 @@ fragment IssueFields on Issue {
       ...UserFields
     }
   }
+}
+
+fragment EstimateFields on Estimate {
+  _id
+  user {
+    ...UserFields
+  }
+  value
 }
