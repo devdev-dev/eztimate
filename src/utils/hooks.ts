@@ -37,15 +37,6 @@ export function useIssueEstimateEvent(issue: Issue) {
   });
 }
 
-export function useIssueDeleteEvent() {
-  const apolloClient = useApolloClient();
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-  useEvent(channel, 'issue:delete', ({ issue }) => {
-    apolloClient.cache.evict({ id: apolloClient.cache.identify({ id: issue._id, __typename: 'Issue' }) });
-    apolloClient.cache.gc();
-  });
-}
-
 export function useIssueCreateEvent(team: Team) {
   const apolloClient = useApolloClient();
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
@@ -81,5 +72,14 @@ export function useIssueCreateEvent(team: Team) {
         }
       }
     });
+  });
+}
+
+export function useIssueDeleteEvent() {
+  const apolloClient = useApolloClient();
+  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
+  useEvent(channel, 'issue:delete', ({ issue }) => {
+    apolloClient.cache.evict({ id: apolloClient.cache.identify({ id: issue._id, __typename: 'Issue' }) });
+    apolloClient.cache.gc();
   });
 }

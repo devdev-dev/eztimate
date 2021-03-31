@@ -1,4 +1,3 @@
-import { usePusher, useTrigger } from '@harelpls/use-pusher';
 import {
   Avatar,
   createStyles,
@@ -17,11 +16,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
 import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
 import { useIssueDeleteEvent } from '../../../utils/hooks';
-import { CookieName } from '../../../utils/types';
 
 const ITEM_HEIGHT = 48;
 
@@ -33,20 +30,11 @@ export type IssueListItemProps = {
 export default function IssueListItem({ issue, selected }: IssueListItemProps) {
   const classes = useStyles();
 
-  const { client } = usePusher();
-  const trigger = useTrigger(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-
   const [issueDelete] = useIssueDeleteMutation();
   const handleDeleteIssue = () => {
     setOpen(false);
     issueDelete({
-      variables: { id: issue._id },
-      update: (cache, { data }) => {
-        cache.evict({ id: cache.identify({ id: data.issueDelete._id, __typename: 'Issue' }) });
-        cache.gc();
-      }
-    }).then(issueDeleted => {
-      trigger('issue:delete', { issue: issueDeleted.data.issueDelete, socketId: client.connection.socket_id });
+      variables: { id: issue._id }
     });
   };
   useIssueDeleteEvent();
