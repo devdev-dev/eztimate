@@ -1,13 +1,13 @@
 import { gql, useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
 import Cookies from 'js-cookie';
-import { Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
+import { EstimateFieldsFragment, Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
 import { CookieName } from './types';
 
 export function useIssueEstimateEvent(issue: Issue) {
   const apolloClient = useApolloClient();
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-  useEvent(channel, 'issue:estimate', ({ estimate }) => {
+  useEvent(channel, 'issue:estimate', (estimate: EstimateFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(issue),
       fields: {

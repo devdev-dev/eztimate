@@ -1,9 +1,6 @@
-import { usePusher, useTrigger } from '@harelpls/use-pusher';
-import { Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
-import Cookies from 'js-cookie';
+import { Card, CardActionArea, CardContent, createStyles, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { GetActiveTeamQuery, useEstimateCreateMutation } from '../../../apollo/types.grapqhl';
-import { CookieName } from '../../../utils/types';
 
 export interface EstimationPanelCardProps {
   value: String;
@@ -15,29 +12,10 @@ export interface EstimationPanelCardProps {
 export default function EstimationPanelCard({ value, issue, disabled, raised }: EstimationPanelCardProps) {
   const classes = useStyles();
 
-  const { client } = usePusher();
-  const trigger = useTrigger(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-
   const [estimateCreate] = useEstimateCreateMutation();
   const handleClick = () => {
     estimateCreate({
-      variables: { issueId: issue._id, value: `${value}` },
-      update: (cache, { data: estimateCreated }) => {
-        cache.modify({
-          id: cache.identify(issue),
-          fields: {
-            estimates(cachedEstimates, { toReference }) {
-              if (issue.estimates.find(e => e._id === estimateCreated.estimateCreate._id)) {
-                return cachedEstimates;
-              } else {
-                return [...cachedEstimates, toReference(estimateCreated.estimateCreate)];
-              }
-            }
-          }
-        });
-      }
-    }).then(estimateCreated => {
-      trigger('issue:estimate', { estimate: estimateCreated.data.estimateCreate, socketId: client.connection.socket_id });
+      variables: { issueId: issue._id, value: `${value}` }
     });
   };
 
@@ -54,7 +32,7 @@ export default function EstimationPanelCard({ value, issue, disabled, raised }: 
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     card: {
       aspectRatio: '4 / 5'

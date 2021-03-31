@@ -3,7 +3,7 @@ import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
 import Pusher from 'pusher';
 import { CookieName } from '../../utils/types';
-import { IssueCreateMutationResult } from '../types.grapqhl';
+import { EstimateCreateMutationResult, IssueCreateMutationResult } from '../types.grapqhl';
 
 export const pusherPlugin: ApolloServerPlugin = {
   requestDidStart() {
@@ -20,6 +20,9 @@ export const pusherPlugin: ApolloServerPlugin = {
           case 'IssueCreate':
             handleIssueCreate(pusher, context.context.context, context.response);
             break;
+          case 'EstimateCreate':
+            handleEstimateCreate(pusher, context.context.context, context.response);
+            break;
         }
       }
     };
@@ -28,4 +31,8 @@ export const pusherPlugin: ApolloServerPlugin = {
 
 const handleIssueCreate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
   pusher.trigger(`presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`, 'issue:create', (response as IssueCreateMutationResult).data.issueCreate);
+};
+
+const handleEstimateCreate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
+  pusher.trigger(`presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`, 'issue:estimate', (response as EstimateCreateMutationResult).data.estimateCreate);
 };
