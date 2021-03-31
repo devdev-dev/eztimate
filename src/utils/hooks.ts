@@ -1,7 +1,7 @@
 import { gql, useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
 import Cookies from 'js-cookie';
-import { Issue, Team } from '../apollo/types.grapqhl';
+import { Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
 import { CookieName } from './types';
 
 export function useIssueEstimateEvent(issue: Issue) {
@@ -49,8 +49,7 @@ export function useIssueDeleteEvent() {
 export function useIssueCreateEvent(team: Team) {
   const apolloClient = useApolloClient();
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
-  useEvent(channel, 'issue:create', ({ issue }) => {
-    console.log(issue);
+  useEvent(channel, 'issue:create', (issue: IssueFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(team),
       fields: {

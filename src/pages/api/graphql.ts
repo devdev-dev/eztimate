@@ -1,5 +1,6 @@
 import { ApolloServer } from 'apollo-server-micro';
 import { getSession } from 'next-auth/client';
+import { pusherPlugin } from '../../apollo/plugins/pusher';
 import schema from '../../apollo/schema';
 import getDatabase from '../../utils/mongodb';
 
@@ -19,7 +20,8 @@ const apolloServer = new ApolloServer({
       db,
       context: { req, res }
     };
-  }
+  },
+  plugins: [pusherPlugin]
 });
 
 export const config = {
@@ -28,4 +30,6 @@ export const config = {
   }
 };
 
-export default apolloServer.createHandler({ path: '/api/graphql' });
+export default apolloServer.createHandler({
+  path: '/api/graphql'
+});
