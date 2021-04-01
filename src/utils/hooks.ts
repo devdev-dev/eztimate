@@ -1,12 +1,13 @@
 import { gql, useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
-import Cookies from 'js-cookie';
+import { useContext } from 'react';
 import { EstimateFieldsFragment, Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
-import { CookieName } from './types';
+import { AppContext } from '../pages/app';
 
 export function useIssueEstimateEvent(issue: Issue) {
   const apolloClient = useApolloClient();
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
   useEvent(channel, 'issue:estimate', (estimate: EstimateFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(issue),
@@ -39,7 +40,8 @@ export function useIssueEstimateEvent(issue: Issue) {
 
 export function useIssueCreateEvent(team: Team) {
   const apolloClient = useApolloClient();
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
   useEvent(channel, 'issue:create', (issue: IssueFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(team),
@@ -77,7 +79,8 @@ export function useIssueCreateEvent(team: Team) {
 
 export function useIssueDeleteEvent() {
   const apolloClient = useApolloClient();
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
   useEvent(channel, 'issue:delete', ({ issue }) => {
     apolloClient.cache.evict({ id: apolloClient.cache.identify({ id: issue._id, __typename: 'Issue' }) });
     apolloClient.cache.gc();

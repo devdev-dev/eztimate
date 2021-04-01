@@ -1,5 +1,4 @@
 import { ApolloProvider } from '@apollo/client';
-import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { Provider } from 'next-auth/client';
 import Head from 'next/head';
@@ -7,16 +6,6 @@ import React, { useEffect } from 'react';
 import { apolloClient } from '../apollo/client';
 import theme from '../utils/mui/theme';
 
-const config: PusherProviderProps = {
-  clientKey: '631e589ee8fe02a182ba',
-  cluster: 'eu',
-  authEndpoint: '/api/pusher/auth',
-  triggerEndpoint: '/api/pusher',
-  forceTLS: true,
-  auth: {
-    headers: { Authorization: 'Bearer token' }
-  }
-};
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -39,12 +28,10 @@ export default function MyApp(props) {
       </Head>
       <ApolloProvider client={apolloClient}>
         <Provider session={pageProps.session}>
-          <PusherProvider {...config}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              {getLayout(<Component {...pageProps} />)}
-            </ThemeProvider>
-          </PusherProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {getLayout(<Component {...pageProps} />)}
+          </ThemeProvider>
         </Provider>
       </ApolloProvider>
       ,

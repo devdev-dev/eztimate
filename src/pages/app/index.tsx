@@ -1,28 +1,45 @@
+import { PusherProvider, PusherProviderProps, usePresenceChannel } from '@harelpls/use-pusher';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
+import { PresenceChannel } from 'pusher-js';
 import React from 'react';
 import Estimate from '../../components/app/estimate';
 import Sidebar from '../../components/app/timeline';
 import withAppLayout from '../../components/withAppLayout';
 import { CookieName } from '../../utils/types';
 
-export const AppContext = React.createContext(undefined);
+const config: PusherProviderProps = {
+  clientKey: '631e589ee8fe02a182ba',
+  cluster: 'eu',
+  authEndpoint: '/api/pusher/auth',
+  triggerEndpoint: '/api/pusher',
+  forceTLS: true,
+  auth: {
+    headers: { Authorization: 'Bearer token' }
+  }
+};
+interface IContextProps {
+  teamId: string;
+}
+export const AppContext = React.createContext({} as IContextProps);
 
-const Dashboard = () => {
+const Dashboard = ({ teamId }) => {
   const classes = useStyles();
   return (
-    <AppContext.Provider value={{}}>
-      <Grid container component="main" className={classes.root}>
-        <Grid item sm={12} md={8} lg={8} className={classes.parts}>
-          <Estimate />
+    <PusherProvider {...config}>
+      <AppContext.Provider value={{ teamId }}>
+        <Grid container component="main" className={classes.root}>
+          <Grid item sm={12} md={8} lg={8} className={classes.parts}>
+            <Estimate />
+          </Grid>
+          <Grid item sm={12} md={4} lg={3} className={classes.parts} component={Paper} elevation={6} square>
+            <Sidebar />
+          </Grid>
         </Grid>
-        <Grid item sm={12} md={4} lg={3} className={classes.parts} component={Paper} elevation={6} square>
-          <Sidebar />
-        </Grid>
-      </Grid>
-    </AppContext.Provider>
+      </AppContext.Provider>
+    </PusherProvider>
   );
 };
 
@@ -45,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
     context.res.end();
     return { props: {} };
   }
-  return { props: {} };
+  return { props: { teamId: cookies.get(CookieName.TEAM_ID) } };
 };
 
 export default withAppLayout(Dashboard);
