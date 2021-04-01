@@ -15,14 +15,9 @@ export default function ObfuscatableChip({ estimate, obfuscated, deleteable, sel
   const classes = useStyles();
 
   const [estimateDelete] = useEstimateDeleteMutation();
-
   const handleDelete = () => {
     estimateDelete({
-      variables: { id: estimate._id },
-      update: (cache, { data }) => {
-        cache.evict({ id: cache.identify({ id: data.estimateDelete._id, __typename: 'Estimate' }) });
-        cache.gc();
-      }
+      variables: { id: estimate._id }
     });
   };
 

@@ -1,48 +1,15 @@
 import { gql, useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
 import { useContext } from 'react';
-import { EstimateFieldsFragment, Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
+import { Estimate, EstimateFieldsFragment, Issue, IssueFieldsFragment, Team } from '../apollo/types.grapqhl';
 import { AppContext } from '../pages/app';
-
-export function useIssueEstimateEvent(issue: Issue) {
-  const apolloClient = useApolloClient();
-  const { teamId } = useContext(AppContext);
-  const { channel } = usePresenceChannel(`presence-${teamId}`);
-  useEvent(channel, 'issue:estimate', (estimate: EstimateFieldsFragment) => {
-    apolloClient.cache.modify({
-      id: apolloClient.cache.identify(issue),
-      fields: {
-        estimates(cachedEstimates) {
-          const newEstimateRef = apolloClient.cache.writeFragment({
-            data: estimate,
-            fragment: gql`
-              fragment NewEstimate on Estimate {
-                _id
-                user {
-                  _id
-                  email
-                }
-                value
-              }
-            `
-          });
-
-          if (issue.estimates.find(e => e._id === estimate._id)) {
-            return cachedEstimates;
-          } else {
-            return [...cachedEstimates, newEstimateRef];
-          }
-        }
-      }
-    });
-  });
-}
+import { PusherEvents } from '../utils/types';
 
 export function useIssueCreateEvent(team: Team) {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);
-  useEvent(channel, 'issue:create', (issue: IssueFieldsFragment) => {
+  useEvent(channel, PusherEvents.IssueCreate, (issue: IssueFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(team),
       fields: {
@@ -81,8 +48,52 @@ export function useIssueDeleteEvent() {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);
-  useEvent(channel, 'issue:delete', ({ issue }) => {
+  useEvent(channel, PusherEvents.IssueDelete, (issue: Pick<Issue, '_id'>) => {
     apolloClient.cache.evict({ id: apolloClient.cache.identify({ id: issue._id, __typename: 'Issue' }) });
+    apolloClient.cache.gc();
+  });
+}
+
+export function useIssueEstimateEvent(issue: Issue) {
+  const apolloClient = useApolloClient();
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+  useEvent(channel, PusherEvents.EstimateCreate, (estimate: EstimateFieldsFragment) => {
+    apolloClient.cache.modify({
+      id: apolloClient.cache.identify(issue),
+      fields: {
+        estimates(cachedEstimates) {
+          const newEstimateRef = apolloClient.cache.writeFragment({
+            data: estimate,
+            fragment: gql`
+              fragment NewEstimate on Estimate {
+                _id
+                user {
+                  _id
+                  email
+                }
+                value
+              }
+            `
+          });
+
+          if (issue.estimates.find(e => e._id === estimate._id)) {
+            return cachedEstimates;
+          } else {
+            return [...cachedEstimates, newEstimateRef];
+          }
+        }
+      }
+    });
+  });
+}
+
+export function useEstimateDeleteEvent() {
+  const apolloClient = useApolloClient();
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+  useEvent(channel, PusherEvents.EstimateDelete, (estimate: Pick<Estimate, '_id'>) => {
+    apolloClient.cache.evict({ id: apolloClient.cache.identify({ id: estimate._id, __typename: 'Estimate' }) });
     apolloClient.cache.gc();
   });
 }

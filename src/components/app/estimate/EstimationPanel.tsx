@@ -9,7 +9,7 @@ import {
   useIssueUpdateMutation,
   useLoggedInUserQuery
 } from '../../../apollo/types.grapqhl';
-import { useIssueEstimateEvent } from '../../../utils/hooks';
+import { useEstimateDeleteEvent, useIssueEstimateEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
 import ObfuscatableChip from './ObfuscatableChip';
@@ -27,6 +27,7 @@ export default function EstimationPanel() {
     setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
   }, [issueQuery]);
   useIssueEstimateEvent(issueUnderEstimation);
+  useEstimateDeleteEvent();
 
   const [obfuscated, setObfuscated] = useState(true);
   useEffect(() => {
@@ -58,7 +59,6 @@ export default function EstimationPanel() {
   };
 
   const userEstimate = issueUnderEstimation?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
-
 
   const EmptyToolbar = (
     <Toolbar className={classes.resultsToolbar}>
