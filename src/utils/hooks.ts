@@ -1,55 +1,16 @@
-import { gql, useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
 import { FragmentDefinitionNode } from 'graphql';
 import { useContext } from 'react';
-import { Estimate, EstimateFieldsFragment, Issue, IssueFieldsFragment, IssueFieldsFragmentDoc, Team } from '../apollo/types.grapqhl';
+import { Estimate, EstimateFieldsFragment, EstimateFieldsFragmentDoc, Issue, IssueFieldsFragment, IssueFieldsFragmentDoc, Team } from '../apollo/types.grapqhl';
 import { AppContext } from '../pages/app';
 import { PusherEvents } from '../utils/types';
 
-export function useIssueCreateEvent(team: Team) {
+export function useIssueCreateEvent(team: Pick<Team, '_id' | '__typename'> & { issues: Array<Pick<Issue, '_id'>> }) {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);
   useEvent(channel, PusherEvents.IssueCreate, (issue: IssueFieldsFragment) => {
-    apolloClient.cache.modify({
-      id: apolloClient.cache.identify(team),
-      fields: {
-        issues(cachedIssues) {
-          const newIssueRef = apolloClient.cache.writeFragment({
-            data: issue,
-            fragment: gql`
-              fragment NewIssue on Issue {
-                _id
-                name
-                state
-                estimate
-                estimates {
-                  _id
-                  value
-                  user {
-                    ...UserFields
-                  }
-                }
-              }
-            `
-          });
-
-          if (team.issues.find(i => i._id === issue._id)) {
-            return cachedIssues;
-          } else {
-            return [newIssueRef, ...cachedIssues];
-          }
-        }
-      }
-    });
-  });
-}
-
-export function useIssueUpdateEvent(team: Team) {
-  const apolloClient = useApolloClient();
-  const { teamId } = useContext(AppContext);
-  const { channel } = usePresenceChannel(`presence-${teamId}`);
-  useEvent(channel, PusherEvents.IssueUpdate, (issue: IssueFieldsFragment) => {
     apolloClient.cache.modify({
       id: apolloClient.cache.identify(team),
       fields: {
@@ -67,6 +28,19 @@ export function useIssueUpdateEvent(team: Team) {
           }
         }
       }
+    });
+  });
+}
+
+export function useIssueUpdateEvent() {
+  const apolloClient = useApolloClient();
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+  useEvent(channel, PusherEvents.IssueUpdate, (issue: IssueFieldsFragment) => {
+    apolloClient.cache.writeFragment({
+      data: issue,
+      fragmentName: (IssueFieldsFragmentDoc.definitions[0] as FragmentDefinitionNode).name.value,
+      fragment: IssueFieldsFragmentDoc
     });
   });
 }
@@ -92,16 +66,8 @@ export function useEstimateCreateEvent(issue: Issue) {
         estimates(cachedEstimates) {
           const newEstimateRef = apolloClient.cache.writeFragment({
             data: estimate,
-            fragment: gql`
-              fragment NewEstimate on Estimate {
-                _id
-                user {
-                  _id
-                  email
-                }
-                value
-              }
-            `
+            fragmentName: (EstimateFieldsFragmentDoc.definitions[0] as FragmentDefinitionNode).name.value,
+            fragment: EstimateFieldsFragmentDoc
           });
 
           if (issue.estimates.find(e => e._id === estimate._id)) {

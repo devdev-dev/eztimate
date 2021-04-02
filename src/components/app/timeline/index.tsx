@@ -27,7 +27,7 @@ const Timeline = () => {
 
   const [issueCreate] = useIssueCreateMutation();
   useIssueCreateEvent(data?.activeTeam);
-  useIssueUpdateEvent(data?.activeTeam);
+  useIssueUpdateEvent();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {
