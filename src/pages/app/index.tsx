@@ -1,9 +1,8 @@
-import { PusherProvider, PusherProviderProps, usePresenceChannel } from '@harelpls/use-pusher';
+import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
 import { createStyles, Grid, makeStyles, Paper } from '@material-ui/core';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/client';
-import { PresenceChannel } from 'pusher-js';
 import React from 'react';
 import Estimate from '../../components/app/estimate';
 import Sidebar from '../../components/app/timeline';
@@ -11,7 +10,7 @@ import withAppLayout from '../../components/withAppLayout';
 import { CookieName } from '../../utils/types';
 
 const config: PusherProviderProps = {
-  clientKey: '631e589ee8fe02a182ba',
+  clientKey: '2a14557f5433a2aa3ace',
   cluster: 'eu',
   authEndpoint: '/api/pusher/auth',
   triggerEndpoint: '/api/pusher',

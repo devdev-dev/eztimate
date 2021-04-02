@@ -18,9 +18,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_APP_KEY,
-    secret: process.env.PUSHER_APP_SECRET,
-    cluster: 'eu'
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_CLUSTER
   });
 
   const { channelName, eventName, data } = JSON.parse(request.body);
