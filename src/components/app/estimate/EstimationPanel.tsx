@@ -9,7 +9,7 @@ import {
   useIssueUpdateMutation,
   useLoggedInUserQuery
 } from '../../../apollo/types.grapqhl';
-import { useEstimateDeleteEvent, useIssueEstimateEvent } from '../../../utils/hooks';
+import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
 import ObfuscatableChip from './ObfuscatableChip';
@@ -26,7 +26,7 @@ export default function EstimationPanel() {
   useEffect(() => {
     setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
   }, [issueQuery]);
-  useIssueEstimateEvent(issueUnderEstimation);
+  useEstimateCreateEvent(issueUnderEstimation);
   useEstimateDeleteEvent();
 
   const [obfuscated, setObfuscated] = useState(true);
@@ -34,7 +34,7 @@ export default function EstimationPanel() {
     setObfuscated(issueQuery?.activeTeam.estimatedIssue?.state === IssueState.Open);
   }, [issueQuery]);
 
-  const [issueUpdate] = useIssueUpdateMutation();
+  const [issueUpdate] = useIssueUpdateMutation({ ignoreResults: true });
   const handleIssueUpdate = name => {
     issueUpdate({ variables: { id: issueUnderEstimation?._id, name } });
   };

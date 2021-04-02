@@ -3,7 +3,13 @@ import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
 import Pusher from 'pusher';
 import { CookieName, PusherEvents } from '../../utils/types';
-import { EstimateCreateMutationResult, EstimateDeleteMutationResult, IssueCreateMutationResult, IssueDeleteMutationResult } from '../types.grapqhl';
+import {
+  EstimateCreateMutationResult,
+  EstimateDeleteMutationResult,
+  IssueCreateMutationResult,
+  IssueDeleteMutationResult,
+  IssueUpdateMutationResult
+} from '../types.grapqhl';
 
 export const pusherPlugin: ApolloServerPlugin = {
   requestDidStart() {
@@ -19,6 +25,9 @@ export const pusherPlugin: ApolloServerPlugin = {
         switch (context.operationName) {
           case 'IssueCreate':
             handleIssueCreate(pusher, context.context.context, context.response);
+            break;
+          case 'IssueUpdate':
+            handleIssueUpdate(pusher, context.context.context, context.response);
             break;
           case 'IssueDelete':
             handleIssueDelete(pusher, context.context.context, context.response);
@@ -40,6 +49,14 @@ const handleIssueCreate = (pusher: Pusher, { req, res }, response: GraphQLRespon
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueCreate,
     (response as IssueCreateMutationResult).data.issueCreate
+  );
+};
+
+const handleIssueUpdate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
+  pusher.trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.IssueUpdate,
+    (response as IssueUpdateMutationResult).data.issueUpdate
   );
 };
 
