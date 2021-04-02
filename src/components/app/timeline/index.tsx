@@ -16,7 +16,7 @@ import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
-import { useIssueCreateEvent, useIssueUpdateEvent } from '../../../utils/hooks';
+import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamEstimateEvent } from '../../../utils/hooks';
 import IssueListItem from './IssueListItem';
 
 const Timeline = () => {
@@ -28,6 +28,8 @@ const Timeline = () => {
   const [issueCreate] = useIssueCreateMutation();
   useIssueCreateEvent(data?.activeTeam);
   useIssueUpdateEvent();
+  useIssueDeleteEvent();
+  useTeamEstimateEvent();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const handleAddIssue = () => {

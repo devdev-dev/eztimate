@@ -10,17 +10,6 @@ if (!process.env.MONGODB_DB) {
   throw new Error('Please define the MONGODB_DB environment variable inside .env.local');
 }
 
-export async function connectDatabase() {
-  const client = await MongoClient.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-
-  const db = await client.db(process.env.MONGODB_DB);
-
-  return { client, db };
-}
-
 export default async function getDatabase() {
   if (!global.mongo.client) {
     global.mongo.client = new MongoClient(process.env.MONGODB_URI, {

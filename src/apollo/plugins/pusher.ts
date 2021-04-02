@@ -1,42 +1,39 @@
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
-import Pusher from 'pusher';
+import getPusher from '../../utils/pusher';
 import { CookieName, PusherEvents } from '../../utils/types';
 import {
   EstimateCreateMutationResult,
   EstimateDeleteMutationResult,
   IssueCreateMutationResult,
   IssueDeleteMutationResult,
-  IssueUpdateMutationResult
+  IssueUpdateMutationResult,
+  TeamSetActiveIssueMutationResult
 } from '../types.grapqhl';
 
 export const pusherPlugin: ApolloServerPlugin = {
   requestDidStart() {
     return {
       async willSendResponse(context) {
-        const pusher = new Pusher({
-          appId: process.env.PUSHER_APP_ID,
-          key: process.env.PUSHER_APP_KEY,
-          secret: process.env.PUSHER_APP_SECRET,
-          cluster: 'eu'
-        });
-
         switch (context.operationName) {
+          case 'TeamSetActiveIssue':
+            handleTeamEstimate(context.context.context, context.response);
+            break;
           case 'IssueCreate':
-            handleIssueCreate(pusher, context.context.context, context.response);
+            handleIssueCreate(context.context.context, context.response);
             break;
           case 'IssueUpdate':
-            handleIssueUpdate(pusher, context.context.context, context.response);
+            handleIssueUpdate(context.context.context, context.response);
             break;
           case 'IssueDelete':
-            handleIssueDelete(pusher, context.context.context, context.response);
+            handleIssueDelete(context.context.context, context.response);
             break;
           case 'EstimateCreate':
-            handleEstimateCreate(pusher, context.context.context, context.response);
+            handleEstimateCreate(context.context.context, context.response);
             break;
           case 'EstimateDelete':
-            handleEstimateDelete(pusher, context.context.context, context.response);
+            handleEstimateDelete(context.context.context, context.response);
             break;
         }
       }
@@ -44,40 +41,48 @@ export const pusherPlugin: ApolloServerPlugin = {
   }
 };
 
-const handleIssueCreate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
-  pusher.trigger(
+const handleTeamEstimate = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.TeamEstimate,
+    (response as TeamSetActiveIssueMutationResult).data.teamSetActiveIssue
+  );
+};
+
+const handleIssueCreate = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueCreate,
     (response as IssueCreateMutationResult).data.issueCreate
   );
 };
 
-const handleIssueUpdate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
-  pusher.trigger(
+const handleIssueUpdate = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueUpdate,
     (response as IssueUpdateMutationResult).data.issueUpdate
   );
 };
 
-const handleIssueDelete = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
-  pusher.trigger(
+const handleIssueDelete = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueDelete,
     (response as IssueDeleteMutationResult).data.issueDelete
   );
 };
 
-const handleEstimateCreate = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
-  pusher.trigger(
+const handleEstimateCreate = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.EstimateCreate,
     (response as EstimateCreateMutationResult).data.estimateCreate
   );
 };
 
-const handleEstimateDelete = (pusher: Pusher, { req, res }, response: GraphQLResponse) => {
-  pusher.trigger(
+const handleEstimateDelete = ({ req, res }, response: GraphQLResponse) => {
+  getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.EstimateDelete,
     (response as EstimateDeleteMutationResult).data.estimateDelete

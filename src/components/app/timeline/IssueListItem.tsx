@@ -18,7 +18,6 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React, { useRef, useState } from 'react';
 import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
-import { useIssueDeleteEvent } from '../../../utils/hooks';
 
 const ITEM_HEIGHT = 48;
 
@@ -37,9 +36,8 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
       variables: { id: issue._id }
     });
   };
-  useIssueDeleteEvent();
 
-  const [teamSetActiveIssue] = useTeamSetActiveIssueMutation();
+  const [teamSetActiveIssue] = useTeamSetActiveIssueMutation({ ignoreResults: true });
   const handleTeamSetActiveIssue = () => {
     setOpen(false);
     teamSetActiveIssue({

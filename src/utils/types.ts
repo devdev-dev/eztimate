@@ -3,6 +3,7 @@ export enum CookieName {
 }
 
 export enum PusherEvents {
+  TeamEstimate = 'team:estimate',
   IssueCreate = 'issue:create',
   IssueUpdate = 'issue:update',
   IssueDelete = 'issue:delete',
