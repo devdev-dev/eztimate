@@ -1,0 +1,24 @@
+mutation CreateTeam($teamName: String!) {
+  teamCreate(teamName: $teamName) {
+    _id
+  }
+}
+
+mutation UserJoinTeam($teamId: String!) {
+  userJoinTeam(teamId: $teamId) {
+    _id
+  }
+}
+
+query LoggedInUser {
+  loggedInUser {
+    _id
+    teams {
+      _id
+      name
+      users {
+        email
+      }
+    }
+  }
+}

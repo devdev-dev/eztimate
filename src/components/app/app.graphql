@@ -1,0 +1,100 @@
+query GetActiveTeam {
+  activeTeam {
+    ...TeamFields
+  }
+}
+
+query GetEstimatedIssue {
+  activeTeam {
+    _id
+    estimatedIssue {
+      ...IssueFields
+    }
+  }
+}
+
+query GetUsers {
+  activeTeam {
+    _id
+    users {
+      ...UserFields
+    }
+  }
+}
+
+mutation TeamSetActiveIssue($id: String!) {
+  teamSetActiveIssue(id: $id) {
+    _id
+    estimatedIssue {
+      _id
+    }
+  }
+}
+
+mutation IssueCreate($name: String!) {
+  issueCreate(name: $name) {
+    ...IssueFields
+  }
+}
+
+mutation IssueUpdate($id: String!, $name: String, $state: IssueState, $estimate: String) {
+  issueUpdate(id: $id, name: $name, state: $state, estimate: $estimate) {
+    ...IssueFields
+  }
+}
+
+mutation IssueDelete($id: String!) {
+  issueDelete(id: $id) {
+    _id
+  }
+}
+
+mutation EstimateCreate($issueId: String!, $value: String!) {
+  estimateCreate(issueId: $issueId, value: $value) {
+    ...EstimateFields
+  }
+}
+
+mutation EstimateDelete($id: String!) {
+  estimateDelete(id: $id) {
+    _id
+  }
+}
+
+fragment TeamFields on Team {
+  _id
+  name
+  estimatedIssue {
+    ...IssueFields
+  }
+  issues {
+    ...IssueFields
+  }
+}
+
+fragment UserFields on User {
+  _id
+  email
+}
+
+fragment IssueFields on Issue {
+  _id
+  name
+  state
+  estimate
+  estimates {
+    _id
+    value
+    user {
+      ...UserFields
+    }
+  }
+}
+
+fragment EstimateFields on Estimate {
+  _id
+  user {
+    ...UserFields
+  }
+  value
+}

@@ -1,0 +1,13 @@
+overwrite: true
+schema: ./src/apollo/schema.graphql
+documents: './src/**/*.graphql'
+generates:
+  ./src/apollo/types.grapqhl.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
+    - prettier --write

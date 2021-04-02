@@ -1,0 +1,53 @@
+type Mutation {
+  userJoinTeam(teamId: String!): Team!
+
+  teamCreate(teamName: String!): Team!
+  teamSetActiveIssue(id: String!): Team!
+
+  issueCreate(name: String!): Issue
+  issueUpdate(id: String!, name: String, state: IssueState, estimate: String): Issue
+  issueDelete(id: String!): Issue
+
+  estimateCreate(issueId: String!, value: String!): Estimate
+  estimateDelete(id: String!): Estimate
+}
+
+type Query {
+  loggedInUser: User
+  activeTeam: Team
+}
+
+type User {
+  _id: String!
+  email: String!
+  teams: [Team]!
+}
+
+type Team {
+  _id: String!
+  name: String!
+  users: [User]!
+  issues: [Issue]!
+  estimatedIssue: Issue
+}
+
+type Issue {
+  _id: String!
+  name: String!
+  state: IssueState!
+  dateCreated: String!
+  estimate: String
+  estimates: [Estimate]!
+}
+
+type Estimate {
+  _id: String!
+  user: User!
+  value: String!
+}
+
+enum IssueState {
+  OPEN
+  DISCUSSED
+  ESTIMATED
+}
