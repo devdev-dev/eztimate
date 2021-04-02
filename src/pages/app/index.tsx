@@ -10,8 +10,8 @@ import withAppLayout from '../../components/withAppLayout';
 import { CookieName } from '../../utils/types';
 
 const config: PusherProviderProps = {
-  clientKey: '2a14557f5433a2aa3ace',
-  cluster: 'eu',
+  clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,
+  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
   authEndpoint: '/api/pusher/auth',
   triggerEndpoint: '/api/pusher',
   forceTLS: true,
