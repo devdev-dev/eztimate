@@ -4,7 +4,7 @@ import React from 'react';
 
 export type UserAvatarProps = {
   user: any;
-  online: boolean;
+  online?: boolean;
 };
 
 export default function UserAvatar({ user, online }: UserAvatarProps) {
