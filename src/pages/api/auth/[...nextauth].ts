@@ -1,8 +1,8 @@
-import NextAuth, { InitOptions, User } from 'next-auth';
+import NextAuth, { JWT, NextAuthOptions, Session, User } from 'next-auth';
 import Providers from 'next-auth/providers';
-import { SessionBase } from 'next-auth/_utils';
+import { WithAdditionalParams } from 'next-auth/_utils';
 
-const options: InitOptions = {
+const options: NextAuthOptions = {
   providers: [
     Providers.Email({
       server: {
@@ -27,10 +27,9 @@ const options: InitOptions = {
     async redirect(_, baseUrl) {
       return baseUrl;
     },
-    async session(sessionBase: SessionBase, user: User) {
-      sessionBase.user.id = user.id;
-
-      return sessionBase;
+    async session(session: Session, userOrToken: User | JWT) {
+      session.user.id = userOrToken.id;
+      return session as WithAdditionalParams<Session>;
     },
     async jwt(token, user: User) {
       if (user) {
