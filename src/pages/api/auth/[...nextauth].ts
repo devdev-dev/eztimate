@@ -39,8 +39,7 @@ const options: NextAuthOptions = {
       return token;
     }
   },
-  database: process.env.MONGODB_URI + process.env.MONGODB_DB,
-  debug: process.env.IS_PROD === 'false'
+  database: process.env.MONGODB_URI + process.env.MONGODB_DB
 };
 
 export default (req, res) => NextAuth(req, res, options);

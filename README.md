@@ -15,7 +15,6 @@
 
    - A working mail server
    - A mongodb database (local or remote - I prefer MongoDb Atlas)
-   - IS_PROD should be set to `false`
 
 3. Then, run the development server:
 
