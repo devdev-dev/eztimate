@@ -5,11 +5,11 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import { apolloClient } from '../apollo/client';
 import theme from '../utils/mui/theme';
+import { initSentry } from '../utils/sentry';
 
+initSentry();
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props;
-
+export default function MyApp({ Component, pageProps, err }) {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -30,7 +30,7 @@ export default function MyApp(props) {
         <Provider session={pageProps.session}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {getLayout(<Component {...pageProps} />)}
+            {getLayout(<Component {...pageProps} err={err} />)}
           </ThemeProvider>
         </Provider>
       </ApolloProvider>
