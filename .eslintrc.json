@@ -24,7 +24,7 @@
       }
     ],
     "no-use-before-define": "off",
-    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false, "varsIgnorePattern": "^_" }],
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }],
     "sort-keys": "off",
     "react/prop-types": 0
