@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
@@ -16,6 +17,10 @@ export const pusherPlugin: ApolloServerPlugin = {
   requestDidStart() {
     return {
       async willSendResponse(context) {
+        if (context.response === null || context.response === undefined) {
+          handleIllegalState(context.operationName, context.context.context);
+        }
+
         switch (context.operationName) {
           case 'TeamSetActiveIssue':
             handleTeamEstimate(context.context.context, context.response);
@@ -39,6 +44,15 @@ export const pusherPlugin: ApolloServerPlugin = {
       }
     };
   }
+};
+
+const handleIllegalState = (operationName: string, { req, res }) => {
+  Sentry.captureException(`Received a [null|undefined] value while processing the operation: ${operationName}`);
+  getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.IllegalState,
+    `Received a [null|undefined] value while processing the operation: ${operationName}`
+  );
 };
 
 const handleTeamEstimate = ({ req, res }, response: GraphQLResponse) => {
