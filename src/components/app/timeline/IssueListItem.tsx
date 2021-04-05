@@ -12,10 +12,8 @@ import {
   Theme,
   Tooltip
 } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import { Check, Flag, MoreVert, QuestionAnswer, RadioButtonUnchecked } from '@material-ui/icons/';
+import { Skeleton } from '@material-ui/lab';
 import React, { useRef, useState } from 'react';
 import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
 
@@ -55,9 +53,9 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
           <Tooltip title={issue.state}>
             <Avatar className={classes.issueAvatar}>
               <>
-                {issue.state === IssueState.Open && <RadioButtonUncheckedIcon />}
-                {issue.state === IssueState.Discussed && <QuestionAnswerIcon />}
-                {issue.state === IssueState.Estimated && <CheckIcon />}
+                {issue.state === IssueState.Open && <RadioButtonUnchecked />}
+                {issue.state === IssueState.Discussed && <QuestionAnswer />}
+                {issue.state === IssueState.Estimated && <Check />}
               </>
             </Avatar>
           </Tooltip>
@@ -65,7 +63,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
         <ListItemText primary={issue.name} secondary={issue._id} />
         <ListItemSecondaryAction>
           <IconButton edge="end" onClick={() => setOpen(true)} ref={moreButtonRef}>
-            <MoreVertIcon />
+            <MoreVert />
           </IconButton>
           <Menu
             anchorEl={moreButtonRef.current}
@@ -104,3 +102,38 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
+
+export type IssueListItemSkeletonProps = {
+  sizePrimary: string;
+  sizeSecondary: string;
+};
+
+export function IssueListItemSkeleton({ sizePrimary, sizeSecondary }: IssueListItemSkeletonProps) {
+  const classes = useStyles();
+  return (
+    <>
+      <ListItem button disableGutters>
+        <ListItemAvatar>
+          <Skeleton variant="circle">
+            <Avatar />
+          </Skeleton>
+        </ListItemAvatar>
+        <ListItemText primary={<Skeleton width={sizePrimary} />} secondary={<Skeleton width={sizeSecondary} />} />
+      </ListItem>
+      <div className={classes.vertical}></div>
+    </>
+  );
+}
+
+export function IssueListItemBeginning() {
+  return (
+    <ListItem disableGutters>
+      <ListItemAvatar>
+        <Avatar>
+          <Flag />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText primary="This is the beginning of your estimation history! Create a new story to start estimating." />
+    </ListItem>
+  );
+}
