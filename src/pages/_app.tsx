@@ -4,6 +4,7 @@ import { Provider } from 'next-auth/client';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
 import { apolloClient } from '../apollo/client';
+import { IntlProvider } from '../l10n/IntlProvider';
 import theme from '../utils/mui/theme';
 import { initSentry } from '../utils/sentry';
 
@@ -28,10 +29,12 @@ export default function MyApp({ Component, pageProps, err }) {
       </Head>
       <ApolloProvider client={apolloClient}>
         <Provider session={pageProps.session}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {getLayout(<Component {...pageProps} err={err} />)}
-          </ThemeProvider>
+          <IntlProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              {getLayout(<Component {...pageProps} err={err} />)}
+            </ThemeProvider>
+          </IntlProvider>
         </Provider>
       </ApolloProvider>
       ,
