@@ -1,23 +1,22 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
-import { Avatar, Box, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils/types';
-import UserAvatar from '../../shared/UserAvatar';
+import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
 const ITEM_HEIGHT = 48;
 
 export default function UserPanel() {
   const classes = useStyles();
 
-  const { data } = useGetUsersQuery();
+  const { data, loading } = useGetUsersQuery();
+  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
 
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
-
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
 
   const handleCopy = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
@@ -41,13 +40,19 @@ export default function UserPanel() {
         </Typography>
       </Grid>
       <Grid item xs className={classes.avatars}>
-        {channel && data?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel.members.get(user._id)} />)}
-        <Box className={classes.inviteButton}>
-          <IconButton onClick={() => setOpen(true)} ref={moreButtonRef}>
-            <Avatar>
-              <PersonAddIcon />
-            </Avatar>
-          </IconButton>
+        {loading ? (
+          <>
+            <UserAvatarSkeleton />
+            <UserAvatarSkeleton />
+            <UserAvatarSkeleton />
+          </>
+        ) : (
+          data?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} />)
+        )}
+        <IconButton disabled={loading} onClick={() => setOpen(true)} ref={moreButtonRef} className={classes.inviteButton}>
+          <Avatar>
+            <PersonAddIcon />
+          </Avatar>
           <Menu
             anchorEl={moreButtonRef.current}
             open={open}
@@ -64,7 +69,7 @@ export default function UserPanel() {
             <MenuItem onClick={handleEMail}>Send Email</MenuItem>
             <MenuItem onClick={handleShare}>Share with ...</MenuItem>
           </Menu>
-        </Box>
+        </IconButton>
       </Grid>
     </Grid>
   );
@@ -74,17 +79,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      display: 'flex',
+      alignItems: 'center'
     },
     avatars: {
       display: 'flex',
       justifyContent: 'flex-end'
     },
     inviteButton: {
-      '& .MuiIconButton-root': {
-        padding: theme.spacing(1),
-        paddingLeft: theme.spacing(3)
-      }
+      marginLeft: theme.spacing(2)
     }
   })
 );
