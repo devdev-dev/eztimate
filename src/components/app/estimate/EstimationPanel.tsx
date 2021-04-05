@@ -43,9 +43,9 @@ export default function EstimationPanel() {
     if (obfuscated) {
       variables = { ...variables, state: IssueState.Discussed };
     } else {
-      variables = { ...variables, state: IssueState.Open, estimate: null };
+      variables = { ...variables, state: IssueState.Reestimate, estimate: null };
     }
-    issueUpdate({ variables }).then(issue => setObfuscated(issue.data?.issueUpdate.state === IssueState.Open));
+    issueUpdate({ variables }).then(() => setObfuscated(!obfuscated));
   };
   const handleEstimationSelect = estimateValue => {
     if (issueUnderEstimation?.estimate === estimateValue) {

@@ -12,7 +12,7 @@ import {
   Theme,
   Tooltip
 } from '@material-ui/core';
-import { Check, Flag, MoreVert, QuestionAnswer, RadioButtonUnchecked } from '@material-ui/icons/';
+import { Check, Flag, MoreVert, QuestionAnswer, RadioButtonUnchecked, Repeat } from '@material-ui/icons/';
 import { Skeleton } from '@material-ui/lab';
 import React, { useRef, useState } from 'react';
 import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
@@ -54,6 +54,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
             <Avatar className={classes.issueAvatar}>
               <>
                 {issue.state === IssueState.Open && <RadioButtonUnchecked />}
+                {issue.state === IssueState.Reestimate && <Repeat />}
                 {issue.state === IssueState.Discussed && <QuestionAnswer />}
                 {issue.state === IssueState.Estimated && <Check />}
               </>
