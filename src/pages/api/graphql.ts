@@ -3,6 +3,9 @@ import { getSession } from 'next-auth/client';
 import { pusherPlugin } from '../../apollo/plugins/pusher';
 import schema from '../../apollo/schema';
 import getDatabase from '../../utils/mongodb';
+import { initSentry } from '../../utils/sentry';
+
+initSentry();
 
 const apolloServer = new ApolloServer({
   schema,
