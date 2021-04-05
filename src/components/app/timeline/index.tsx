@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import FlagIcon from '@material-ui/icons/Flag';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import { Skeleton } from '@material-ui/lab';
 import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
 import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamEstimateEvent } from '../../../utils/hooks';
@@ -22,7 +23,7 @@ import IssueListItem from './IssueListItem';
 const Timeline = () => {
   const classes = useStyles();
 
-  const { data } = useGetActiveTeamQuery();
+  const { data, loading } = useGetActiveTeamQuery();
   const [value, setValue] = useState('');
 
   const [issueCreate] = useIssueCreateMutation();
@@ -44,7 +45,7 @@ const Timeline = () => {
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
         <Typography component="h2" variant="h5" gutterBottom>
-          {`Timeline ${data?.activeTeam.name ? 'of ' + data?.activeTeam.name : ''}`}
+          {loading ? <Skeleton animation="wave" height="50px" /> : `Timeline ${data?.activeTeam.name}`}
         </Typography>
       </Box>
       <Box flexGrow={0} className={classes.buttons}>
