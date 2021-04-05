@@ -3,9 +3,7 @@ import { Avatar, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, The
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
-import { messages } from '../../../l10n/messages';
 import { CookieName } from '../../../utils/types';
 import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
@@ -13,7 +11,6 @@ const ITEM_HEIGHT = 48;
 
 export default function UserPanel() {
   const classes = useStyles();
-  const intl = useIntl();
 
   const { data, loading } = useGetUsersQuery();
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
@@ -39,7 +36,7 @@ export default function UserPanel() {
     <Grid container direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
       <Grid item>
         <Typography component="h2" variant="h5" gutterBottom>
-          {intl.formatMessage(messages.appEstimateHeader)}
+          Estimate with your Team
         </Typography>
       </Grid>
       <Grid item className={classes.avatars}>
