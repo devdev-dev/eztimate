@@ -17,8 +17,11 @@ export const pusherPlugin: ApolloServerPlugin = {
   requestDidStart() {
     return {
       async willSendResponse(context) {
+        Sentry.captureMessage('Hello Hendrik');
+
         if (context.response === null || context.response === undefined) {
           handleIllegalState(context.operationName, context.context.context);
+          return;
         }
 
         switch (context.operationName) {
