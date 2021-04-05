@@ -33,13 +33,13 @@ export default function UserPanel() {
   const handleShare = () => {};
 
   return (
-    <Grid container spacing={2} direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
-      <Grid item xs>
+    <Grid container direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
+      <Grid item>
         <Typography component="h2" variant="h5" gutterBottom>
           Estimate with your Team
         </Typography>
       </Grid>
-      <Grid item xs className={classes.avatars}>
+      <Grid item className={classes.avatars}>
         {loading ? (
           <>
             <UserAvatarSkeleton />
@@ -78,6 +78,7 @@ export default function UserPanel() {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      height: 128,
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
       display: 'flex',

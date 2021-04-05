@@ -33,7 +33,7 @@ export default function UserAvatar({ user, online }: UserAvatarProps) {
 const StyledBadge = withStyles((theme: Theme) =>
   createStyles({
     badge: {
-      left: '20%',
+      left: '30%',
       backgroundColor: '#44b700',
       color: '#44b700',
       boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       boxSizing: 'initial',
       margin: theme.spacing(1),
-      marginRight: theme.spacing(-2.5),
+      marginRight: theme.spacing(-2.75),
       border: '3px solid white'
     },
     skeleton: {

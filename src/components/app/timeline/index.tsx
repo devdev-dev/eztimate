@@ -95,7 +95,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     header: {
       paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      height: 128,
+      display: 'flex',
+      alignItems: 'center'
     },
     buttons: {
       paddingRight: theme.spacing(1),

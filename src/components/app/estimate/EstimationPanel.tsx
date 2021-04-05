@@ -126,6 +126,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     results: {
       margin: theme.spacing(2),
+      marginTop: 0,
       position: 'relative',
       zIndex: 200
     },
