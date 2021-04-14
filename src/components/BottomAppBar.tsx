@@ -32,7 +32,7 @@ export default function BottomAppBar() {
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Eztimate | Easy Estimation.
+            Eztimate | Easy Estimation
           </Typography>
           <div className={classes.grow} />
           {session && (
