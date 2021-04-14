@@ -26,6 +26,7 @@ export default function SignIn() {
           label="Sign In to get started"
           fullWidth={true}
           inputRef={textFieldRef}
+          onKeyDown={e => e.key === 'Enter' && handleSignIn()}
           InputProps={{
             endAdornment: (
               <IconButton onClick={handleSignIn}>

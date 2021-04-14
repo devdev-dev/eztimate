@@ -45,6 +45,7 @@ const Timeline = () => {
           autoComplete="off"
           value={value}
           onChange={e => setValue(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleAddIssue()}
           InputProps={{
             endAdornment: (
               <IconButton disabled={loading} onClick={() => handleAddIssue()}>

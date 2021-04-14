@@ -41,6 +41,7 @@ export default function JoinNewTeam(props: JoinSessionProps) {
           inputRef={textFieldRef}
           autoComplete="off"
           defaultValue={props.teamId}
+          onKeyDown={e => e.key === 'Enter' && handleJoinTeam()}
           InputProps={{
             endAdornment: (
               <IconButton onClick={handleJoinTeam}>

@@ -36,6 +36,7 @@ export default function CreateNewTeam() {
           fullWidth={true}
           inputRef={textFieldRef}
           autoComplete="off"
+          onKeyDown={e => e.key === 'Enter' && handleCreateTeam()}
           InputProps={{
             endAdornment: (
               <IconButton onClick={handleCreateTeam}>
