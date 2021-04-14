@@ -48,6 +48,7 @@ type Estimate {
 
 enum IssueState {
   OPEN
+  REESTIMATE
   DISCUSSED
   ESTIMATED
 }

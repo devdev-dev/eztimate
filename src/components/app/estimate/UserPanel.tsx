@@ -1,25 +1,22 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
-import { Avatar, Box, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, Grid, IconButton, makeStyles, Snackbar, Theme, Typography } from '@material-ui/core';
+import CopyIcon from '@material-ui/icons/FileCopy';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import { Alert } from '@material-ui/lab';
 import Cookies from 'js-cookie';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils/types';
-import UserAvatar from '../../shared/UserAvatar';
-
-const ITEM_HEIGHT = 48;
+import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
 export default function UserPanel() {
   const classes = useStyles();
+  const [copyAlertOpen, setCopyAlertOpen] = React.useState(false);
 
-  const { data } = useGetUsersQuery();
-
-  const moreButtonRef = useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = useState(false);
-
+  const { data: usersDataQuery, loading: usersDataLoading } = useGetUsersQuery();
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
 
-  const handleCopy = () => {
+  const handleCopyID = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
     const el = document.createElement('textarea');
     el.value = `${origin}/?join=${Cookies.get(CookieName.TEAM_ID)}`;
@@ -28,63 +25,68 @@ export default function UserPanel() {
     document.execCommand('copy');
     document.body.removeChild(el);
 
-    setOpen(false);
+    setCopyAlertOpen(true);
   };
-  const handleEMail = () => {};
-  const handleShare = () => {};
 
   return (
-    <Grid container spacing={2} direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
-      <Grid item xs>
-        <Typography component="h2" variant="h5" gutterBottom>
-          Estimate with your Team
-        </Typography>
-      </Grid>
-      <Grid item xs className={classes.avatars}>
-        {channel && data?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel.members.get(user._id)} />)}
-        <Box className={classes.inviteButton}>
-          <IconButton onClick={() => setOpen(true)} ref={moreButtonRef}>
+    <>
+      {' '}
+      <Grid container direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
+        <Grid item>
+          <Typography component="h2" variant="h5" gutterBottom>
+            Estimate with your Team
+          </Typography>
+        </Grid>
+        <Grid item className={classes.avatars}>
+          {usersDataLoading ? (
+            <>
+              <UserAvatarSkeleton />
+              <UserAvatarSkeleton />
+              <UserAvatarSkeleton />
+            </>
+          ) : (
+            usersDataQuery?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} />)
+          )}
+          <IconButton disabled={usersDataLoading} onClick={() => handleCopyID()} className={classes.inviteButton}>
             <Avatar>
               <PersonAddIcon />
             </Avatar>
           </IconButton>
-          <Menu
-            anchorEl={moreButtonRef.current}
-            open={open}
-            onClose={() => setOpen(false)}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: '20ch'
-              }
-            }}
-            keepMounted
-          >
-            <MenuItem onClick={handleCopy}>Copy Link</MenuItem>
-            <MenuItem onClick={handleEMail}>Send Email</MenuItem>
-            <MenuItem onClick={handleShare}>Share with ...</MenuItem>
-          </Menu>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={copyAlertOpen}
+        message="Invitation link copied."
+        autoHideDuration={6000}
+        onClose={() => setCopyAlertOpen(false)}
+      >
+        <Alert onClose={() => setCopyAlertOpen(false)} severity="info" variant="filled" icon={<CopyIcon />}>
+          Invitation link copied. Share it with your team!
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      height: 128,
       paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      display: 'flex',
+      alignItems: 'center'
     },
     avatars: {
       display: 'flex',
       justifyContent: 'flex-end'
     },
     inviteButton: {
-      '& .MuiIconButton-root': {
-        padding: theme.spacing(1),
-        paddingLeft: theme.spacing(3)
-      }
+      marginLeft: theme.spacing(2)
     }
   })
 );
