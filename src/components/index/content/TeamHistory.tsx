@@ -16,7 +16,6 @@ export default function TeamHistory() {
     router.push('/app');
   };
 
-  console.log(data);
   return (
     <>
       {!loading ? (

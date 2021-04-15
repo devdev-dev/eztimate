@@ -51,7 +51,6 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
       className={classes.textField}
       autoComplete="off"
       onKeyDown={e => {
-        console.log(e);
         if (e.key === 'Escape') handleClose();
         if (e.key === 'Enter') handleSave();
       }}

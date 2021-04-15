@@ -3,7 +3,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useUserJoinTeamMutation } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils/types';
 
@@ -18,11 +18,18 @@ export default function JoinNewTeam(props: JoinSessionProps) {
   const [userJoinTeam] = useUserJoinTeamMutation();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
+  const [helperText, setHelperText] = useState('');
   const handleJoinTeam = () => {
-    userJoinTeam({ variables: { teamId: textFieldRef.current?.value } }).then(result => {
-      Cookies.set(CookieName.TEAM_ID, result.data.userJoinTeam._id);
-      router.push('/app');
-    });
+    const value = textFieldRef.current?.value;
+    if (value && value.length >= 12) {
+      setHelperText('');
+      userJoinTeam({ variables: { teamId: value } }).then(result => {
+        Cookies.set(CookieName.TEAM_ID, result.data.userJoinTeam._id);
+        router.push('/app');
+      });
+    } else {
+      setHelperText('This team id is invalid!');
+    }
   };
 
   return (
@@ -39,6 +46,8 @@ export default function JoinNewTeam(props: JoinSessionProps) {
           label="Join a team"
           fullWidth={true}
           inputRef={textFieldRef}
+          helperText={helperText}
+          error={helperText.length > 0}
           autoComplete="off"
           defaultValue={props.teamId}
           onKeyDown={e => e.key === 'Enter' && handleJoinTeam()}

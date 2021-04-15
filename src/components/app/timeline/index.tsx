@@ -19,12 +19,19 @@ const Timeline = () => {
   useTeamEstimateEvent();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
+  const [helperText, setHelperText] = useState('');
   const handleAddIssue = () => {
-    issueCreate({
-      variables: { name: textFieldRef.current.value }
-    }).then(() => {
-      setValue('');
-    });
+    const value = textFieldRef.current?.value;
+    if (value && value.length > 0) {
+      setHelperText('');
+      issueCreate({
+        variables: { name: textFieldRef.current.value }
+      }).then(() => {
+        setValue('');
+      });
+    } else {
+      setHelperText('The issue name is empty');
+    }
   };
 
   return (
@@ -42,6 +49,8 @@ const Timeline = () => {
           placeholder="Create a new issue"
           fullWidth={true}
           inputRef={textFieldRef}
+          helperText={helperText}
+          error={helperText.length > 0}
           autoComplete="off"
           value={value}
           onChange={e => setValue(e.target.value)}
