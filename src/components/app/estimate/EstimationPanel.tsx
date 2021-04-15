@@ -1,7 +1,6 @@
-import { Badge, Box, Button, createStyles, Grid, IconButton, makeStyles, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
+import { Box, Button, createStyles, Grid, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   IssueState,
   IssueUpdateMutationVariables,
@@ -15,6 +14,7 @@ import EditableTextField from './EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
 
 const estimationValues = ['Small', 'Medium', 'Large'];
+const MENU_ITEM_HEIGHT = 48;
 
 export default function EstimationPanel() {
   const classes = useStyles();
@@ -22,23 +22,28 @@ export default function EstimationPanel() {
   const { data: loggedInUser } = useLoggedInUserQuery();
   const { data: issueQuery, loading: loadingIssueQuery } = useGetEstimatedIssueQuery();
 
+  const [issueUpdate] = useIssueUpdateMutation({ ignoreResults: true });
+  const [estimateCreate] = useEstimateCreateMutation();
+
+  const [finishMenuOpen, setFinishMenuOpen] = useState(false);
   const [issueUnderEstimation, setIssueUnderEstimation] = useState(null);
+  const [obfuscated, setObfuscated] = useState(true);
+
   useEffect(() => {
     setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
   }, [issueQuery]);
   useEstimateCreateEvent(issueUnderEstimation);
   useEstimateDeleteEvent();
 
-  const [obfuscated, setObfuscated] = useState(true);
   useEffect(() => {
     const state = issueQuery?.activeTeam.estimatedIssue?.state;
     setObfuscated(state === IssueState.Open || state === IssueState.Reestimate);
   }, [issueQuery]);
 
-  const [issueUpdate] = useIssueUpdateMutation({ ignoreResults: true });
   const handleIssueUpdate = name => {
     issueUpdate({ variables: { id: issueUnderEstimation?._id, name } });
   };
+
   const handleShowResults = () => {
     let variables: IssueUpdateMutationVariables = { id: issueUnderEstimation?._id };
     if (obfuscated) {
@@ -48,18 +53,11 @@ export default function EstimationPanel() {
     }
     issueUpdate({ variables }).then(() => setObfuscated(!obfuscated));
   };
-  const handleEstimationSelect = estimateValue => {
-    if (issueUnderEstimation?.estimate === estimateValue) {
-      issueUpdate({ variables: { id: issueUnderEstimation?._id, estimate: null } });
-    } else {
-      issueUpdate({ variables: { id: issueUnderEstimation?._id, estimate: estimateValue } });
-    }
-  };
-  const handleEstimationFinished = () => {
-    issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Estimated } });
+
+  const handleEstimationFinished = (value: string) => {
+    issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Estimated, estimate: value } }).then(() => setFinishMenuOpen(false));
   };
 
-  const [estimateCreate] = useEstimateCreateMutation();
   const handleCardClick = value => {
     estimateCreate({
       variables: { issueId: issueUnderEstimation._id, value: `${value}` }
@@ -74,24 +72,44 @@ export default function EstimationPanel() {
     </Toolbar>
   );
 
+  const finishButtonRef = useRef<HTMLButtonElement>(null);
+
   const EstimationToolbar = (
     <Toolbar className={classes.resultsToolbar}>
       <EditableTextField inputValue={issueUnderEstimation?.name} onSave={name => handleIssueUpdate(name)} />
-      <Button variant="text" color="secondary" onClick={handleShowResults}>
-        {obfuscated ? 'Show Results' : 'Hide Results'}
-      </Button>
-      <IconButton edge="end" disabled={obfuscated} onClick={handleEstimationFinished}>
-        <Badge
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          badgeContent={issueUnderEstimation?.estimate ?? 0}
-          color="secondary"
-        >
-          <SendIcon />
-        </Badge>
-      </IconButton>
+      {obfuscated && (
+        <Button variant="contained" color="primary" onClick={handleShowResults}>
+          Reveal
+        </Button>
+      )}
+      {!obfuscated && (
+        <>
+          <Button variant="text" color="secondary" onClick={handleShowResults}>
+            Restimate
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => setFinishMenuOpen(true)} ref={finishButtonRef}>
+            Finish
+          </Button>
+          <Menu
+            anchorEl={finishButtonRef.current}
+            open={finishMenuOpen}
+            onClose={() => setFinishMenuOpen(false)}
+            PaperProps={{
+              style: {
+                maxHeight: MENU_ITEM_HEIGHT * 4.5,
+                width: '20ch'
+              }
+            }}
+            keepMounted
+          >
+            {estimationValues.map((value, index) => (
+              <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
+                {value}
+              </MenuItem>
+            ))}
+          </Menu>
+        </>
+      )}
     </Toolbar>
   );
 
@@ -102,12 +120,7 @@ export default function EstimationPanel() {
         <Box className={classes.resultsChips} px={2} pb={2}>
           {issueUnderEstimation?.estimates.map((estimate, index) => (
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard
-                value={obfuscated ? '?' : estimate.value}
-                lable={obfuscated ? '?' : estimate.user.email}
-                disabled={true}
-                onCardClick={handleEstimationSelect}
-              />
+              <EstimationPanelCard value={obfuscated ? '?' : estimate.value} lable={obfuscated ? '?' : estimate.user.email} disabled={true} />
             </Grid>
           ))}
         </Box>
@@ -140,9 +153,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     resultsToolbar: {},
     resultsChips: {},
-    title: {
-      flexGrow: 1
-    },
     chip: {
       margin: theme.spacing(0.5)
     },

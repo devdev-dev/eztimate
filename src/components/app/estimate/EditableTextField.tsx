@@ -46,7 +46,6 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
         setValue(e.target.value);
       }}
       variant={'outlined'}
-      fullWidth
       inputRef={textFieldRef}
       className={classes.textField}
       autoComplete="off"
@@ -93,7 +92,8 @@ export default function EditableTextField({ inputValue, onSave }: EditableTextFi
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     textField: {
-      marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2),
+      flexGrow: 1
     },
     textFieldInput: {
       fontSize: theme.typography.h5.fontSize,
