@@ -1,27 +1,19 @@
 import { Card, CardActionArea, CardContent, createStyles, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { GetActiveTeamQuery, useEstimateCreateMutation } from '../../../apollo/types.grapqhl';
 
 export interface EstimationPanelCardProps {
   value: String;
-  issue: GetActiveTeamQuery['activeTeam']['issues'][0];
-  disabled: boolean;
-  raised: boolean;
+  disabled?: boolean;
+  raised?: boolean;
+  onCardClick?: (value) => void;
 }
 
-export default function EstimationPanelCard({ value, issue, disabled, raised }: EstimationPanelCardProps) {
+export default function EstimationPanelCard({ value, disabled, raised, onCardClick }: EstimationPanelCardProps) {
   const classes = useStyles();
-
-  const [estimateCreate] = useEstimateCreateMutation();
-  const handleClick = () => {
-    estimateCreate({
-      variables: { issueId: issue._id, value: `${value}` }
-    });
-  };
 
   return (
     <Card className={classes.card} raised={raised}>
-      <CardActionArea className={classes.cardActionArea} onClick={handleClick} disabled={disabled}>
+      <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
         <CardContent className={classes.cardContent}>
           <Typography variant="h4" color="textSecondary">
             {value}

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import {
   IssueState,
   IssueUpdateMutationVariables,
+  useEstimateCreateMutation,
   useGetEstimatedIssueQuery,
   useIssueUpdateMutation,
   useLoggedInUserQuery
@@ -56,6 +57,13 @@ export default function EstimationPanel() {
   };
   const handleEstimationFinished = () => {
     issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Estimated } });
+  };
+
+  const [estimateCreate] = useEstimateCreateMutation();
+  const handleCardClick = value => {
+    estimateCreate({
+      variables: { issueId: issueUnderEstimation._id, value: `${value}` }
+    });
   };
 
   const userEstimate = issueUnderEstimation?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
@@ -110,9 +118,9 @@ export default function EstimationPanel() {
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
               <EstimationPanelCard
                 value={value}
-                issue={issueUnderEstimation}
                 disabled={!issueUnderEstimation || loadingIssueQuery}
                 raised={userEstimate?.value === value}
+                onCardClick={handleCardClick}
               />
             </Grid>
           ))}
