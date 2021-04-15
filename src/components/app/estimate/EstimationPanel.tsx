@@ -14,7 +14,7 @@ import EditableTextField from './EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
 import ObfuscatableChip from './ObfuscatableChip';
 
-const estimationValues = ['1', '2', '3', '5', '8', '13', '20', '40', '100'];
+const estimationValues = ['Small', 'Medium', 'Large'];
 
 export default function EstimationPanel() {
   const classes = useStyles();
