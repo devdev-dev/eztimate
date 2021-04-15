@@ -18,7 +18,7 @@ export default function TeamHistory() {
 
   return (
     <>
-      {data && !loading ? (
+      {!loading ? (
         <List
           component="nav"
           subheader={
@@ -29,6 +29,11 @@ export default function TeamHistory() {
           className={classes.root}
           disablePadding
         >
+          {data?.loggedInUser?.teams?.length === 0 && (
+            <ListItem>
+              <ListItemText primary="Join or create a team to get started" />
+            </ListItem>
+          )}
           {data?.loggedInUser?.teams?.map((team, index) => (
             <ListItem key={index} onClick={() => handleTeamSelect(team._id)} button>
               <ListItemText primary={team.name} />

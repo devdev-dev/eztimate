@@ -9,8 +9,10 @@ import {
   EstimateDeleteMutationResult,
   IssueCreateMutationResult,
   IssueDeleteMutationResult,
+  IssueResetMutationResult,
   IssueUpdateMutationResult,
-  TeamSetActiveIssueMutationResult
+  TeamSetActiveIssueMutationResult,
+  UserJoinTeamMutationResult
 } from '../types.grapqhl';
 
 export const pusherPlugin: ApolloServerPlugin = {
@@ -21,16 +23,21 @@ export const pusherPlugin: ApolloServerPlugin = {
           await handleIllegalState(context.operationName, context.context.context);
           return;
         }
-
         switch (context.operationName) {
           case 'TeamSetActiveIssue':
             await handleTeamEstimate(context.context.context, context.response);
+            break;
+          case 'UserJoinTeam':
+            await handleUserJoinTeam(context.context.context, context.response);
             break;
           case 'IssueCreate':
             await handleIssueCreate(context.context.context, context.response);
             break;
           case 'IssueUpdate':
             await handleIssueUpdate(context.context.context, context.response);
+            break;
+          case 'IssueReset':
+            await handleIssueReset(context.context.context, context.response);
             break;
           case 'IssueDelete':
             await handleIssueDelete(context.context.context, context.response);
@@ -56,6 +63,14 @@ const handleIllegalState = (operationName: string, { req, res }) => {
   );
 };
 
+const handleUserJoinTeam = ({ req, res }, response: GraphQLResponse) => {
+  return getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.UserJoinTeam,
+    (response as UserJoinTeamMutationResult).data.userJoinTeam
+  );
+};
+
 const handleTeamEstimate = ({ req, res }, response: GraphQLResponse) => {
   return getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
@@ -77,6 +92,14 @@ const handleIssueUpdate = ({ req, res }, response: GraphQLResponse) => {
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueUpdate,
     (response as IssueUpdateMutationResult).data.issueUpdate
+  );
+};
+
+const handleIssueReset = ({ req, res }, response: GraphQLResponse) => {
+  return getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.IssueUpdate,
+    (response as IssueResetMutationResult).data.issueReset
   );
 };
 

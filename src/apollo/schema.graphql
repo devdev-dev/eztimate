@@ -6,6 +6,7 @@ type Mutation {
 
   issueCreate(name: String!): Issue
   issueUpdate(id: String!, name: String, state: IssueState, estimate: String): Issue
+  issueReset(id: String!): Issue
   issueDelete(id: String!): Issue
 
   estimateCreate(issueId: String!, value: String!): Estimate
