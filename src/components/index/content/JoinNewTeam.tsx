@@ -23,8 +23,8 @@ export default function JoinNewTeam(props: JoinSessionProps) {
     const value = textFieldRef.current?.value;
     if (value && value.length >= 12) {
       setHelperText('');
-      userJoinTeam({ variables: { teamId: value } }).then(result => {
-        Cookies.set(CookieName.TEAM_ID, result.data.userJoinTeam._id);
+      Cookies.set(CookieName.TEAM_ID, value);
+      userJoinTeam({ variables: { teamId: value } }).then(() => {
         router.push('/app');
       });
     } else {

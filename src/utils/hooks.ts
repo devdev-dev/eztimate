@@ -16,6 +16,15 @@ import {
 import { AppContext } from '../pages/app';
 import { PusherEvents } from '../utils/types';
 
+export function useUserJoinTeam(refetch) {
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+
+  useEvent(channel, PusherEvents.UserJoinTeam, () => {
+    refetch();
+  });
+}
+
 export function useTeamEstimateEvent() {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);

@@ -128,8 +128,7 @@ export default function EstimationPanel() {
   if (channel?.members?.count && issueUnderEstimation) {
     remainingEstimates = channel?.members?.count - issueUnderEstimation.estimates.length;
   }
-  console.log('members' + channel?.members?.count);
-  console.log('Estimates' + issueUnderEstimation?.estimates.length);
+
   return (
     <Box>
       <Paper className={classes.results}>
