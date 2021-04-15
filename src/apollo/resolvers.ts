@@ -97,6 +97,26 @@ export const resolvers: IResolvers = {
 
       return issue;
     },
+    issueReset: async (_, { id }, { db }) => {
+      let issue = await db.collection('issues').findOne({ _id: getObjectId(id) });
+      db.collection('estimates').deleteMany({ _id: { $in: issue.estimates } });
+
+      issue = await db.collection('issues').findOneAndUpdate(
+        { _id: getObjectId(id) },
+        {
+          $set: {
+            estimates: [],
+            state: IssueState.Open
+          },
+          $unset: {
+            estimate: ''
+          }
+        },
+        { returnOriginal: false }
+      ).value;
+
+      return issue;
+    },
     issueDelete: async (_, { id }, { db }) => {
       const { value } = await db.collection('issues').findOneAndDelete({ _id: getObjectId(id) });
       return value;
@@ -106,6 +126,7 @@ export const resolvers: IResolvers = {
         { user: getObjectId(session.user.id) },
         {
           user: getObjectId(session.user.id),
+          issue: getObjectId(issueId),
           value
         },
         { upsert: true, returnOriginal: false }

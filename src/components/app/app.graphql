@@ -43,6 +43,12 @@ mutation IssueUpdate($id: String!, $name: String, $state: IssueState, $estimate:
   }
 }
 
+mutation IssueReset($id: String!) {
+  issueReset(id: $id) {
+    _id
+  }
+}
+
 mutation IssueDelete($id: String!) {
   issueDelete(id: $id) {
     _id

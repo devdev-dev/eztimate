@@ -37,7 +37,9 @@ export default function EstimationPanelCard({ value, lable, disabled, raised, on
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      aspectRatio: '4 / 5'
+      aspectRatio: '4 / 5',
+      transition: 'transform 1s',
+      transformStyle: 'preserve-3d'
     },
     cardActionArea: {
       height: '100%'
