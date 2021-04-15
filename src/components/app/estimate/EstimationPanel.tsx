@@ -13,7 +13,6 @@ import {
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard from './EstimationPanelCard';
-import ObfuscatableChip from './ObfuscatableChip';
 
 const estimationValues = ['Small', 'Medium', 'Large'];
 
@@ -32,7 +31,8 @@ export default function EstimationPanel() {
 
   const [obfuscated, setObfuscated] = useState(true);
   useEffect(() => {
-    setObfuscated(issueQuery?.activeTeam.estimatedIssue?.state === IssueState.Open);
+    const state = issueQuery?.activeTeam.estimatedIssue?.state;
+    setObfuscated(state === IssueState.Open || state === IssueState.Reestimate);
   }, [issueQuery]);
 
   const [issueUpdate] = useIssueUpdateMutation({ ignoreResults: true });
@@ -101,14 +101,14 @@ export default function EstimationPanel() {
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
         <Box className={classes.resultsChips} px={2} pb={2}>
           {issueUnderEstimation?.estimates.map((estimate, index) => (
-            <ObfuscatableChip
-              key={index}
-              estimate={estimate}
-              obfuscated={obfuscated}
-              deleteable={userEstimate?._id === estimate._id}
-              selected={issueUnderEstimation?.estimate === estimate.value}
-              onSelect={handleEstimationSelect}
-            />
+            <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
+              <EstimationPanelCard
+                value={obfuscated ? '?' : estimate.value}
+                lable={obfuscated ? '' : estimate.user.email}
+                disabled={true}
+                onCardClick={handleEstimationSelect}
+              />
+            </Grid>
           ))}
         </Box>
       </Paper>

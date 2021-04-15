@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardContent, createStyles, makeStyles, Typography
 import React from 'react';
 
 export interface EstimationPanelCardProps {
-  value: String;
+  value: string;
   disabled?: boolean;
   raised?: boolean;
   onCardClick?: (value) => void;
