@@ -28,16 +28,16 @@ export default function EstimationPanel() {
   const [finishMenuOpen, setFinishMenuOpen] = useState(false);
   const [issueUnderEstimation, setIssueUnderEstimation] = useState(null);
   const [obfuscated, setObfuscated] = useState(true);
+  const [finished, setFinished] = useState(false);
 
-  useEffect(() => {
-    setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
-  }, [issueQuery]);
   useEstimateCreateEvent(issueUnderEstimation);
   useEstimateDeleteEvent();
 
   useEffect(() => {
+    setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
     const state = issueQuery?.activeTeam.estimatedIssue?.state;
     setObfuscated(state === IssueState.Open || state === IssueState.Reestimate);
+    setFinished(state === IssueState.Estimated);
   }, [issueQuery]);
 
   const handleIssueUpdate = name => {
@@ -82,7 +82,7 @@ export default function EstimationPanel() {
           Reveal
         </Button>
       )}
-      {!obfuscated && (
+      {!obfuscated && !finished && (
         <>
           <Button variant="text" color="secondary" onClick={handleShowResults}>
             Restimate
@@ -110,6 +110,11 @@ export default function EstimationPanel() {
           </Menu>
         </>
       )}
+      {finished && (
+        <Button disabled={true} variant="outlined" color="secondary" onClick={handleShowResults}>
+          Final Estimation: {issueUnderEstimation?.estimate}
+        </Button>
+      )}
     </Toolbar>
   );
 
@@ -131,7 +136,7 @@ export default function EstimationPanel() {
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
               <EstimationPanelCard
                 value={value}
-                disabled={!issueUnderEstimation || loadingIssueQuery}
+                disabled={!issueUnderEstimation || loadingIssueQuery || finished}
                 raised={userEstimate?.value === value}
                 onCardClick={handleCardClick}
               />
