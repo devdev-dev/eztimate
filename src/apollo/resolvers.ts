@@ -35,7 +35,8 @@ export const resolvers: IResolvers = {
 
       const teamInsertResult = await db.collection('teams').insertOne({
         name: teamName,
-        users: [loggedInUserIdObject]
+        users: [loggedInUserIdObject],
+        issues: []
       });
 
       await db.collection('users').updateOne(
