@@ -101,18 +101,20 @@ export const resolvers: IResolvers = {
       let issue = await db.collection('issues').findOne({ _id: getObjectId(id) });
       db.collection('estimates').deleteMany({ _id: { $in: issue.estimates } });
 
-      issue = await db.collection('issues').findOneAndUpdate(
-        { _id: getObjectId(id) },
-        {
-          $set: {
-            estimates: [],
-            state: IssueState.Open
+      issue = (
+        await db.collection('issues').findOneAndUpdate(
+          { _id: getObjectId(id) },
+          {
+            $set: {
+              estimates: [],
+              state: IssueState.Open
+            },
+            $unset: {
+              estimate: ''
+            }
           },
-          $unset: {
-            estimate: ''
-          }
-        },
-        { returnOriginal: false }
+          { returnOriginal: false }
+        )
       ).value;
 
       return issue;

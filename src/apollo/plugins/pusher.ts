@@ -9,6 +9,7 @@ import {
   EstimateDeleteMutationResult,
   IssueCreateMutationResult,
   IssueDeleteMutationResult,
+  IssueResetMutationResult,
   IssueUpdateMutationResult,
   TeamSetActiveIssueMutationResult
 } from '../types.grapqhl';
@@ -31,6 +32,9 @@ export const pusherPlugin: ApolloServerPlugin = {
             break;
           case 'IssueUpdate':
             await handleIssueUpdate(context.context.context, context.response);
+            break;
+          case 'IssueReset':
+            await handleIssueReset(context.context.context, context.response);
             break;
           case 'IssueDelete':
             await handleIssueDelete(context.context.context, context.response);
@@ -77,6 +81,14 @@ const handleIssueUpdate = ({ req, res }, response: GraphQLResponse) => {
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IssueUpdate,
     (response as IssueUpdateMutationResult).data.issueUpdate
+  );
+};
+
+const handleIssueReset = ({ req, res }, response: GraphQLResponse) => {
+  return getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.IssueUpdate,
+    (response as IssueResetMutationResult).data.issueReset
   );
 };
 
