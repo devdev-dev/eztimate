@@ -1,6 +1,9 @@
+import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Box, Button, createStyles, Grid, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
+import BlurOnIcon from '@material-ui/icons/BlurOn';
+import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   IssueState,
   IssueUpdateMutationVariables,
@@ -9,9 +12,10 @@ import {
   useIssueUpdateMutation,
   useLoggedInUserQuery
 } from '../../../apollo/types.grapqhl';
+import { AppContext } from '../../../pages/app';
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
-import EstimationPanelCard from './EstimationPanelCard';
+import EstimationPanelCard, { EstimationPanelCardStack } from './EstimationPanelCard';
 
 const estimationValues = ['Small', 'Medium', 'Large'];
 const MENU_ITEM_HEIGHT = 48;
@@ -30,6 +34,8 @@ export default function EstimationPanel() {
   const [obfuscated, setObfuscated] = useState(true);
   const [finished, setFinished] = useState(false);
 
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
   useEstimateCreateEvent(issueUnderEstimation);
   useEstimateDeleteEvent();
 
@@ -118,17 +124,32 @@ export default function EstimationPanel() {
     </Toolbar>
   );
 
+  let remainingEstimates = 1;
+  if (channel?.members?.count && issueUnderEstimation) {
+    remainingEstimates = channel?.members?.count - issueUnderEstimation.estimates.length;
+  }
+  console.log('members' + channel?.members?.count);
+  console.log('Estimates' + issueUnderEstimation?.estimates.length);
   return (
     <Box>
       <Paper className={classes.results}>
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
-        <Box className={classes.resultsChips} px={2} pb={2}>
+        <Grid direction="row" justify="center" alignItems="stretch" container>
+          {remainingEstimates > 0 && (
+            <Grid item xs={3} md={2} className={classes.cardsContent}>
+              <EstimationPanelCardStack count={remainingEstimates} />{' '}
+            </Grid>
+          )}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard value={obfuscated ? '?' : estimate.value} lable={obfuscated ? '?' : estimate.user.email} disabled={true} />
+              <EstimationPanelCard
+                value={obfuscated ? <CheckIcon /> : estimate.value}
+                lable={obfuscated ? <BlurOnIcon /> : estimate.user.email}
+                disabled={true}
+              />
             </Grid>
           ))}
-        </Box>
+        </Grid>
       </Paper>
       <Paper elevation={0} className={classes.cards}>
         <Grid direction="row" justify="center" alignItems="stretch" container>
