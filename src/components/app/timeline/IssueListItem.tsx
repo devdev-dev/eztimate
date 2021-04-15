@@ -69,7 +69,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
             </Avatar>
           </Tooltip>
         </ListItemAvatar>
-        <ListItemText primary={issue.name} secondary={issue._id} />
+        <ListItemText primary={issue.name} secondary={issue.estimate && `Estimated Value: ${issue.estimate}`} />
         <ListItemSecondaryAction>
           <IconButton edge="end" onClick={() => setOpen(true)} ref={moreButtonRef}>
             <MoreVert />
