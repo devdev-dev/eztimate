@@ -104,7 +104,7 @@ export default function EstimationPanel() {
             <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
               <EstimationPanelCard
                 value={obfuscated ? '?' : estimate.value}
-                lable={obfuscated ? '' : estimate.user.email}
+                lable={obfuscated ? '?' : estimate.user.email}
                 disabled={true}
                 onCardClick={handleEstimationSelect}
               />
