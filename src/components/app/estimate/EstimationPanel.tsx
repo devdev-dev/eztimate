@@ -1,6 +1,5 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
-import { Box, Button, createStyles, Grid, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
-import BlurOnIcon from '@material-ui/icons/BlurOn';
+import { Box, Button, createStyles, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -133,36 +132,25 @@ export default function EstimationPanel() {
     <Box>
       <Paper className={classes.results}>
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
-        <Grid direction="row" justify="center" alignItems="stretch" container>
-          {remainingEstimates > 0 && (
-            <Grid item xs={3} md={2} className={classes.cardsContent}>
-              <EstimationPanelCardStack count={remainingEstimates} />{' '}
-            </Grid>
-          )}
+        <Box className={classes.cardwrap}>
+          {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
-            <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard
-                value={obfuscated ? <CheckIcon /> : estimate.value}
-                lable={obfuscated ? <BlurOnIcon /> : estimate.user.email}
-                disabled={true}
-              />
-            </Grid>
+            <EstimationPanelCard key={index} value={obfuscated ? <CheckIcon /> : estimate.value} disabled={true} />
           ))}
-        </Grid>
+        </Box>
       </Paper>
       <Paper elevation={0} className={classes.cards}>
-        <Grid direction="row" justify="center" alignItems="stretch" container>
+        <Box className={classes.cardwrap}>
           {estimationValues.map((value, index) => (
-            <Grid item xs={3} md={2} className={classes.cardsContent} key={index}>
-              <EstimationPanelCard
-                value={value}
-                disabled={!issueUnderEstimation || loadingIssueQuery || finished}
-                raised={userEstimate?.value === value}
-                onCardClick={handleCardClick}
-              />
-            </Grid>
+            <EstimationPanelCard
+              key={index}
+              value={value}
+              disabled={!issueUnderEstimation || loadingIssueQuery || finished}
+              raised={userEstimate?.value === value}
+              onCardClick={handleCardClick}
+            />
           ))}
-        </Grid>
+        </Box>
       </Paper>
     </Box>
   );
@@ -170,6 +158,11 @@ export default function EstimationPanel() {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    cardwrap: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap'
+    },
     results: {
       margin: theme.spacing(2),
       marginTop: 0,

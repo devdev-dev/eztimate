@@ -1,37 +1,27 @@
-import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Tooltip, Typography } from '@material-ui/core';
+import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import React from 'react';
 
 export interface EstimationPanelCardProps {
-  value: string | JSX.Element;
-  lable?: string;
+  value: string | React.ReactNode;
   disabled?: boolean;
   raised?: boolean;
   onCardClick?: (value) => void;
 }
 
-export default function EstimationPanelCard({ value, lable, disabled, raised, onCardClick }: EstimationPanelCardProps) {
+export default function EstimationPanelCard({ value, disabled, raised, onCardClick }: EstimationPanelCardProps) {
   const classes = useStyles();
 
   return (
-    <Box>
-      <Card className={classes.card} raised={raised}>
-        <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
-          <CardContent className={classes.cardContent}>
-            <Typography variant="h5" color="textSecondary">
-              {value}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      {lable && (
-        <Tooltip title={lable}>
-          <Typography variant="subtitle2" color="textSecondary" className={classes.cardLabel}>
-            {lable}
+    <Card className={classes.card} raised={raised}>
+      <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
+        <CardContent className={classes.cardContent}>
+          <Typography variant="h5" color="textSecondary">
+            {value}
           </Typography>
-        </Tooltip>
-      )}
-    </Box>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 }
 
@@ -55,11 +45,15 @@ export function EstimationPanelCardStack({ count }: EstimationPanelCardStackProp
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      aspectRatio: '4 / 5'
+      aspectRatio: '4 / 5',
+      height: 120,
+      margin: theme.spacing(1)
     },
     cardStack: {
       position: 'relative',
-      aspectRatio: '4 / 5'
+      aspectRatio: '4 / 5',
+      height: 120,
+      margin: theme.spacing(1)
     },
     cardStackCard: {
       position: 'absolute',
