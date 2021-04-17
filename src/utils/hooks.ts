@@ -16,6 +16,15 @@ import {
 import { AppContext } from '../pages/app';
 import { PusherEvents } from '../utils/types';
 
+export function useUserUpdate(refetch) {
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+
+  useEvent(channel, PusherEvents.UserUpdate, () => {
+    refetch();
+  });
+}
+
 export function useUserJoinTeam(refetch) {
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);

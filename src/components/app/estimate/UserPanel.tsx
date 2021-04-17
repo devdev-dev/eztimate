@@ -6,7 +6,7 @@ import { Alert } from '@material-ui/lab';
 import Cookies from 'js-cookie';
 import React from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
-import { useUserJoinTeam } from '../../../utils/hooks';
+import { useUserJoinTeam, useUserUpdate } from '../../../utils/hooks';
 import { CookieName } from '../../../utils/types';
 import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
@@ -18,6 +18,7 @@ export default function UserPanel() {
 
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
   useUserJoinTeam(refetch);
+  useUserUpdate(refetch);
 
   const handleCopyID = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';

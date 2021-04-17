@@ -2,9 +2,10 @@ import { Avatar, Badge, createStyles, makeStyles, Theme, Tooltip, withStyles } f
 import PersonIcon from '@material-ui/icons/Person';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
+import { User } from '../../apollo/types.grapqhl';
 
 export type UserAvatarProps = {
-  user: any;
+  user: Pick<User, 'email' | 'username'>;
   online?: boolean;
 };
 
@@ -12,28 +13,52 @@ export default function UserAvatar({ user, online }: UserAvatarProps) {
   const classes = useStyles();
 
   return (
-    <Tooltip title={user.email} className={classes.root}>
-      <StyledBadge
-        overlap="circle"
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
-        variant="dot"
-        badgeContent={online ? 1 : 0}
-      >
+    <StyledBadge
+      overlap="circle"
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left'
+      }}
+      variant="dot"
+      badgeContent={online ? 1 : 0}
+    >
+      <Tooltip title={user.username ?? user.email}>
         <Avatar className={classes.avatar}>
           <PersonIcon />
         </Avatar>
-      </StyledBadge>
-    </Tooltip>
+      </Tooltip>
+    </StyledBadge>
   );
 }
+
+export function UserAvatarSkeleton() {
+  const classes = useStyles();
+  return (
+    <Skeleton animation="wave" variant="circle" height="100%" className={`${classes.avatar} ${classes.skeleton}`}>
+      <Avatar />
+    </Skeleton>
+  );
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    avatar: {
+      boxSizing: 'initial',
+      margin: theme.spacing(1),
+      marginRight: theme.spacing(-2.75),
+      border: '3px solid white'
+    },
+    skeleton: {
+      backgroundColor: 'rgba(220, 220, 220, 1)'
+    }
+  })
+);
 
 const StyledBadge = withStyles((theme: Theme) =>
   createStyles({
     badge: {
-      left: '30%',
+      left: '50%',
+      bottom: '25%',
       backgroundColor: '#44b700',
       color: '#44b700',
       boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
@@ -61,32 +86,3 @@ const StyledBadge = withStyles((theme: Theme) =>
     }
   })
 )(Badge);
-
-export function UserAvatarSkeleton() {
-  const classes = useStyles();
-  return (
-    <Skeleton animation="wave" variant="circle" height="100%" className={`${classes.avatar} ${classes.skeleton}`}>
-      <Avatar />
-    </Skeleton>
-  );
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      '& > *': {
-        margin: theme.spacing(1)
-      }
-    },
-    avatar: {
-      boxSizing: 'initial',
-      margin: theme.spacing(1),
-      marginRight: theme.spacing(-2.75),
-      border: '3px solid white'
-    },
-    skeleton: {
-      backgroundColor: 'rgba(220, 220, 220, 1)'
-    }
-  })
-);
