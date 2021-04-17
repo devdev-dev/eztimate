@@ -3,30 +3,34 @@ import { AccountCircle } from '@material-ui/icons';
 import Cookies from 'js-cookie';
 import { signOut, useSession } from 'next-auth/client';
 import router from 'next/router';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { CookieName } from '../utils/types';
+import ProfileDialog from './ProfileDialog';
 
 export default function BottomAppBar() {
-  const [session] = useSession();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [session] = useSession();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
     Cookies.remove(CookieName.TEAM_ID);
     signOut();
-    handleClose();
+    setMenuOpen(false);
   };
+
   const handleSwitchTeam = () => {
     Cookies.remove(CookieName.TEAM_ID);
     router.push('/');
-    handleClose();
+    setMenuOpen(false);
   };
+  const handleEditProfile = () => {
+    setMenuOpen(false);
+    setProfileDialogOpen(true);
+  };
+
   return (
     <React.Fragment>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
@@ -37,12 +41,12 @@ export default function BottomAppBar() {
           <div className={classes.grow} />
           {session && (
             <div>
-              <IconButton onClick={handleMenu} color="inherit">
+              <IconButton onClick={() => setMenuOpen(true)} ref={profileButtonRef} color="inherit">
                 <AccountCircle />
               </IconButton>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={profileButtonRef.current}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'right'
@@ -52,10 +56,10 @@ export default function BottomAppBar() {
                   vertical: 'top',
                   horizontal: 'right'
                 }}
-                open={open}
-                onClose={handleClose}
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleEditProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleSwitchTeam}>Switch Team</MenuItem>
                 <MenuItem onClick={handleLogOut}>Sign Out</MenuItem>
               </Menu>
@@ -63,6 +67,7 @@ export default function BottomAppBar() {
           )}
         </Toolbar>
       </AppBar>
+      <ProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)} />
     </React.Fragment>
   );
 }
