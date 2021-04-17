@@ -123,7 +123,7 @@ export default function EstimationPanel() {
     </Toolbar>
   );
 
-  let remainingEstimates = 1;
+  let remainingEstimates = 0;
   if (channel?.members?.count && issueUnderEstimation) {
     remainingEstimates = channel?.members?.count - issueUnderEstimation.estimates.length;
   }
