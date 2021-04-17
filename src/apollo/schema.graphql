@@ -21,6 +21,7 @@ type Query {
 type User {
   _id: String!
   email: String!
+  username: String
   teams: [Team]!
 }
 

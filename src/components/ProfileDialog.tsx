@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import React from 'react';
+import { useLoggedInUserQuery } from '../apollo/types.grapqhl';
 import UploadAvatar from './UploadAvatar';
 export interface ProfileDialogProps {
   open: boolean;
@@ -18,6 +19,8 @@ export interface ProfileDialogProps {
 
 export default function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   const classes = useStyles();
+
+  const { data: loggedInUser } = useLoggedInUserQuery();
 
   return (
     <div>
@@ -39,8 +42,23 @@ export default function ProfileDialog({ open, onClose }: ProfileDialogProps) {
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="h6">Update your profile information</Typography>
-          <TextField margin="dense" fullWidth label="Email Address" helperText="Your email is required to login." variant="outlined" required />
-          <TextField margin="dense" fullWidth label="Username" helperText="Setup a username that is shown to your team." variant="outlined" />
+          <TextField
+            margin="dense"
+            fullWidth
+            label="Email Address"
+            defaultValue={loggedInUser && loggedInUser?.loggedInUser.email}
+            helperText="Your email is required to login."
+            variant="outlined"
+            required
+          />
+          <TextField
+            margin="dense"
+            fullWidth
+            label="Username"
+            defaultValue={loggedInUser && loggedInUser?.loggedInUser.username}
+            helperText="Setup a username that is shown to your team."
+            variant="outlined"
+          />
           <Typography variant="h6">Customize your personal avatar</Typography>
           <UploadAvatar />
         </DialogContent>

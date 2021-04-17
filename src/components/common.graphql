@@ -1,0 +1,51 @@
+query LoggedInUser {
+  loggedInUser {
+    ...UserFields
+    teams {
+      _id
+      name
+      users {
+        email
+      }
+    }
+  }
+}
+
+fragment TeamFields on Team {
+  _id
+  name
+  estimatedIssue {
+    ...IssueFields
+  }
+  issues {
+    ...IssueFields
+  }
+}
+
+fragment UserFields on User {
+  _id
+  email
+  username
+}
+
+fragment IssueFields on Issue {
+  _id
+  name
+  state
+  estimate
+  estimates {
+    _id
+    value
+    user {
+      ...UserFields
+    }
+  }
+}
+
+fragment EstimateFields on Estimate {
+  _id
+  user {
+    ...UserFields
+  }
+  value
+}
