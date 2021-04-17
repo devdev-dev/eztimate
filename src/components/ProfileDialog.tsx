@@ -40,7 +40,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
       return;
     }
 
-    const username = usernameFieldRef.current?.value ?? '';
+    const username = usernameFieldRef.current?.value ?? null;
 
     userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username } }).then(() => handleClose());
   };

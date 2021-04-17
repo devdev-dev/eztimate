@@ -1,5 +1,4 @@
 import { Avatar, Badge, createStyles, makeStyles, Theme, Tooltip, withStyles } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { User } from '../../apollo/types.grapqhl';
@@ -23,12 +22,19 @@ export default function UserAvatar({ user, online }: UserAvatarProps) {
       badgeContent={online ? 1 : 0}
     >
       <Tooltip title={user.username ?? user.email}>
-        <Avatar className={classes.avatar}>
-          <PersonIcon />
-        </Avatar>
+        <Avatar className={classes.avatar}>{getInitials(user.username ?? user.email)}</Avatar>
       </Tooltip>
     </StyledBadge>
   );
+}
+
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .slice(0, 2)
+    .map(i => i.charAt(0))
+    .join('')
+    .toUpperCase();
 }
 
 export function UserAvatarSkeleton() {
@@ -45,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       boxSizing: 'initial',
       margin: theme.spacing(1),
-      marginRight: theme.spacing(-2.75),
+      marginRight: theme.spacing(-2.5),
       border: '3px solid white'
     },
     skeleton: {
