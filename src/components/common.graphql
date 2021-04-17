@@ -11,6 +11,12 @@ query LoggedInUser {
   }
 }
 
+mutation UserUpdate($id: String!, $email: String, $username: String) {
+  userUpdate(id: $id, email: $email, username: $username) {
+    ...UserFields
+  }
+}
+
 fragment TeamFields on Team {
   _id
   name

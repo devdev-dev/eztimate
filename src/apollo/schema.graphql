@@ -1,5 +1,6 @@
 type Mutation {
   userJoinTeam(teamId: String!): Team!
+  userUpdate(id: String!, email: String, username: String): User!
 
   teamCreate(teamName: String!): Team!
   teamSetActiveIssue(id: String!): Team!

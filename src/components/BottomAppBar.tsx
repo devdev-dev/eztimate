@@ -67,7 +67,7 @@ export default function BottomAppBar() {
           )}
         </Toolbar>
       </AppBar>
-      <ProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)} />
+      <ProfileDialog open={profileDialogOpen} onDialogClose={() => setProfileDialogOpen(false)} />
     </React.Fragment>
   );
 }
