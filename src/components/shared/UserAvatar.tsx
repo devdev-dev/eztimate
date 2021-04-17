@@ -5,11 +5,20 @@ import { User } from '../../apollo/types.grapqhl';
 
 export type UserAvatarProps = {
   user: Pick<User, 'email' | 'username'>;
+  avatar?: React.ReactNode;
   online?: boolean;
 };
 
-export default function UserAvatar({ user, online }: UserAvatarProps) {
+export default function UserAvatar({ user, avatar, online }: UserAvatarProps) {
   const classes = useStyles();
+
+  const avatarComponent = avatar ? (
+    <Avatar className={classes.avatar}>{avatar}</Avatar>
+  ) : (
+    <Tooltip title={user.username ?? user.email}>
+      <Avatar className={classes.avatar}>{getInitials(user.username ?? user.email)}</Avatar>
+    </Tooltip>
+  );
 
   return (
     <StyledBadge
@@ -21,20 +30,21 @@ export default function UserAvatar({ user, online }: UserAvatarProps) {
       variant="dot"
       badgeContent={online ? 1 : 0}
     >
-      <Tooltip title={user.username ?? user.email}>
-        <Avatar className={classes.avatar}>{getInitials(user.username ?? user.email)}</Avatar>
-      </Tooltip>
+      {avatarComponent}
     </StyledBadge>
   );
 }
 
 function getInitials(name: string) {
-  return name
-    .split(' ')
-    .slice(0, 2)
-    .map(i => i.charAt(0))
-    .join('')
-    .toUpperCase();
+  return (
+    name &&
+    name
+      .split(' ')
+      .slice(0, 2)
+      .map(i => i.charAt(0))
+      .join('')
+      .toUpperCase()
+  );
 }
 
 export function UserAvatarSkeleton() {

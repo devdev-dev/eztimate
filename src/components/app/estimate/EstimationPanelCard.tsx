@@ -1,15 +1,19 @@
 import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import React from 'react';
+import { User } from '../../../apollo/types.grapqhl';
+import UserAvatar from '../../shared/UserAvatar';
 
 export interface EstimationPanelCardProps {
   value: string | React.ReactNode;
+  user?: Pick<User, 'email' | 'username'>;
+  avatar?: React.ReactNode;
   disabled?: boolean;
   raised?: boolean;
   onCardClick?: (value) => void;
 }
 
-export default function EstimationPanelCard({ value, disabled, raised, onCardClick }: EstimationPanelCardProps) {
+export default function EstimationPanelCard({ value, user, avatar, disabled, raised, onCardClick }: EstimationPanelCardProps) {
   const classes = useStyles();
 
   return (
@@ -19,6 +23,7 @@ export default function EstimationPanelCard({ value, disabled, raised, onCardCli
           <Typography variant="h5" color="textSecondary">
             {value}
           </Typography>
+          {user && <UserAvatar user={user} avatar={avatar} />}
         </CardContent>
       </CardActionArea>
     </Card>

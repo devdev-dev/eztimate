@@ -4,6 +4,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
+  IssueFieldsFragment,
   IssueState,
   IssueUpdateMutationVariables,
   useEstimateCreateMutation,
@@ -29,7 +30,7 @@ export default function EstimationPanel() {
   const [estimateCreate] = useEstimateCreateMutation();
 
   const [finishMenuOpen, setFinishMenuOpen] = useState(false);
-  const [issueUnderEstimation, setIssueUnderEstimation] = useState(null);
+  const [issueUnderEstimation, setIssueUnderEstimation] = useState<IssueFieldsFragment>(null);
   const [obfuscated, setObfuscated] = useState(true);
   const [finished, setFinished] = useState(false);
 
@@ -135,7 +136,13 @@ export default function EstimationPanel() {
         <Box className={classes.cardwrap}>
           {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
-            <EstimationPanelCard key={index} value={obfuscated ? <CheckIcon /> : estimate.value} disabled={true} />
+            <EstimationPanelCard
+              key={index}
+              value={obfuscated ? <CheckIcon /> : estimate.value}
+              user={estimate.user}
+              avatar={obfuscated ? <CheckIcon /> : undefined}
+              disabled
+            />
           ))}
         </Box>
       </Paper>

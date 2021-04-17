@@ -9,6 +9,7 @@ import {
   Issue,
   IssueFieldsFragment,
   IssueFieldsFragmentDoc,
+  Maybe,
   Team,
   TeamFieldsFragment,
   TeamFieldsFragmentDoc
@@ -100,7 +101,11 @@ export function useIssueDeleteEvent() {
   });
 }
 
-export function useEstimateCreateEvent(issue: Issue) {
+export function useEstimateCreateEvent(
+  issue: Pick<Issue, '_id' | '__typename' | 'name' | 'state' | 'estimate'> & {
+    estimates: Array<Maybe<Pick<Estimate, '_id'>>>;
+  }
+) {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);
