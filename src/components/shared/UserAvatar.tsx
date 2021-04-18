@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       border: '3px solid white',
 
-      marginRight: theme.spacing(props.shift ? -2.5 : 0)
+      marginRight: props.shift && theme.spacing(-2.5)
     }),
     skeleton: {
       backgroundColor: 'rgba(220, 220, 220, 1)'

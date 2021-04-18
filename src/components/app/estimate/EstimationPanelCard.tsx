@@ -20,10 +20,10 @@ export default function EstimationPanelCard({ value, user, avatar, disabled, rai
     <Card className={classes.card} raised={raised}>
       <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
         <CardContent className={classes.cardContent}>
+          {user && <UserAvatar user={user} customAvatar={avatar} />}
           <Typography variant="h5" color="textSecondary">
             {value}
           </Typography>
-          {user && <UserAvatar user={user} customAvatar={avatar} />}
         </CardContent>
       </CardActionArea>
     </Card>
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardContent: {
       display: 'flex',
-      flexDirection: 'column-reverse',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%'
