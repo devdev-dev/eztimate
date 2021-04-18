@@ -38,16 +38,16 @@ export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarPr
                 <ClearIcon />
               </Grid>
               <Grid item xs={10}>
-                <Button>Remove Avatar</Button>
+                <Button onClick={() => setImage(null)}>Remove Avatar</Button>
               </Grid>
               <Grid item xs={2}>
-                <RotateRightIcon />
+                <PhotoSizeSelectLargeIcon />
               </Grid>
               <Grid item xs={10}>
                 <Slider value={scale} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
               </Grid>
               <Grid item xs={2}>
-                <PhotoSizeSelectLargeIcon />
+                <RotateRightIcon />
               </Grid>
               <Grid item xs={10}>
                 <Slider value={rotation} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
