@@ -23,7 +23,7 @@ export default function EstimationPanelCard({ value, user, avatar, disabled, rai
           <Typography variant="h5" color="textSecondary">
             {value}
           </Typography>
-          {user && <UserAvatar user={user} avatar={avatar} />}
+          {user && <UserAvatar user={user} customAvatar={avatar} />}
         </CardContent>
       </CardActionArea>
     </Card>

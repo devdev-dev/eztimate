@@ -4,22 +4,27 @@ import React from 'react';
 import { User } from '../../apollo/types.grapqhl';
 
 export type UserAvatarProps = {
-  user: Pick<User, 'email' | 'username'>;
-  avatar?: React.ReactNode;
+  user: Pick<User, 'email' | 'username' | 'avatar'>;
+  customAvatar?: React.ReactNode;
   online?: boolean;
   shift?: boolean;
 };
 
-export default function UserAvatar({ user, avatar, online, shift }: UserAvatarProps) {
+export default function UserAvatar({ user, customAvatar, online, shift }: UserAvatarProps) {
   const classes = useStyles({ shift });
 
-  const avatarComponent = avatar ? (
-    <Avatar className={classes.avatar}>{avatar}</Avatar>
-  ) : (
-    <Tooltip title={user.username ?? user.email}>
-      <Avatar className={classes.avatar}>{getInitials(user.username ?? user.email)}</Avatar>
-    </Tooltip>
-  );
+  let avatarComponent;
+  if (customAvatar) {
+    avatarComponent = customAvatar && <Avatar className={classes.avatar}>{customAvatar}</Avatar>;
+  } else {
+    avatarComponent = (
+      <Tooltip title={user.username ?? user.email}>
+        <Avatar src={user.avatar} className={classes.avatar}>
+          {getInitials(user.username ?? user.email)}
+        </Avatar>
+      </Tooltip>
+    );
+  }
 
   return (
     <StyledBadge
