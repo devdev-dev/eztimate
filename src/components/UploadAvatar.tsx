@@ -23,7 +23,16 @@ export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarPr
 
   return (
     <Box className={classes.container}>
-      <Dropzone ref={dropzoneRef} onDrop={e => setImage(e[0])} accept={['image/jpeg', 'image/png']} maxFiles={1} multiple={false} noKeyboard noClick>
+      <Dropzone
+        ref={dropzoneRef}
+        onDrop={e => setImage(e[0])}
+        accept={['image/jpeg', 'image/png']}
+        maxFiles={1}
+        multiple={false}
+        maxSize={512}
+        noKeyboard
+        noClick
+      >
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} className={classes.zone}>
             <input {...getInputProps()} />
