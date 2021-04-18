@@ -30,10 +30,11 @@ export const resolvers: IResolvers = {
 
       return team;
     },
-    userUpdate: async (_, { id, email, username }, { db }) => {
+    userUpdate: async (_, { id, email, username, avatar }, { db }) => {
       let update = {};
-      if (email !== undefined) update = { ...update, email: email };
-      if (username !== undefined) update = { ...update, username: username };
+      if (email !== undefined) update = { ...update, email };
+      if (username !== undefined) update = { ...update, username };
+      if (avatar !== undefined) update = { ...update, avatar };
 
       const { value: user } = await db.collection('users').findOneAndUpdate(
         { _id: getObjectId(id) },

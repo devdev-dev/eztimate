@@ -11,8 +11,8 @@ query LoggedInUser {
   }
 }
 
-mutation UserUpdate($id: String!, $email: String, $username: String) {
-  userUpdate(id: $id, email: $email, username: $username) {
+mutation UserUpdate($id: String!, $email: String, $username: String, $avatar: String) {
+  userUpdate(id: $id, email: $email, username: $username, avatar: $avatar) {
     ...UserFields
   }
 }

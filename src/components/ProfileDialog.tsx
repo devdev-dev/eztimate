@@ -12,6 +12,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import React, { useRef, useState } from 'react';
 import { useLoggedInUserQuery, useUserUpdateMutation } from '../apollo/types.grapqhl';
 import UploadAvatar from './UploadAvatar';
+
 export interface ProfileDialogProps {
   open: boolean;
   onDialogClose: () => void;
@@ -28,6 +29,8 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
 
   const usernameFieldRef = useRef<HTMLInputElement>(null);
 
+  const editorRef = useRef(null);
+
   const handleClose = () => {
     setEmailFieldHelperText('');
     onDialogClose();
@@ -41,8 +44,9 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
     }
 
     const username = usernameFieldRef.current?.value ?? null;
+    const avatar = editorRef?.current?.getImageScaledToCanvas().toDataURL();
 
-    userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username } }).then(() => handleClose());
+    userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username, avatar } }).then(() => handleClose());
   };
 
   return (
@@ -86,7 +90,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
           />
           <Typography variant="h6">Customize your personal avatar</Typography>
           <Typography variant="subtitle1">Use drag and drop to adjust the image crop</Typography>
-          <UploadAvatar />
+          <UploadAvatar editorRef={editorRef} />
         </DialogContent>
         <DialogActions>
           <Button variant="text" onClick={handleClose} color="secondary">
