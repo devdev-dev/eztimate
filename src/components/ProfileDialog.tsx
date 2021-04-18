@@ -4,7 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -69,6 +69,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="h6">Update your profile information</Typography>
+          <Typography variant="caption">The information below are visible for others</Typography>
           <TextField
             margin="dense"
             fullWidth
@@ -89,7 +90,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
             variant="outlined"
           />
           <Typography variant="h6">Customize your personal avatar</Typography>
-          <Typography variant="subtitle1">Use drag and drop to adjust the image crop</Typography>
+          <Typography variant="caption">Use drag and drop to adjust the image crop</Typography>
           <UploadAvatar editorRef={editorRef} imageDataUrl={loggedInUser?.loggedInUser?.avatar} />
         </DialogContent>
         <DialogActions>
@@ -110,11 +111,9 @@ function validateEmail(email) {
   return regex.test(String(email).toLowerCase());
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     title: {
-      margin: 0,
-      padding: theme.spacing(2),
       display: 'flex',
       alignItems: 'center'
     },

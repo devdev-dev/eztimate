@@ -1,6 +1,8 @@
-import { Box, createStyles, IconButton, makeStyles } from '@material-ui/core';
+import { Box, Button, createStyles, Grid, makeStyles, Slider, Theme } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
+import PhotoSizeSelectLargeIcon from '@material-ui/icons/PhotoSizeSelectLarge';
 import PublishIcon from '@material-ui/icons/Publish';
+import RotateRightIcon from '@material-ui/icons/RotateRight';
 import React, { MutableRefObject, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone from 'react-dropzone';
@@ -14,6 +16,8 @@ export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarPr
   const classes = useStyles();
 
   const [image, setImage] = useState<File>(dataURLtoFile(imageDataUrl));
+  const [scale, setScale] = React.useState<number>(1);
+  const [rotation, setRotation] = React.useState<number>(0);
 
   const dropzoneRef = useRef(null);
 
@@ -23,15 +27,42 @@ export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarPr
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} className={classes.zone}>
             <input {...getInputProps()} />
-            <AvatarEditor ref={editorRef} borderRadius={125} image={image} color={[255, 255, 255, 0.8]} />
-            <Box className={classes.buttonContainer}>
-              <IconButton className={classes.uploadButton} onClick={() => dropzoneRef?.current?.open()}>
+            <Grid container spacing={2} className={classes.interactions}>
+              <Grid item xs={2}>
                 <PublishIcon />
-              </IconButton>
-              <IconButton className={classes.removeButton} onClick={() => setImage(null)}>
+              </Grid>
+              <Grid item xs={10}>
+                <Button onClick={() => dropzoneRef?.current?.open()}>Upload Image</Button>
+              </Grid>
+              <Grid item xs={2}>
                 <ClearIcon />
-              </IconButton>
-            </Box>
+              </Grid>
+              <Grid item xs={10}>
+                <Button>Remove Avatar</Button>
+              </Grid>
+              <Grid item xs={2}>
+                <RotateRightIcon />
+              </Grid>
+              <Grid item xs={10}>
+                <Slider value={scale} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
+              </Grid>
+              <Grid item xs={2}>
+                <PhotoSizeSelectLargeIcon />
+              </Grid>
+              <Grid item xs={10}>
+                <Slider value={rotation} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
+              </Grid>
+            </Grid>
+            <AvatarEditor
+              width={150}
+              height={150}
+              ref={editorRef}
+              borderRadius={125}
+              image={image}
+              color={[238, 238, 238, 0.8]}
+              rotate={rotation}
+              scale={scale}
+            />
           </div>
         )}
       </Dropzone>
@@ -56,26 +87,22 @@ function dataURLtoFile(dataurl) {
   return new File([u8arr], 'image', { type: mime });
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       width: '100%'
     },
     zone: {
-      position: 'relative',
       width: '100%',
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      background: '#eee',
+      padding: theme.spacing(4)
     },
-    buttonContainer: {
-      position: 'absolute',
-      right: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      '& button': {}
-    },
-    uploadButton: {},
-    removeButton: {}
+    interactions: {
+      alignItems: 'flex-end',
+      paddingRight: theme.spacing(4)
+    }
   })
 );
