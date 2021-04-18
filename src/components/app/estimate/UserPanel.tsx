@@ -49,7 +49,7 @@ export default function UserPanel() {
               <UserAvatarSkeleton />
             </>
           ) : (
-            usersDataQuery?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} />)
+            usersDataQuery?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} shift/>)
           )}
           <IconButton disabled={usersDataLoading} onClick={() => handleCopyID()} className={classes.inviteButton}>
             <Avatar>

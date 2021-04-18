@@ -7,10 +7,11 @@ export type UserAvatarProps = {
   user: Pick<User, 'email' | 'username'>;
   avatar?: React.ReactNode;
   online?: boolean;
+  shift?: boolean;
 };
 
-export default function UserAvatar({ user, avatar, online }: UserAvatarProps) {
-  const classes = useStyles();
+export default function UserAvatar({ user, avatar, online, shift }: UserAvatarProps) {
+  const classes = useStyles({ shift });
 
   const avatarComponent = avatar ? (
     <Avatar className={classes.avatar}>{avatar}</Avatar>
@@ -47,8 +48,8 @@ function getInitials(name: string) {
   );
 }
 
-export function UserAvatarSkeleton() {
-  const classes = useStyles();
+export function UserAvatarSkeleton({ shift = false }) {
+  const classes = useStyles({ shift });
   return (
     <Skeleton animation="wave" variant="circle" height="100%" className={`${classes.avatar} ${classes.skeleton}`}>
       <Avatar />
@@ -58,12 +59,13 @@ export function UserAvatarSkeleton() {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    avatar: {
+    avatar: (props: { shift: boolean }) => ({
       boxSizing: 'initial',
       margin: theme.spacing(1),
-      marginRight: theme.spacing(-2.5),
-      border: '3px solid white'
-    },
+      border: '3px solid white',
+
+      marginRight: theme.spacing(props.shift ? -2.5 : 0)
+    }),
     skeleton: {
       backgroundColor: 'rgba(220, 220, 220, 1)'
     }

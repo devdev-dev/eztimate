@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardContent: {
       display: 'flex',
+      flexDirection: 'column-reverse',
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%'

@@ -1,5 +1,6 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Box, Button, createStyles, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
+import BlurOnIcon from '@material-ui/icons/BlurOn';
 import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -16,7 +17,6 @@ import { AppContext } from '../../../pages/app';
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard, { EstimationPanelCardStack } from './EstimationPanelCard';
-
 const estimationValues = ['Small', 'Medium', 'Large'];
 const MENU_ITEM_HEIGHT = 48;
 
@@ -140,7 +140,7 @@ export default function EstimationPanel() {
               key={index}
               value={obfuscated ? <CheckIcon /> : estimate.value}
               user={estimate.user}
-              avatar={obfuscated ? <CheckIcon /> : undefined}
+              avatar={obfuscated && <BlurOnIcon />}
               disabled
             />
           ))}
