@@ -44,12 +44,14 @@ export default function UserPanel() {
         <Grid item className={classes.avatars}>
           {usersDataLoading ? (
             <>
-              <UserAvatarSkeleton />
-              <UserAvatarSkeleton />
-              <UserAvatarSkeleton />
+              <UserAvatarSkeleton shift />
+              <UserAvatarSkeleton shift />
+              <UserAvatarSkeleton shift />
             </>
           ) : (
-            usersDataQuery?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} shift/>)
+            usersDataQuery?.activeTeam.users?.map((user, userIndex) => (
+              <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} shift />
+            ))
           )}
           <IconButton disabled={usersDataLoading} onClick={() => handleCopyID()} className={classes.inviteButton}>
             <Avatar>
