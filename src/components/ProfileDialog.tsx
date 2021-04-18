@@ -90,7 +90,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
             variant="outlined"
           />
           <Typography variant="h6">Customize your personal avatar</Typography>
-          <Typography variant="caption">Use drag and drop to adjust the image crop</Typography>
+          <Typography variant="caption">Use drag and drop to adjust the image crop. Maximum file size is 420kB.</Typography>
           <UploadAvatar editorRef={editorRef} imageDataUrl={loggedInUser?.loggedInUser?.avatar} />
         </DialogContent>
         <DialogActions>
