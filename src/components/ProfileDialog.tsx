@@ -90,7 +90,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
           />
           <Typography variant="h6">Customize your personal avatar</Typography>
           <Typography variant="subtitle1">Use drag and drop to adjust the image crop</Typography>
-          <UploadAvatar editorRef={editorRef} />
+          <UploadAvatar editorRef={editorRef} imageDataUrl={loggedInUser?.loggedInUser?.avatar} />
         </DialogContent>
         <DialogActions>
           <Button variant="text" onClick={handleClose} color="secondary">

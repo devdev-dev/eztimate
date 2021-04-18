@@ -32,6 +32,7 @@ fragment UserFields on User {
   _id
   email
   username
+  avatar
 }
 
 fragment IssueFields on Issue {
