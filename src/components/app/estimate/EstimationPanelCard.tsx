@@ -1,37 +1,33 @@
-import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Tooltip, Typography } from '@material-ui/core';
+import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import { Skeleton } from '@material-ui/lab';
 import React from 'react';
+import { User } from '../../../apollo/types.grapqhl';
+import UserAvatar from '../../shared/UserAvatar';
 
 export interface EstimationPanelCardProps {
-  value: string | JSX.Element;
-  lable?: string;
+  value: string | React.ReactNode;
+  user?: Pick<User, 'email' | 'username'>;
+  avatar?: React.ReactNode;
   disabled?: boolean;
   raised?: boolean;
   onCardClick?: (value) => void;
 }
 
-export default function EstimationPanelCard({ value, lable, disabled, raised, onCardClick }: EstimationPanelCardProps) {
+export default function EstimationPanelCard({ value, user, avatar, disabled, raised, onCardClick }: EstimationPanelCardProps) {
   const classes = useStyles();
 
   return (
-    <Box>
-      <Card className={classes.card} raised={raised}>
-        <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
-          <CardContent className={classes.cardContent}>
-            <Typography variant="h5" color="textSecondary">
-              {value}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      {lable && (
-        <Tooltip title={lable}>
-          <Typography variant="subtitle2" color="textSecondary" className={classes.cardLabel}>
-            {lable}
+    <Card className={classes.card} raised={raised}>
+      <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
+        <CardContent className={classes.cardContent}>
+          {user && <UserAvatar user={user} customAvatar={avatar} />}
+          <Typography variant="h5" color="textSecondary">
+            {value}
           </Typography>
-        </Tooltip>
-      )}
-    </Box>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 }
 
@@ -52,14 +48,41 @@ export function EstimationPanelCardStack({ count }: EstimationPanelCardStackProp
   );
 }
 
+export function SkeletonEstimationPanelCard() {
+  const classes = useStyles();
+  return (
+    <>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+    </>
+  );
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      aspectRatio: '4 / 5'
+      aspectRatio: '4 / 5',
+      height: 142,
+      margin: theme.spacing(1)
+    },
+    cardSkeleton: {
+      transform: 'initial'
     },
     cardStack: {
       position: 'relative',
-      aspectRatio: '4 / 5'
+      aspectRatio: '4 / 5',
+      height: 142,
+      margin: theme.spacing(1)
     },
     cardStackCard: {
       position: 'absolute',
@@ -75,6 +98,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardContent: {
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%'

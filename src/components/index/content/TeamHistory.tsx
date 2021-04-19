@@ -38,7 +38,7 @@ export default function TeamHistory() {
             <ListItem key={index} onClick={() => handleTeamSelect(team._id)} button>
               <ListItemText primary={team.name} />
               {team.users?.map((user, userIndex) => (
-                <UserAvatar key={userIndex} user={user} />
+                <UserAvatar key={userIndex} user={user} shift />
               ))}
             </ListItem>
           ))}

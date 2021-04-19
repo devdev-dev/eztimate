@@ -30,6 +30,22 @@ export const resolvers: IResolvers = {
 
       return team;
     },
+    userUpdate: async (_, { id, email, username, avatar }, { db }) => {
+      let update = {};
+      if (email !== undefined) update = { ...update, email };
+      if (username !== undefined) update = { ...update, username };
+      if (avatar !== undefined) update = { ...update, avatar };
+
+      const { value: user } = await db.collection('users').findOneAndUpdate(
+        { _id: getObjectId(id) },
+        {
+          $set: update
+        },
+        { returnOriginal: false }
+      );
+
+      return user;
+    },
     teamCreate: async (_, { teamName }, { db, session }) => {
       const loggedInUserIdObject = getObjectId(session.user.id);
 

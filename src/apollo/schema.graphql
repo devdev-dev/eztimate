@@ -1,5 +1,6 @@
 type Mutation {
   userJoinTeam(teamId: String!): Team!
+  userUpdate(id: String!, email: String, username: String, avatar: String): User!
 
   teamCreate(teamName: String!): Team!
   teamSetActiveIssue(id: String!): Team!
@@ -21,6 +22,8 @@ type Query {
 type User {
   _id: String!
   email: String!
+  username: String
+  avatar: String
   teams: [Team]!
 }
 

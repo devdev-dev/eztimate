@@ -12,7 +12,8 @@ import {
   IssueResetMutationResult,
   IssueUpdateMutationResult,
   TeamSetActiveIssueMutationResult,
-  UserJoinTeamMutationResult
+  UserJoinTeamMutationResult,
+  UserUpdateMutationResult
 } from '../types.grapqhl';
 
 export const pusherPlugin: ApolloServerPlugin = {
@@ -24,6 +25,9 @@ export const pusherPlugin: ApolloServerPlugin = {
           return;
         }
         switch (context.operationName) {
+          case 'UserUpdate':
+            await handleUserUpdate(context.context.context, context.response);
+            break;
           case 'TeamSetActiveIssue':
             await handleTeamEstimate(context.context.context, context.response);
             break;
@@ -60,6 +64,14 @@ const handleIllegalState = (operationName: string, { req, res }) => {
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.IllegalState,
     `Received a [null|undefined] value while processing the operation: ${operationName}`
+  );
+};
+
+const handleUserUpdate = ({ req, res }, response: GraphQLResponse) => {
+  return getPusher().trigger(
+    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
+    PusherEvents.UserUpdate,
+    (response as UserUpdateMutationResult).data.userUpdate
   );
 };
 

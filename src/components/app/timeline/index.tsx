@@ -37,9 +37,13 @@ const Timeline = () => {
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       <Box flexGrow={0} className={classes.header}>
-        <Typography component="h2" variant="h5" gutterBottom>
-          {loading ? <Skeleton animation="wave" /> : `Timeline ${data?.activeTeam.name}`}
-        </Typography>
+        {loading ? (
+          <Skeleton animation="wave" width="100%" height="50px" />
+        ) : (
+          <Typography component="h2" variant="h5" gutterBottom>
+            {`Timeline of ${data?.activeTeam.name}`}
+          </Typography>
+        )}
       </Box>
       <Box flexGrow={0} className={classes.buttons}>
         <TextField

@@ -9,12 +9,22 @@ import {
   Issue,
   IssueFieldsFragment,
   IssueFieldsFragmentDoc,
+  Maybe,
   Team,
   TeamFieldsFragment,
   TeamFieldsFragmentDoc
 } from '../apollo/types.grapqhl';
 import { AppContext } from '../pages/app';
 import { PusherEvents } from '../utils/types';
+
+export function useUserUpdate(refetch) {
+  const { teamId } = useContext(AppContext);
+  const { channel } = usePresenceChannel(`presence-${teamId}`);
+
+  useEvent(channel, PusherEvents.UserUpdate, () => {
+    refetch();
+  });
+}
 
 export function useUserJoinTeam(refetch) {
   const { teamId } = useContext(AppContext);
@@ -91,7 +101,11 @@ export function useIssueDeleteEvent() {
   });
 }
 
-export function useEstimateCreateEvent(issue: Issue) {
+export function useEstimateCreateEvent(
+  issue: Pick<Issue, '_id' | '__typename' | 'name' | 'state' | 'estimate'> & {
+    estimates: Array<Maybe<Pick<Estimate, '_id'>>>;
+  }
+) {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);

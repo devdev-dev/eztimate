@@ -9,16 +9,3 @@ mutation UserJoinTeam($teamId: String!) {
     _id
   }
 }
-
-query LoggedInUser {
-  loggedInUser {
-    _id
-    teams {
-      _id
-      name
-      users {
-        email
-      }
-    }
-  }
-}
