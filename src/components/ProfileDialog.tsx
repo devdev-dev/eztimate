@@ -36,7 +36,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
     onDialogClose();
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const email = emailFieldRef.current?.value;
     if (!email || !validateEmail(email)) {
       setEmailFieldHelperText('The given email is invalid');
@@ -44,9 +44,34 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
     }
 
     const username = usernameFieldRef.current?.value ?? null;
-    const avatar = editorRef?.current?.getImageScaledToCanvas().toDataURL();
 
-    userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username, avatar } }).then(() => handleClose());
+    const editorRefImage = editorRef?.current?.props.image;
+    console.log(editorRef?.current?.props);
+    if (editorRefImage === null) {
+      userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username, avatar: null } }).then(() => handleClose());
+    } else if (typeof editorRefImage !== 'string') {
+      editorRef?.current?.getImageScaledToCanvas().toBlob(
+        blob => {
+          const formData = new FormData();
+          formData.append('avatar', blob);
+          formData.append('name', loggedInUser.loggedInUser._id + '_' + Math.random().toString(36).substr(2, 9));
+          fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => {
+              return response.json();
+            })
+            .then(body => {
+              userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username, avatar: body.url } }).then(() => handleClose());
+            });
+        },
+        'image/jpeg',
+        0.9
+      );
+    } else {
+      userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username } }).then(() => handleClose());
+    }
   };
 
   return (
@@ -91,7 +116,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
           />
           <Typography variant="h6">Customize your personal avatar</Typography>
           <Typography variant="caption">Use drag and drop to adjust the image crop. Maximum file size is 420kB.</Typography>
-          <UploadAvatar editorRef={editorRef} imageDataUrl={loggedInUser?.loggedInUser?.avatar} />
+          <UploadAvatar editorRef={editorRef} url={loggedInUser?.loggedInUser?.avatar} />
         </DialogContent>
         <DialogActions>
           <Button variant="text" onClick={handleClose} color="secondary">

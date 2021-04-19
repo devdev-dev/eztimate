@@ -9,13 +9,13 @@ import Dropzone from 'react-dropzone';
 
 export interface UploadAvatarProps {
   editorRef: MutableRefObject<any>;
-  imageDataUrl: String | undefined;
+  url: string | undefined;
 }
 
-export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarProps) {
+export default function UploadAvatar({ editorRef, url }: UploadAvatarProps) {
   const classes = useStyles();
 
-  const [image, setImage] = useState<File>(dataURLtoFile(imageDataUrl));
+  const [image, setImage] = useState<File | string | undefined>(url);
   const [scale, setScale] = React.useState<number>(1);
   const [rotation, setRotation] = React.useState<number>(0);
 
@@ -77,23 +77,6 @@ export default function UploadAvatar({ editorRef, imageDataUrl }: UploadAvatarPr
       </Dropzone>
     </Box>
   );
-}
-
-function dataURLtoFile(dataurl) {
-  if (!dataurl) {
-    return null;
-  }
-  const arr = dataurl.split(',');
-  const mime = arr[0].match(/:(.*?);/)[1];
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-
-  return new File([u8arr], 'image', { type: mime });
 }
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -9,7 +9,7 @@ class EztimateBucketStack extends core.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const Bucket = new s3.Bucket(this, 'imagedb', {
+    const Bucket = new s3.Bucket(this, 'avatars', {
       versioned: true,
       removalPolicy: core.RemovalPolicy.DESTROY,
       accessControl: 'Private',
@@ -27,5 +27,5 @@ class EztimateBucketStack extends core.Stack {
   }
 }
 
-const Stack = new EztimateBucketStack(app, 'Eztimate');
+const Stack = new EztimateBucketStack(app, 'eztimate');
 Stack();
