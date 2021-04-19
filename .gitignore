@@ -35,3 +35,6 @@ yarn-error.log*
 
 # grapqhl
 /src/apollo/types.grapqhl.ts
+
+# aws cdk
+cdk.out
