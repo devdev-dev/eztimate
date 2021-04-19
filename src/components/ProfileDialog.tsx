@@ -14,11 +14,10 @@ import { useLoggedInUserQuery, useUserUpdateMutation } from '../apollo/types.gra
 import UploadAvatar from './UploadAvatar';
 
 export interface ProfileDialogProps {
-  open: boolean;
   onDialogClose: () => void;
 }
 
-export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProps) {
+export default function ProfileDialog({ onDialogClose }: ProfileDialogProps) {
   const classes = useStyles();
 
   const { data: loggedInUser } = useLoggedInUserQuery();
@@ -46,7 +45,6 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
     const username = usernameFieldRef.current?.value ?? null;
 
     const editorRefImage = editorRef?.current?.props.image;
-    console.log(editorRef?.current?.props);
     if (editorRefImage === null) {
       userUpdate({ variables: { id: loggedInUser?.loggedInUser?._id, email, username, avatar: null } }).then(() => handleClose());
     } else if (typeof editorRefImage !== 'string') {
@@ -76,7 +74,7 @@ export default function ProfileDialog({ open, onDialogClose }: ProfileDialogProp
 
   return (
     <div>
-      <Dialog onClose={onDialogClose} open={open}>
+      <Dialog onClose={onDialogClose} open={true}>
         <DialogTitle disableTypography className={classes.title}>
           <Typography variant="h6" className={classes.titleText}>
             Edit your Profile
