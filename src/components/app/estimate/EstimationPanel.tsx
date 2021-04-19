@@ -16,7 +16,7 @@ import {
 import { AppContext } from '../../../pages/app';
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
-import EstimationPanelCard, { EstimationPanelCardStack } from './EstimationPanelCard';
+import EstimationPanelCard, { EstimationPanelCardStack, SkeletonEstimationPanelCard } from './EstimationPanelCard';
 const estimationValues = ['Small', 'Medium', 'Large'];
 const MENU_ITEM_HEIGHT = 48;
 
@@ -134,6 +134,7 @@ export default function EstimationPanel() {
       <Paper className={classes.results}>
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
         <Box className={classes.cardwrap}>
+          {loadingIssueQuery && <SkeletonEstimationPanelCard />}
           {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
             <EstimationPanelCard

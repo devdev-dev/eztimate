@@ -1,5 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { User } from '../../../apollo/types.grapqhl';
 import UserAvatar from '../../shared/UserAvatar';
@@ -47,12 +48,35 @@ export function EstimationPanelCardStack({ count }: EstimationPanelCardStackProp
   );
 }
 
+export function SkeletonEstimationPanelCard() {
+  const classes = useStyles();
+  return (
+    <>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+      <Card className={classes.card}>
+        <Skeleton animation="wave" height={'100%'} className={classes.cardSkeleton} />
+      </Card>
+    </>
+  );
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
       aspectRatio: '4 / 5',
       height: 142,
       margin: theme.spacing(1)
+    },
+    cardSkeleton: {
+      transform: 'initial'
     },
     cardStack: {
       position: 'relative',
