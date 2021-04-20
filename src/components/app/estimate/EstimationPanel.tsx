@@ -9,6 +9,7 @@ import {
   IssueState,
   IssueUpdateMutationVariables,
   useEstimateCreateMutation,
+  useEstimateDeleteMutation,
   useGetEstimatedIssueQuery,
   useIssueUpdateMutation,
   useLoggedInUserQuery
@@ -28,6 +29,7 @@ export default function EstimationPanel() {
 
   const [issueUpdate] = useIssueUpdateMutation({ ignoreResults: true });
   const [estimateCreate] = useEstimateCreateMutation();
+  const [estimateDelete] = useEstimateDeleteMutation();
 
   const [finishMenuOpen, setFinishMenuOpen] = useState(false);
   const [issueUnderEstimation, setIssueUnderEstimation] = useState<IssueFieldsFragment>(null);
@@ -64,13 +66,19 @@ export default function EstimationPanel() {
     issueUpdate({ variables: { id: issueUnderEstimation?._id, state: IssueState.Estimated, estimate: value } }).then(() => setFinishMenuOpen(false));
   };
 
-  const handleCardClick = value => {
-    estimateCreate({
-      variables: { issueId: issueUnderEstimation._id, value: `${value}` }
-    });
-  };
-
   const userEstimate = issueUnderEstimation?.estimates.find(e => e.user._id === loggedInUser?.loggedInUser._id);
+
+  const handleCardClick = value => {
+    if (userEstimate && userEstimate.value === value) {
+      estimateDelete({
+        variables: { id: userEstimate._id }
+      });
+    } else {
+      estimateCreate({
+        variables: { issueId: issueUnderEstimation._id, value: `${value}` }
+      });
+    }
+  };
 
   const EmptyToolbar = (
     <Toolbar className={classes.resultsToolbar}>
