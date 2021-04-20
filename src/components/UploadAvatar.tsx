@@ -29,7 +29,7 @@ export default function UploadAvatar({ editorRef, url }: UploadAvatarProps) {
         accept={['image/jpeg', 'image/png']}
         maxFiles={1}
         multiple={false}
-        maxSize={420000}
+        maxSize={5000000}
         noKeyboard
         noClick
       >
