@@ -3,7 +3,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import PhotoSizeSelectLargeIcon from '@material-ui/icons/PhotoSizeSelectLarge';
 import PublishIcon from '@material-ui/icons/Publish';
 import RotateRightIcon from '@material-ui/icons/RotateRight';
-import React, { MutableRefObject, useRef, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone from 'react-dropzone';
 
@@ -15,11 +15,17 @@ export interface UploadAvatarProps {
 export default function UploadAvatar({ editorRef, url }: UploadAvatarProps) {
   const classes = useStyles();
 
-  const [image, setImage] = useState<File | string | undefined>(url);
+  const [image, setImage] = useState<File>(null);
   const [scale, setScale] = React.useState<number>(1);
   const [rotation, setRotation] = React.useState<number>(0);
 
   const dropzoneRef = useRef(null);
+
+  useEffect(() => {
+    fetch(url)
+      .then(r => r.blob())
+      .then(blobFile => setImage(new File([blobFile], 'avatar', { type: 'image/jpeg' })));
+  }, []);
 
   return (
     <Box className={classes.container}>
@@ -71,6 +77,7 @@ export default function UploadAvatar({ editorRef, url }: UploadAvatarProps) {
               color={[238, 238, 238, 0.8]}
               rotate={rotation}
               scale={scale}
+              disableBoundaryChecks={true}
             />
           </div>
         )}
