@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       if (err) return reject(err);
       fs.readFile(files.avatar.path, function (fsErr, data) {
         if (fsErr) return reject(fsErr);
-        resolve({ name: fields.name, file: files.avatar, data });
+        resolve({ name: fields.name, file: files.avatar, data, oldiamge: fields.oldimage });
       });
     });
   });
@@ -27,7 +27,9 @@ export default async function handler(req, res) {
     signatureVersion: 'v4'
   });
 
-  await new aws.S3().upload(
+  const awsInstance = new aws.S3();
+
+  await awsInstance.upload(
     {
       Bucket: process.env.S3_BUCKET_NAME,
       Key: reqForm.name + '.jpeg',
@@ -36,6 +38,19 @@ export default async function handler(req, res) {
     },
     function (s3Err, data) {
       if (s3Err) throw s3Err;
+
+      if (reqForm.oldiamge) {
+        awsInstance.deleteObject(
+          {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: reqForm.oldiamge.substring(reqForm.oldiamge.lastIndexOf('/') + 1)
+          },
+          s3DeleteErr => {
+            if (s3DeleteErr) throw s3DeleteErr;
+          }
+        );
+      }
+
       res.status(200).json({ url: data.Location });
     }
   );

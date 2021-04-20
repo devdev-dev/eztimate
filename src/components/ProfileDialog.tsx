@@ -53,6 +53,7 @@ export default function ProfileDialog({ onDialogClose }: ProfileDialogProps) {
           const formData = new FormData();
           formData.append('avatar', blob);
           formData.append('name', loggedInUser.loggedInUser._id + '_' + Math.random().toString(36).substr(2, 9));
+          formData.append('oldimage', loggedInUser.loggedInUser.avatar ?? undefined);
           fetch('/api/upload', {
             method: 'POST',
             body: formData
