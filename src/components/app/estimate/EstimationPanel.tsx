@@ -10,7 +10,6 @@ import {
   IssueUpdateMutationVariables,
   useEstimateCreateMutation,
   useEstimateDeleteMutation,
-
   useGetEstimatedIssueQuery,
   useIssueUpdateMutation,
   useLoggedInUserQuery
@@ -143,7 +142,8 @@ export default function EstimationPanel() {
       <Paper className={classes.results}>
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
         <Box className={classes.cardwrap}>
-          {loadingIssueQuery && remainingEstimates === 0 ? <SkeletonEstimationPanelCard /> : <EstimationPanelCardStack count={remainingEstimates} />}
+          {loadingIssueQuery && remainingEstimates === 0 && <SkeletonEstimationPanelCard />}
+          {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
             <EstimationPanelCard
               key={index}
