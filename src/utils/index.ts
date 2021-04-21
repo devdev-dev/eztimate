@@ -13,3 +13,5 @@ export enum PusherEvents {
   EstimateCreate = 'estimate:create',
   EstimateDelete = 'estimate:delete'
 }
+
+export const defaultCardSet = ['1', '2', '3', '5', '8', '13']

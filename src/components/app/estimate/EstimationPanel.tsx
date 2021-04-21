@@ -10,6 +10,7 @@ import {
   IssueUpdateMutationVariables,
   useEstimateCreateMutation,
   useEstimateDeleteMutation,
+
   useGetEstimatedIssueQuery,
   useIssueUpdateMutation,
   useLoggedInUserQuery
@@ -18,7 +19,6 @@ import { AppContext } from '../../../pages/app';
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard, { EstimationPanelCardStack, SkeletonEstimationPanelCard } from './EstimationPanelCard';
-const estimationValues = ['Small', 'Medium', 'Large'];
 const MENU_ITEM_HEIGHT = 48;
 
 export default function EstimationPanel() {
@@ -116,11 +116,12 @@ export default function EstimationPanel() {
             }}
             keepMounted
           >
-            {estimationValues.map((value, index) => (
-              <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
-                {value}
-              </MenuItem>
-            ))}
+            {!loadingIssueQuery &&
+              issueQuery.activeTeam.cardSet.map((value, index) => (
+                <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
+                  {value}
+                </MenuItem>
+              ))}
           </Menu>
         </>
       )}
@@ -156,15 +157,19 @@ export default function EstimationPanel() {
       </Paper>
       <Paper elevation={0} className={classes.cards}>
         <Box className={classes.cardwrap}>
-          {estimationValues.map((value, index) => (
-            <EstimationPanelCard
-              key={index}
-              value={value}
-              disabled={!issueUnderEstimation || loadingIssueQuery || finished}
-              raised={userEstimate?.value === value}
-              onCardClick={handleCardClick}
-            />
-          ))}
+          {loadingIssueQuery ? (
+            <SkeletonEstimationPanelCard />
+          ) : (
+            issueQuery.activeTeam.cardSet.map((value, index) => (
+              <EstimationPanelCard
+                key={index}
+                value={value}
+                disabled={!issueUnderEstimation || loadingIssueQuery || finished}
+                raised={userEstimate?.value === value}
+                onCardClick={handleCardClick}
+              />
+            ))
+          )}
         </Box>
       </Paper>
     </Box>

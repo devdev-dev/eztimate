@@ -3,7 +3,7 @@ import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
 import getPusher from '../../utils/pusher';
-import { CookieName, PusherEvents } from '../../utils/types';
+import { CookieName, PusherEvents } from '../../utils';
 import {
   EstimateCreateMutationResult,
   EstimateDeleteMutationResult,

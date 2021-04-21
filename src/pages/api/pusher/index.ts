@@ -2,7 +2,7 @@ import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 import Pusher from 'pusher';
-import { CookieName } from '../../../utils/types';
+import { CookieName } from '../../../utils';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const session = await getSession({ req: request });

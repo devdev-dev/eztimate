@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import router from 'next/router';
 import React from 'react';
 import { useLoggedInUserQuery } from '../../../apollo/types.grapqhl';
-import { CookieName } from '../../../utils/types';
+import { CookieName } from '../../../utils';
 import UserAvatar from '../../shared/UserAvatar';
 
 export default function TeamHistory() {

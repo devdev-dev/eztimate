@@ -1,7 +1,7 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
 import { getObjectId } from '../utils/mongodb';
-import { CookieName } from '../utils/types';
+import { CookieName, defaultCardSet } from '../utils';
 import { Estimate, Issue, IssueState, Team, User } from './types.grapqhl';
 
 export const resolvers: IResolvers = {
@@ -51,6 +51,7 @@ export const resolvers: IResolvers = {
 
       const teamInsertResult = await db.collection('teams').insertOne({
         name: teamName,
+        cardSet: defaultCardSet,
         users: [loggedInUserIdObject],
         issues: []
       });

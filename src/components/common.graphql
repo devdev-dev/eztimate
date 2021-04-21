@@ -20,6 +20,7 @@ mutation UserUpdate($id: String!, $email: String, $username: String, $avatar: St
 fragment TeamFields on Team {
   _id
   name
+  cardSet
   estimatedIssue {
     ...IssueFields
   }

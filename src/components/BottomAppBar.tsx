@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { signOut, useSession } from 'next-auth/client';
 import router from 'next/router';
 import React, { useRef, useState } from 'react';
-import { CookieName } from '../utils/types';
+import { CookieName } from '../utils';
 import ProfileDialog from './ProfileDialog';
 
 export default function BottomAppBar() {

@@ -15,7 +15,7 @@ import {
   TeamFieldsFragmentDoc
 } from '../apollo/types.grapqhl';
 import { AppContext } from '../pages/app';
-import { PusherEvents } from '../utils/types';
+import { PusherEvents } from '.';
 
 export function useUserUpdate(refetch) {
   const { teamId } = useContext(AppContext);

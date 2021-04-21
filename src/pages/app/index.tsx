@@ -7,7 +7,7 @@ import React from 'react';
 import Estimate from '../../components/app/estimate';
 import Sidebar from '../../components/app/timeline';
 import withAppLayout from '../../components/withAppLayout';
-import { CookieName } from '../../utils/types';
+import { CookieName } from '../../utils';
 
 const config: PusherProviderProps = {
   clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,

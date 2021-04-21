@@ -30,6 +30,7 @@ type User {
 type Team {
   _id: String!
   name: String!
+  cardSet: [String]!
   users: [User]!
   issues: [Issue]!
   estimatedIssue: Issue

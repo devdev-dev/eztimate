@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import React from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
 import { useUserJoinTeam, useUserUpdate } from '../../../utils/hooks';
-import { CookieName } from '../../../utils/types';
+import { CookieName } from '../../../utils';
 import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
 export default function UserPanel() {
