@@ -40,7 +40,7 @@ const Timeline = () => {
         {loading ? (
           <Skeleton animation="wave" width="100%" height="50px" />
         ) : (
-          <Typography component="h2" variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5">
             {`Timeline of ${data?.activeTeam.name}`}
           </Typography>
         )}

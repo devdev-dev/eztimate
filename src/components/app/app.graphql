@@ -17,6 +17,7 @@ query GetEstimatedIssue {
 query GetUsers {
   activeTeam {
     _id
+    name
     users {
       ...UserFields
     }
