@@ -1,8 +1,8 @@
 import Cookies from 'cookies';
 import { IResolvers } from 'graphql-tools';
-import { getObjectId } from '../utils/mongodb';
-import { CookieName, defaultCardSet } from '../utils';
-import { Estimate, Issue, IssueState, Team, User } from './types.grapqhl';
+import { CookieName, defaultCardSet } from '../../utils';
+import { getObjectId } from '../../utils/mongodb';
+import { IssueState } from '../types.grapqhl';
 
 export const resolvers: IResolvers = {
   Mutation: {
@@ -171,65 +171,6 @@ export const resolvers: IResolvers = {
       await db.collection('issues').updateOne({ estimates: { $elemMatch: { $eq: estimateIdObject } } }, { $pull: { estimates: estimateIdObject } });
 
       return value;
-    }
-  },
-  Query: {
-    async loggedInUser(parent, args, context) {
-      return await context.db.collection('users').findOne({ _id: getObjectId(context.session.user.id) });
-    },
-    activeTeam: async (parent, args, { db, context: { req, res } }) => {
-      const team = await db.collection('teams').findOne({ _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) });
-      return team;
-    }
-  },
-  User: {
-    async teams(user: User, args, { db }) {
-      const teams = await db
-        .collection('teams')
-        .find({ _id: { $in: user.teams } })
-        .toArray();
-
-      return teams;
-    }
-  },
-  Team: {
-    async users(team: Team, args, { db }) {
-      const users = await db
-        .collection('users')
-        .find({ _id: { $in: team.users } })
-        .toArray();
-
-      return users;
-    },
-    async issues(team: Team, args, { db }) {
-      const issues = await db
-        .collection('issues')
-        .find({ _id: { $in: team.issues } })
-        .sort({ dateCreated: -1 })
-        .toArray();
-
-      return issues;
-    },
-    async estimatedIssue(team: Team, args, { db }) {
-      const issue = await db.collection('issues').findOne({ _id: team.estimatedIssue });
-      return issue;
-    }
-  },
-  Issue: {
-    async estimates(issue: Issue, args, { db }) {
-      if (issue.estimates) {
-        return await db
-          .collection('estimates')
-          .find({ _id: { $in: issue.estimates ?? [] } })
-          .toArray();
-      }
-      return [];
-    }
-  },
-  Estimate: {
-    async user(estimate: Estimate, args, { db }) {
-      const user = await db.collection('users').findOne({ _id: estimate.user });
-      return user;
     }
   }
 };
