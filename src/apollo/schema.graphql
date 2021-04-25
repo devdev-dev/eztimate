@@ -17,6 +17,7 @@ type Mutation {
 type Query {
   loggedInUser: User
   activeTeam: Team
+  activeIssue: Issue
 }
 
 type User {
