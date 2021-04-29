@@ -1,14 +1,15 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
-import { Avatar, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Snackbar, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, Grid, IconButton, makeStyles, Menu, MenuItem, Theme, Typography } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { Alert, Skeleton } from '@material-ui/lab';
+import { Skeleton } from '@material-ui/lab';
 import Cookies from 'js-cookie';
 import React, { useRef } from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils';
 import { useUserJoinTeam, useUserUpdate } from '../../../utils/hooks';
+import AppSnackbar from '../../shared/AppSnackbar';
 import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
 
 export default function UserPanel() {
@@ -91,20 +92,12 @@ export default function UserPanel() {
           </IconButton>
         </Grid>
       </Grid>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
+      <AppSnackbar
+        message="Invitation link copied. Share it with your team!"
+        icon={<CopyIcon />}
         open={copyAlertOpen}
-        message="Invitation link copied."
-        autoHideDuration={6000}
         onClose={() => setCopyAlertOpen(false)}
-      >
-        <Alert onClose={() => setCopyAlertOpen(false)} severity="info" variant="filled" icon={<CopyIcon />}>
-          Invitation link copied. Share it with your team!
-        </Alert>
-      </Snackbar>
+      />
     </>
   );
 }
