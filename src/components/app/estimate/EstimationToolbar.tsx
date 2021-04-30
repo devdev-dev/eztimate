@@ -6,7 +6,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Skeleton } from '@material-ui/lab';
 import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
-import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
+import { useGetActiveTeamQuery } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils';
 import { useUserJoinTeam, useUserUpdate } from '../../../utils/hooks';
 import AppSnackbar from '../../shared/AppSnackbar';
@@ -21,7 +21,7 @@ export default function UserPanel() {
 
   const teamButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { data: usersData, loading: usersDataLoading, refetch } = useGetUsersQuery();
+  const { data, loading, refetch } = useGetActiveTeamQuery();
 
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
   useUserJoinTeam(refetch);
@@ -44,7 +44,7 @@ export default function UserPanel() {
       {' '}
       <Grid container direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
         <Grid item className={classes.team}>
-          {usersDataLoading ? (
+          {loading ? (
             <Skeleton animation="wave" width="95%" height="50px" />
           ) : (
             <>
@@ -77,22 +77,22 @@ export default function UserPanel() {
                 </MenuItem>
               </Menu>
               <Typography component="h2" variant="h5">
-                {usersData.activeTeam.name}
+                {data?.activeTeam?.name}
               </Typography>
             </>
           )}
         </Grid>
         <Grid item className={classes.avatars}>
-          {usersDataLoading ? (
+          {loading ? (
             <>
               <UserAvatarSkeleton shift />
               <UserAvatarSkeleton shift />
               <UserAvatarSkeleton shift />
             </>
           ) : (
-            usersData?.activeTeam.users?.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} shift />)
+            data?.activeTeam?.users.map((user, userIndex) => <UserAvatar key={userIndex} user={user} online={channel?.members?.get(user._id)} shift />)
           )}
-          <IconButton disabled={usersDataLoading} onClick={() => handleCopyID()} className={classes.inviteButton}>
+          <IconButton disabled={loading} onClick={() => handleCopyID()} className={classes.inviteButton}>
             <Avatar>
               <PersonAddIcon />
             </Avatar>

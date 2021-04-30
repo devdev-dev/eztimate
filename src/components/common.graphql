@@ -27,6 +27,9 @@ fragment TeamFields on Team {
   issues {
     ...IssueFields
   }
+  users {
+    ...UserFields
+  }
 }
 
 fragment UserFields on User {

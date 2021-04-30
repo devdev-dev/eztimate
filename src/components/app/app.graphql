@@ -20,16 +20,6 @@ query GetEstimatedIssue {
   }
 }
 
-query GetUsers {
-  activeTeam {
-    _id
-    name
-    users {
-      ...UserFields
-    }
-  }
-}
-
 mutation TeamSetActiveIssue($id: String!) {
   teamSetActiveIssue(id: $id) {
     _id
