@@ -5,17 +5,19 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Skeleton } from '@material-ui/lab';
 import Cookies from 'js-cookie';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useGetUsersQuery } from '../../../apollo/types.grapqhl';
 import { CookieName } from '../../../utils';
 import { useUserJoinTeam, useUserUpdate } from '../../../utils/hooks';
 import AppSnackbar from '../../shared/AppSnackbar';
 import UserAvatar, { UserAvatarSkeleton } from '../../shared/UserAvatar';
+import TeamDialog from './TeamDialog';
 
 export default function UserPanel() {
   const classes = useStyles();
   const [copyAlertOpen, setCopyAlertOpen] = React.useState(false);
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const teamButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -24,8 +26,6 @@ export default function UserPanel() {
   const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.TEAM_ID)}`);
   useUserJoinTeam(refetch);
   useUserUpdate(refetch);
-
-  const handleManageTeam = () => {};
 
   const handleCopyID = () => {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
@@ -45,7 +45,7 @@ export default function UserPanel() {
       <Grid container direction="row" justify="space-between" alignItems="flex-start" component="section" className={classes.root}>
         <Grid item className={classes.team}>
           {usersDataLoading ? (
-            <Skeleton animation="wave" width="20%" height="50px" />
+            <Skeleton animation="wave" width="95%" height="50px" />
           ) : (
             <>
               <IconButton ref={teamButtonRef} onClick={() => setMenuOpen(true)}>
@@ -67,7 +67,14 @@ export default function UserPanel() {
                 open={menuOpen}
                 onClose={() => setMenuOpen(false)}
               >
-                <MenuItem onClick={handleManageTeam}>Manage</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setDialogOpen(true);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Manage
+                </MenuItem>
               </Menu>
               <Typography component="h2" variant="h5">
                 {usersData.activeTeam.name}
@@ -92,6 +99,7 @@ export default function UserPanel() {
           </IconButton>
         </Grid>
       </Grid>
+      {dialogOpen && <TeamDialog onDialogClose={() => setDialogOpen(false)} />}
       <AppSnackbar
         message="Invitation link copied. Share it with your team!"
         icon={<CopyIcon />}
