@@ -1,6 +1,5 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Box, Button, createStyles, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
-import BlurOnIcon from '@material-ui/icons/BlurOn';
 import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -145,13 +144,7 @@ export default function EstimationPanel() {
           {loadingIssueQuery && remainingEstimates === 0 && <SkeletonEstimationPanelCard />}
           {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
-            <EstimationPanelCard
-              key={index}
-              value={obfuscated ? <CheckIcon /> : estimate.value}
-              user={estimate.user}
-              avatar={obfuscated && <BlurOnIcon />}
-              disabled
-            />
+            <EstimationPanelCard key={index} value={obfuscated ? <CheckIcon /> : estimate.value} user={estimate.user} disabled />
           ))}
         </Box>
       </Paper>
