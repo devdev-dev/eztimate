@@ -1,6 +1,5 @@
 import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Box, Button, createStyles, makeStyles, Menu, MenuItem, Paper, Theme, Toolbar, Typography } from '@material-ui/core';
-import BlurOnIcon from '@material-ui/icons/BlurOn';
 import CheckIcon from '@material-ui/icons/Check';
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -18,7 +17,6 @@ import { AppContext } from '../../../pages/app';
 import { useEstimateCreateEvent, useEstimateDeleteEvent } from '../../../utils/hooks';
 import EditableTextField from './EditableTextField';
 import EstimationPanelCard, { EstimationPanelCardStack, SkeletonEstimationPanelCard } from './EstimationPanelCard';
-const estimationValues = ['Small', 'Medium', 'Large'];
 const MENU_ITEM_HEIGHT = 48;
 
 export default function EstimationPanel() {
@@ -116,11 +114,12 @@ export default function EstimationPanel() {
             }}
             keepMounted
           >
-            {estimationValues.map((value, index) => (
-              <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
-                {value}
-              </MenuItem>
-            ))}
+            {!loadingIssueQuery &&
+              issueQuery.activeTeam.cardSet.map((value, index) => (
+                <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
+                  {value}
+                </MenuItem>
+              ))}
           </Menu>
         </>
       )}
@@ -142,30 +141,28 @@ export default function EstimationPanel() {
       <Paper className={classes.results}>
         {issueUnderEstimation && !loadingIssueQuery ? EstimationToolbar : EmptyToolbar}
         <Box className={classes.cardwrap}>
-          {loadingIssueQuery && <SkeletonEstimationPanelCard />}
+          {loadingIssueQuery && remainingEstimates === 0 && <SkeletonEstimationPanelCard />}
           {remainingEstimates > 0 && <EstimationPanelCardStack count={remainingEstimates} />}
           {issueUnderEstimation?.estimates.map((estimate, index) => (
-            <EstimationPanelCard
-              key={index}
-              value={obfuscated ? <CheckIcon /> : estimate.value}
-              user={estimate.user}
-              avatar={obfuscated && <BlurOnIcon />}
-              disabled
-            />
+            <EstimationPanelCard key={index} value={obfuscated ? <CheckIcon /> : estimate.value} user={estimate.user} disabled />
           ))}
         </Box>
       </Paper>
       <Paper elevation={0} className={classes.cards}>
         <Box className={classes.cardwrap}>
-          {estimationValues.map((value, index) => (
-            <EstimationPanelCard
-              key={index}
-              value={value}
-              disabled={!issueUnderEstimation || loadingIssueQuery || finished}
-              raised={userEstimate?.value === value}
-              onCardClick={handleCardClick}
-            />
-          ))}
+          {loadingIssueQuery ? (
+            <SkeletonEstimationPanelCard />
+          ) : (
+            issueQuery.activeTeam.cardSet.map((value, index) => (
+              <EstimationPanelCard
+                key={index}
+                value={value}
+                disabled={!issueUnderEstimation || loadingIssueQuery || finished}
+                raised={userEstimate?.value === value}
+                onCardClick={handleCardClick}
+              />
+            ))
+          )}
         </Box>
       </Paper>
     </Box>

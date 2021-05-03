@@ -3,7 +3,7 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import { Skeleton } from '@material-ui/lab';
 import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
-import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamEstimateEvent } from '../../../utils/hooks';
+import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamUpdateEvent } from '../../../utils/hooks';
 import IssueListItem, { IssueListItemBeginning, IssueListItemSkeleton } from './IssueListItem';
 
 const Timeline = () => {
@@ -16,7 +16,7 @@ const Timeline = () => {
   useIssueCreateEvent(data?.activeTeam);
   useIssueUpdateEvent();
   useIssueDeleteEvent();
-  useTeamEstimateEvent();
+  useTeamUpdateEvent();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const [helperText, setHelperText] = useState('');
@@ -40,7 +40,7 @@ const Timeline = () => {
         {loading ? (
           <Skeleton animation="wave" width="100%" height="50px" />
         ) : (
-          <Typography component="h2" variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5">
             {`Timeline of ${data?.activeTeam.name}`}
           </Typography>
         )}

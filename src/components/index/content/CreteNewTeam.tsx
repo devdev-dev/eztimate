@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react';
 import { useCreateTeamMutation } from '../../../apollo/types.grapqhl';
-import { CookieName } from '../../../utils/types';
+import { CookieName } from '../../../utils';
 
 export default function CreateNewTeam() {
   const classes = useStyles();

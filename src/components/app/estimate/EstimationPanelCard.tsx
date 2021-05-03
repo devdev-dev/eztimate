@@ -17,16 +17,24 @@ export interface EstimationPanelCardProps {
 export default function EstimationPanelCard({ value, user, avatar, disabled, raised, onCardClick }: EstimationPanelCardProps) {
   const classes = useStyles();
 
+  const content = (
+    <CardContent className={classes.cardContent}>
+      {user && <UserAvatar user={user} customAvatar={avatar} />}
+      <Typography variant="h5" color="textSecondary">
+        {value}
+      </Typography>
+    </CardContent>
+  );
+
   return (
     <Card className={classes.card} raised={raised}>
-      <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
-        <CardContent className={classes.cardContent}>
-          {user && <UserAvatar user={user} customAvatar={avatar} />}
-          <Typography variant="h5" color="textSecondary">
-            {value}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+      {disabled ? (
+        content
+      ) : (
+        <CardActionArea className={classes.cardActionArea} onClick={() => onCardClick(value)} disabled={disabled}>
+          {content}
+        </CardActionArea>
+      )}
     </Card>
   );
 }

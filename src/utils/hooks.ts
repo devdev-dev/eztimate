@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client';
 import { useEvent, usePresenceChannel } from '@harelpls/use-pusher';
 import { FragmentDefinitionNode } from 'graphql';
 import { useContext } from 'react';
+import { PusherEvents } from '.';
 import {
   Estimate,
   EstimateFieldsFragment,
@@ -15,7 +16,6 @@ import {
   TeamFieldsFragmentDoc
 } from '../apollo/types.grapqhl';
 import { AppContext } from '../pages/app';
-import { PusherEvents } from '../utils/types';
 
 export function useUserUpdate(refetch) {
   const { teamId } = useContext(AppContext);
@@ -35,12 +35,12 @@ export function useUserJoinTeam(refetch) {
   });
 }
 
-export function useTeamEstimateEvent() {
+export function useTeamUpdateEvent() {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
   const { channel } = usePresenceChannel(`presence-${teamId}`);
 
-  useEvent(channel, PusherEvents.TeamEstimate, (team: TeamFieldsFragment) => {
+  useEvent(channel, PusherEvents.TeamUpdate, (team: TeamFieldsFragment) => {
     apolloClient.cache.writeFragment({
       data: team,
       fragmentName: (TeamFieldsFragmentDoc.definitions[0] as FragmentDefinitionNode).name.value,

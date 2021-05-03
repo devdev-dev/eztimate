@@ -14,8 +14,11 @@ import {
 } from '@material-ui/core';
 import { Check, Flag, MoreVert, QuestionAnswer, RadioButtonUnchecked, Repeat } from '@material-ui/icons/';
 import { Skeleton } from '@material-ui/lab';
+
+import { CookieName } from '../../../utils';
+import Cookies from 'js-cookie';
 import React, { useRef, useState } from 'react';
-import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useIssueResetMutation, useTeamSetActiveIssueMutation } from '../../../apollo/types.grapqhl';
+import { GetActiveTeamQuery, IssueState, useIssueDeleteMutation, useIssueResetMutation, useTeamUpdateMutation } from '../../../apollo/types.grapqhl';
 
 const ITEM_HEIGHT = 48;
 
@@ -35,11 +38,11 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
     });
   };
 
-  const [teamSetActiveIssue] = useTeamSetActiveIssueMutation({ ignoreResults: true });
-  const handleTeamSetActiveIssue = () => {
+  const [useTeamUpdate] = useTeamUpdateMutation({ ignoreResults: true });
+  const handleTeamUpdate = () => {
     setOpen(false);
-    teamSetActiveIssue({
-      variables: { id: issue._id }
+    useTeamUpdate({
+      variables: {id: Cookies.get(CookieName.TEAM_ID),  activeIssueId: issue._id }
     });
   };
 
@@ -86,7 +89,7 @@ export default function IssueListItem({ issue, selected }: IssueListItemProps) {
             }}
             keepMounted
           >
-            <MenuItem onClick={handleTeamSetActiveIssue}>Estimate</MenuItem>
+            <MenuItem onClick={handleTeamUpdate}>Estimate</MenuItem>
             <MenuItem onClick={handleResetIssue}>Reset</MenuItem>
             <MenuItem onClick={handleDeleteIssue}>Delete</MenuItem>
           </Menu>

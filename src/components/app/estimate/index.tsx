@@ -1,7 +1,7 @@
 import { Container, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
 import EstimationPanel from './EstimationPanel';
-import UserPanel from './UserPanel';
+import UserPanel from './EstimationToolbar';
 
 const Estimate = () => {
   const classes = useStyles();

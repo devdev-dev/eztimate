@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/client';
 import React from 'react';
 import IndexTabs from '../components/index/IndexTabs';
 import withAppLayout from '../components/withAppLayout';
-import { CookieName } from '../utils/types';
+import { CookieName } from '../utils';
 
 interface IndexProps {
   teamId: string;

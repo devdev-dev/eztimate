@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/node';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLResponse } from 'apollo-server-types';
 import Cookies from 'cookies';
+import { CookieName, PusherEvents } from '../../utils';
 import getPusher from '../../utils/pusher';
-import { CookieName, PusherEvents } from '../../utils/types';
 import {
   EstimateCreateMutationResult,
   EstimateDeleteMutationResult,
@@ -11,7 +11,7 @@ import {
   IssueDeleteMutationResult,
   IssueResetMutationResult,
   IssueUpdateMutationResult,
-  TeamSetActiveIssueMutationResult,
+  TeamUpdateMutationResult,
   UserJoinTeamMutationResult,
   UserUpdateMutationResult
 } from '../types.grapqhl';
@@ -21,6 +21,7 @@ export const pusherPlugin: ApolloServerPlugin = {
     return {
       async willSendResponse(context) {
         if (context.response === null || context.response === undefined) {
+          console.log('SOMETHING WRONG');
           await handleIllegalState(context.operationName, context.context.context);
           return;
         }
@@ -28,8 +29,8 @@ export const pusherPlugin: ApolloServerPlugin = {
           case 'UserUpdate':
             await handleUserUpdate(context.context.context, context.response);
             break;
-          case 'TeamSetActiveIssue':
-            await handleTeamEstimate(context.context.context, context.response);
+          case 'TeamUpdate':
+            await handleTeamUpdate(context.context.context, context.response);
             break;
           case 'UserJoinTeam':
             await handleUserJoinTeam(context.context.context, context.response);
@@ -50,6 +51,7 @@ export const pusherPlugin: ApolloServerPlugin = {
             await handleEstimateCreate(context.context.context, context.response);
             break;
           case 'EstimateDelete':
+            console.log(context);
             await handleEstimateDelete(context.context.context, context.response);
             break;
         }
@@ -83,11 +85,11 @@ const handleUserJoinTeam = ({ req, res }, response: GraphQLResponse) => {
   );
 };
 
-const handleTeamEstimate = ({ req, res }, response: GraphQLResponse) => {
+const handleTeamUpdate = ({ req, res }, response: GraphQLResponse) => {
   return getPusher().trigger(
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
-    PusherEvents.TeamEstimate,
-    (response as TeamSetActiveIssueMutationResult).data.teamSetActiveIssue
+    PusherEvents.TeamUpdate,
+    (response as TeamUpdateMutationResult).data.teamUpdate
   );
 };
 
