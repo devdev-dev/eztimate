@@ -67,21 +67,11 @@ export const resolvers: IResolvers = {
 
       return teamInsertResult.ops[0];
     },
-    teamSetActiveIssue: async (_, { id }, { db, context: { req, res } }) => {
-      const { value: team } = await db.collection('teams').findOneAndUpdate(
-        { _id: getObjectId(new Cookies(req, res).get(CookieName.TEAM_ID)) },
-        {
-          $set: {
-            estimatedIssue: getObjectId(id)
-          }
-        },
-        { returnOriginal: false }
-      );
-      return team;
-    },
-    teamUpdate: async (_, { id, name }, { db }) => {
+    teamUpdate: async (_, { id, name, activeIssueId }, { db }) => {
       let update = {};
       if (name !== undefined) update = { ...update, name: name };
+      if (activeIssueId !== undefined) update = { ...update, estimatedIssue: getObjectId(activeIssueId) };
+      console.log(activeIssueId);
       const { value: team } = await db.collection('teams').findOneAndUpdate(
         { _id: getObjectId(id) },
         {

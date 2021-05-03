@@ -3,7 +3,7 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import { Skeleton } from '@material-ui/lab';
 import React, { useRef, useState } from 'react';
 import { useGetActiveTeamQuery, useIssueCreateMutation } from '../../../apollo/types.grapqhl';
-import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamEstimateEvent, useTeamUpdateEvent } from '../../../utils/hooks';
+import { useIssueCreateEvent, useIssueDeleteEvent, useIssueUpdateEvent, useTeamUpdateEvent } from '../../../utils/hooks';
 import IssueListItem, { IssueListItemBeginning, IssueListItemSkeleton } from './IssueListItem';
 
 const Timeline = () => {
@@ -16,7 +16,6 @@ const Timeline = () => {
   useIssueCreateEvent(data?.activeTeam);
   useIssueUpdateEvent();
   useIssueDeleteEvent();
-  useTeamEstimateEvent();
   useTeamUpdateEvent();
 
   const textFieldRef = useRef<HTMLInputElement>(null);

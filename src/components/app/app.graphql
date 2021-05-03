@@ -20,17 +20,8 @@ query GetEstimatedIssue {
   }
 }
 
-mutation TeamSetActiveIssue($id: String!) {
-  teamSetActiveIssue(id: $id) {
-    _id
-    estimatedIssue {
-      _id
-    }
-  }
-}
-
-mutation TeamUpdate($id: String!, $name: String) {
-  teamUpdate(id: $id, name: $name) {
+mutation TeamUpdate($id: String!, $name: String, $activeIssueId: String) {
+  teamUpdate(id: $id, name: $name, activeIssueId: $activeIssueId) {
     ...TeamFields
   }
 }

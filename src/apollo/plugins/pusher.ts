@@ -11,7 +11,6 @@ import {
   IssueDeleteMutationResult,
   IssueResetMutationResult,
   IssueUpdateMutationResult,
-  TeamSetActiveIssueMutationResult,
   TeamUpdateMutationResult,
   UserJoinTeamMutationResult,
   UserUpdateMutationResult
@@ -28,9 +27,6 @@ export const pusherPlugin: ApolloServerPlugin = {
         switch (context.operationName) {
           case 'UserUpdate':
             await handleUserUpdate(context.context.context, context.response);
-            break;
-          case 'TeamSetActiveIssue':
-            await handleTeamEstimate(context.context.context, context.response);
             break;
           case 'TeamUpdate':
             await handleTeamUpdate(context.context.context, context.response);
@@ -84,14 +80,6 @@ const handleUserJoinTeam = ({ req, res }, response: GraphQLResponse) => {
     `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
     PusherEvents.UserJoinTeam,
     (response as UserJoinTeamMutationResult).data.userJoinTeam
-  );
-};
-
-const handleTeamEstimate = ({ req, res }, response: GraphQLResponse) => {
-  return getPusher().trigger(
-    `presence-${new Cookies(req, res).get(CookieName.TEAM_ID)}`,
-    PusherEvents.TeamEstimate,
-    (response as TeamSetActiveIssueMutationResult).data.teamSetActiveIssue
   );
 };
 

@@ -3,8 +3,7 @@ type Mutation {
   userUpdate(id: String!, email: String, username: String, avatar: String): User!
 
   teamCreate(teamName: String!): Team!
-  teamSetActiveIssue(id: String!): Team!
-  teamUpdate(id: String!, name: String): Team
+  teamUpdate(id: String!, name: String, activeIssueId: String): Team
 
   issueCreate(name: String!): Issue
   issueUpdate(id: String!, name: String, state: IssueState, estimate: String): Issue

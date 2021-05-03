@@ -35,20 +35,6 @@ export function useUserJoinTeam(refetch) {
   });
 }
 
-export function useTeamEstimateEvent() {
-  const apolloClient = useApolloClient();
-  const { teamId } = useContext(AppContext);
-  const { channel } = usePresenceChannel(`presence-${teamId}`);
-
-  useEvent(channel, PusherEvents.TeamEstimate, (team: TeamFieldsFragment) => {
-    apolloClient.cache.writeFragment({
-      data: team,
-      fragmentName: (TeamFieldsFragmentDoc.definitions[0] as FragmentDefinitionNode).name.value,
-      fragment: TeamFieldsFragmentDoc
-    });
-  });
-}
-
 export function useTeamUpdateEvent() {
   const apolloClient = useApolloClient();
   const { teamId } = useContext(AppContext);
