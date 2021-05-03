@@ -21,6 +21,7 @@ export const pusherPlugin: ApolloServerPlugin = {
     return {
       async willSendResponse(context) {
         if (context.response === null || context.response === undefined) {
+          console.log('SOMETHING WRONG');
           await handleIllegalState(context.operationName, context.context.context);
           return;
         }
@@ -50,6 +51,7 @@ export const pusherPlugin: ApolloServerPlugin = {
             await handleEstimateCreate(context.context.context, context.response);
             break;
           case 'EstimateDelete':
+            console.log(context);
             await handleEstimateDelete(context.context.context, context.response);
             break;
         }
