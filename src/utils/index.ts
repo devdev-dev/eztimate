@@ -7,6 +7,7 @@ export enum PusherEvents {
   UserUpdate = 'user:update',
   UserJoinTeam = 'user:join',
   TeamEstimate = 'team:estimate',
+  TeamUpdate = 'team:update',
   IssueCreate = 'issue:create',
   IssueUpdate = 'issue:update',
   IssueDelete = 'issue:delete',
@@ -14,4 +15,4 @@ export enum PusherEvents {
   EstimateDelete = 'estimate:delete'
 }
 
-export const defaultCardSet = ['1', '2', '3', '5', '8', '13']
+export const defaultCardSet = ['1', '2', '3', '5', '8', '13'];

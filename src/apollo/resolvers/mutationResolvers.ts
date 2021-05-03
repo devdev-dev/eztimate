@@ -79,6 +79,19 @@ export const resolvers: IResolvers = {
       );
       return team;
     },
+    teamUpdate: async (_, { id, name }, { db }) => {
+      let update = {};
+      if (name !== undefined) update = { ...update, name: name };
+      const { value: team } = await db.collection('teams').findOneAndUpdate(
+        { _id: getObjectId(id) },
+        {
+          $set: update
+        },
+        { returnOriginal: false }
+      );
+
+      return team;
+    },
     issueCreate: async (_, { name }, { db, context: { req, res } }) => {
       const issueInsertResult = await db.collection('issues').insertOne({
         name: name,

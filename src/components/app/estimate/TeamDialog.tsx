@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import UndoIcon from '@material-ui/icons/Undo';
 import React, { useRef, useState } from 'react';
-import { useGetActiveTeamQuery } from '../../../apollo/types.grapqhl';
+import { useGetActiveTeamQuery, useTeamUpdateMutation } from '../../../apollo/types.grapqhl';
 
 export interface TeamDialogProps {
   onDialogClose: () => void;
@@ -19,8 +19,9 @@ export default function TeamDialog({ onDialogClose }: TeamDialogProps) {
   const classes = useStyles();
 
   const { data, loading } = useGetActiveTeamQuery();
+  const [teamUpdate] = useTeamUpdateMutation({ ignoreResults: true });
 
-  const usernameFieldRef = useRef<HTMLInputElement>(null);
+  const nameFieldRef = useRef<HTMLInputElement>(null);
 
   const [usersToDelete, setUsersToDelete] = useState([]);
 
@@ -28,7 +29,11 @@ export default function TeamDialog({ onDialogClose }: TeamDialogProps) {
     onDialogClose();
   };
 
-  const handleSave = async () => {};
+  const handleSave = async () => {
+    const name = nameFieldRef.current?.value ?? null;
+
+    teamUpdate({ variables: { id: data?.activeTeam?._id, name } }).then(() => handleClose());
+  };
 
   return (
     <div>
@@ -38,20 +43,21 @@ export default function TeamDialog({ onDialogClose }: TeamDialogProps) {
             Team Settings
           </Typography>
           <Tooltip title="Delete this team">
-            <IconButton>
+            <IconButton disabled={loading}>
               <DeleteForeverIcon />
             </IconButton>
           </Tooltip>
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="h6">Team Information</Typography>
-          <TextField margin="dense" fullWidth label="Name" inputRef={usernameFieldRef} defaultValue={data?.activeTeam.name} variant="outlined" />
+          <TextField disabled={loading} margin="dense" fullWidth label="Name" inputRef={nameFieldRef} defaultValue={data?.activeTeam.name} variant="outlined" />
           <Divider />
           <Typography variant="h6">Team Members</Typography>
 
           <Box className={classes.members}>
             {data?.activeTeam?.users.map((user, index) => (
               <Chip
+                disabled={loading}
                 key={index}
                 avatar={<Avatar alt={user.username} src={user.avatar}></Avatar>}
                 label={`${user.email} (${user.username})`}

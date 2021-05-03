@@ -6,7 +6,7 @@ query GetActiveTeam {
 
 query GetActiveIssue {
   activeIssue {
-    ... IssueFields
+    ...IssueFields
   }
 }
 
@@ -26,6 +26,12 @@ mutation TeamSetActiveIssue($id: String!) {
     estimatedIssue {
       _id
     }
+  }
+}
+
+mutation TeamUpdate($id: String!, $name: String) {
+  teamUpdate(id: $id, name: $name) {
+    ...TeamFields
   }
 }
 
