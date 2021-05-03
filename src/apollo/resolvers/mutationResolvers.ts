@@ -71,7 +71,7 @@ export const resolvers: IResolvers = {
       let update = {};
       if (name !== undefined) update = { ...update, name: name };
       if (activeIssueId !== undefined) update = { ...update, estimatedIssue: getObjectId(activeIssueId) };
-      console.log(activeIssueId);
+
       const { value: team } = await db.collection('teams').findOneAndUpdate(
         { _id: getObjectId(id) },
         {
