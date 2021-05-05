@@ -50,7 +50,7 @@ export default function TeamDialog({ onDialogClose }: TeamDialogProps) {
         </DialogTitle>
         <DialogContent dividers>
           <Typography variant="h6">Team Information</Typography>
-          <TextField disabled={loading} margin="dense" fullWidth label="Name" inputRef={nameFieldRef} defaultValue={data?.activeTeam.name} variant="outlined" />
+          <TextField disabled={loading} margin="dense" fullWidth label="Name" inputRef={nameFieldRef} defaultValue={data?.activeTeam?.name} variant="outlined" />
           <Divider />
           <Typography variant="h6">Team Members</Typography>
 

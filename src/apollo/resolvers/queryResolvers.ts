@@ -30,8 +30,6 @@ export const resolvers: IResolvers = {
         ])
         .toArray();
 
-      console.log(activeIssue);
-
       return activeIssue[0];
     }
   }

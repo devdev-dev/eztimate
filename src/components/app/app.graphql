@@ -22,7 +22,11 @@ query GetEstimatedIssue {
 
 mutation TeamUpdate($id: String!, $name: String, $activeIssueId: String) {
   teamUpdate(id: $id, name: $name, activeIssueId: $activeIssueId) {
-    ...TeamFields
+    _id
+    name
+    estimatedIssue {
+      _id
+    }
   }
 }
 
@@ -34,7 +38,10 @@ mutation IssueCreate($name: String!) {
 
 mutation IssueUpdate($id: String!, $name: String, $state: IssueState, $estimate: String) {
   issueUpdate(id: $id, name: $name, state: $state, estimate: $estimate) {
-    ...IssueFields
+    _id
+    name
+    state
+    estimate
   }
 }
 
