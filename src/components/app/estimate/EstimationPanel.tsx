@@ -40,8 +40,8 @@ export default function EstimationPanel() {
   useEstimateDeleteEvent();
 
   useEffect(() => {
-    setIssueUnderEstimation(issueQuery?.activeTeam.estimatedIssue);
-    const state = issueQuery?.activeTeam.estimatedIssue?.state;
+    setIssueUnderEstimation(issueQuery?.activeTeam?.estimatedIssue);
+    const state = issueQuery?.activeTeam?.estimatedIssue?.state;
     setObfuscated(state === IssueState.Open || state === IssueState.Reestimate);
     setFinished(state === IssueState.Estimated);
   }, [issueQuery]);
@@ -115,7 +115,7 @@ export default function EstimationPanel() {
             keepMounted
           >
             {!loadingIssueQuery &&
-              issueQuery.activeTeam.cardSet.map((value, index) => (
+              issueQuery?.activeTeam?.cardSet.map((value, index) => (
                 <MenuItem key={index} onClick={() => handleEstimationFinished(value)}>
                   {value}
                 </MenuItem>
@@ -153,7 +153,7 @@ export default function EstimationPanel() {
           {loadingIssueQuery ? (
             <SkeletonEstimationPanelCard />
           ) : (
-            issueQuery.activeTeam.cardSet.map((value, index) => (
+            issueQuery?.activeTeam?.cardSet.map((value, index) => (
               <EstimationPanelCard
                 key={index}
                 value={value}

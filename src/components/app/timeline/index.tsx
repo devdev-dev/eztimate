@@ -41,7 +41,7 @@ const Timeline = () => {
           <Skeleton animation="wave" width="100%" height="50px" />
         ) : (
           <Typography component="h2" variant="h5">
-            {`Timeline of ${data?.activeTeam.name}`}
+            {`Timeline of ${data?.activeTeam?.name}`}
           </Typography>
         )}
       </Box>
@@ -78,8 +78,8 @@ const Timeline = () => {
               <IssueListItemSkeleton sizePrimary="90%" sizeSecondary="70%" />
             </>
           ) : (
-            data?.activeTeam.issues.map((issue, issueIndex) => (
-              <IssueListItem issue={issue} selected={issue?._id === data?.activeTeam.estimatedIssue?._id} key={issueIndex} />
+            data?.activeTeam?.issues.map((issue, issueIndex) => (
+              <IssueListItem issue={issue} selected={issue?._id === data?.activeTeam?.estimatedIssue?._id} key={issueIndex} />
             ))
           )}
           <IssueListItemBeginning />
