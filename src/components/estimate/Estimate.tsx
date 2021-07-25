@@ -1,5 +1,6 @@
 import Paper from '@material-ui/core/Paper';
 import * as React from 'react';
+import CardStack from './CardStack';
 
 const Estimate = () => {
   return (
@@ -22,7 +23,7 @@ const Estimate = () => {
           flexDirection: 'column'
         }}
       >
-        Cards
+        <CardStack />
       </Paper>
     </>
   );

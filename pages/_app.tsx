@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { CacheProvider } from '@emotion/react';
+import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import theme from '../src/theme';
 import { UserProvider } from '@auth0/nextjs-auth0';
@@ -19,13 +19,14 @@ export default function MyApp(props: AppProps) {
         <title>My page</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <UserProvider>
-          <Component {...pageProps} />
-        </UserProvider>
-      </ThemeProvider>
+      <MUIThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <UserProvider>
+            <Component {...pageProps} />
+          </UserProvider>
+        </ThemeProvider>
+      </MUIThemeProvider>
     </CacheProvider>
   );
 }
