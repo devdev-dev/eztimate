@@ -1,6 +1,8 @@
+import { Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import * as React from 'react';
 import CardStack from './CardStack';
+import EstimationPanel from './EstimationPanel';
 
 const Estimate = () => {
   return (
@@ -8,13 +10,11 @@ const Estimate = () => {
       <Paper
         sx={{
           mb: 4,
-          p: 2,
           display: 'flex',
-          flexDirection: 'column',
-          height: 240
+          flexDirection: 'column'
         }}
       >
-        Estimation Game
+        <EstimationPanel />
       </Paper>
       <Paper
         sx={{
