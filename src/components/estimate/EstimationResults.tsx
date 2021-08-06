@@ -1,32 +1,32 @@
 import { css } from '@emotion/css';
-import { Avatar } from '@material-ui/core';
+import { Avatar, lighten } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PersonIcon from '@material-ui/icons/Person';
 import * as React from 'react';
 
 export default function EstimationResults() {
-  const results = [1, 1, 1, 3, 4, 4];
   const display = [
-    { value: 0, weight: 6, color: '#0000cc' },
-    { value: 4, weight: 1, color: '#0000aa' },
-    { value: 3, weight: 1, color: '#0000cc' }
+    { value: 0, weight: 3 },
+    { value: 4, weight: 2 },
+    { value: 3, weight: 1 }
   ];
+  const maxWeight = display.map(v => v.weight).reduce((previousValue, currentValue) => Math.max(previousValue, currentValue));
 
   return (
     <div className={styles.bar}>
       {display.map((d, index) => (
         <Box key={index} sx={{ flexGrow: d.weight }}>
-          <div
-            style={{
+          <Box
+            sx={{
               flexGrow: d.weight,
-              background: d.color,
+              bgcolor: lighten('#556cd6', 1 - d.weight / maxWeight),
               color: 'white',
-              border: '1px solid white',
+              border: 1,
               textAlign: 'center'
             }}
           >
             {d.value}
-          </div>
+          </Box>
           <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
             {new Array(d.weight).fill(' ').map((n, i) => (
               <Box key={i} sx={{ display: 'flex', alignItems: 'center' }}>
