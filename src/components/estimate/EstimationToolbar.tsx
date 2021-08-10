@@ -1,16 +1,14 @@
-import { usePresenceChannel } from '@harelpls/use-pusher';
 import { Avatar, Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import ReplayIcon from '@material-ui/icons/Replay';
-import Cookies from 'js-cookie';
 import * as React from 'react';
-import { CookieName } from '../../cookies';
+import { usePusherChannel } from '../AppContext';
 
-export default function ButtonAppBar() {
-  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.ESTIMATE_ID)}`);
+export default function EstimationToolbar() {
+  const channel = usePusherChannel();
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar>
@@ -25,7 +23,12 @@ export default function ButtonAppBar() {
             display: 'flex'
           }}
         >
-          {channel && Object.keys(channel?.members?.members).map(memberId => <Avatar key={memberId}>{memberId}</Avatar>)}
+          {channel &&
+            Object.keys(channel?.members?.members).map(memberId => (
+              <Avatar variant="rounded" key={memberId}>
+                {memberId.charAt(0)}
+              </Avatar>
+            ))}
         </Box>
       </Toolbar>
     </AppBar>

@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { GetServerSideProps, NextPage } from 'next';
 import * as React from 'react';
 import AppLayout from '../../src/AppLayout';
+import { AppContextProvider } from '../../src/components/AppContext';
 import Copyright from '../../src/components/Copyright';
 import Estimate from '../../src/components/estimate/Estimate';
 import { CookieName } from '../../src/cookies';
@@ -19,12 +20,6 @@ const config: PusherProviderProps = {
   }
 };
 
-interface IContextProps {
-  estimateId: string;
-}
-
-export const AppContext = React.createContext({} as IContextProps);
-
 interface InstantEstimateProps {
   estimateId: string;
 }
@@ -32,12 +27,12 @@ interface InstantEstimateProps {
 const InstantEstimate: NextPage<InstantEstimateProps> = ({ estimateId }) => {
   return (
     <PusherProvider {...config}>
-      <AppContext.Provider value={{ estimateId }}>
+      <AppContextProvider estimateId={estimateId}>
         <AppLayout>
           <Estimate />
           <Copyright sx={{ pt: 4 }} />
         </AppLayout>
-      </AppContext.Provider>
+      </AppContextProvider>
     </PusherProvider>
   );
 };
