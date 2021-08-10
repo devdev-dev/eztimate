@@ -1,15 +1,16 @@
+import { usePresenceChannel } from '@harelpls/use-pusher';
+import { Avatar, Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import ReplayIcon from '@material-ui/icons/Replay';
+import Cookies from 'js-cookie';
 import * as React from 'react';
-import { useState } from 'react';
+import { CookieName } from '../../cookies';
 
 export default function ButtonAppBar() {
-  const [isRevealed, setRevealed] = useState(false);
-
+  const { channel } = usePresenceChannel(`presence-${Cookies.get(CookieName.ESTIMATE_ID)}`);
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar>
@@ -19,10 +20,13 @@ export default function ButtonAppBar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Estimate
         </Typography>
-
-        <Button variant="contained" color="primary" onClick={() => setRevealed(!isRevealed)}>
-          {isRevealed ? 'Hide Results' : 'Reveal Results'}
-        </Button>
+        <Box
+          sx={{
+            display: 'flex'
+          }}
+        >
+          {channel && Object.keys(channel?.members?.members).map(memberId => <Avatar key={memberId}>{memberId}</Avatar>)}
+        </Box>
       </Toolbar>
     </AppBar>
   );
