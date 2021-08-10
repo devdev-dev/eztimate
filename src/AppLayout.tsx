@@ -14,7 +14,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import * as React from 'react';
 
 export interface AppLayoutProps {
-  children: React.ReactElement;
+  children: React.ReactElement[];
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
