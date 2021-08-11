@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { CacheProvider } from '@emotion/react';
 import createEmotionServer from '@emotion/server/create-instance';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+import * as React from 'react';
 import theme from '../src/theme';
 
 function getCache() {
@@ -59,15 +59,17 @@ MyDocument.getInitialProps = async ctx => {
   const cache = getCache();
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
-  ctx.renderPage = () =>
-    originalRenderPage({
+  ctx.renderPage = () => {
+    return originalRenderPage({
       // Take precedence over the CacheProvider in our custom _app.js
+      // eslint-disable-next-line react/display-name
       enhanceComponent: Component => props => (
         <CacheProvider value={cache}>
           <Component {...props} />
         </CacheProvider>
       )
     });
+  };
 
   const initialProps = await Document.getInitialProps(ctx);
   const emotionStyles = extractCriticalToChunks(initialProps.html);
