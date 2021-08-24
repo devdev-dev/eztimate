@@ -1,7 +1,7 @@
 type Query {
-    loggedInUser: User
+    activeEstimate: Estimate
 }
 
-type User {
+type Estimate {
     _id: ID!
 }
