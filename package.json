@@ -3,15 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "npm run codegen",
     "dev": "next dev",
+    "prebuild": "npm run codegen",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint \"**/*.{ts,tsx}\"",
+    "eslint": "npx eslint \"**/*.{ts,tsx}\"",
+    "eslint:fix": "npx eslint --fix \"**/*.{ts,tsx}\"",
     "prettier": "npx prettier --check \"**/*.{ts,tsx,css,json,js,jsx}\"",
     "prettier:write": "npx prettier --write \"**/*.{ts,tsx,json}\"",
-    "lint:fix": "npx eslint --fix \"**/*.{ts,tsx}\""
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.9",
     "@auth0/nextjs-auth0": "^1.4.2",
     "@emotion/css": "^11.1.3",
     "@emotion/react": "^11.4.0",
@@ -34,6 +38,12 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.3.0",
+    "@graphql-codegen/cli": "2.1.1",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/typescript": "^2.1.1",
+    "@graphql-codegen/typescript-operations": "^2.1.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.1",
+    "@graphql-codegen/visitor-plugin-common": "^2.1.1",
     "@types/cookies": "^0.7.6",
     "@types/graphql": "^14.5.0",
     "@types/react": "17.0.14",

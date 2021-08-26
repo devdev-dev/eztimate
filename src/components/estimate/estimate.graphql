@@ -1,0 +1,5 @@
+query ActiveEstimate {
+    activeEstimate {
+        _id
+    }
+}
