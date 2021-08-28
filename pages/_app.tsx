@@ -1,15 +1,21 @@
-import * as React from 'react';
-import Head from 'next/head';
-import { AppProps } from 'next/app';
-import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import createCache from '@emotion/cache';
+import { CacheProvider, ThemeProvider } from '@emotion/react';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
+import { AppProps } from 'next/app';
+import Head from 'next/head';
+import * as React from 'react';
 import theme from '../src/theme';
-import { UserProvider } from '@auth0/nextjs-auth0';
 
 const cache = createCache({ key: 'css', prepend: true });
 cache.compat = true;
+
+export const apolloClient = new ApolloClient({
+  uri: '/api/graphql',
+  cache: new InMemoryCache(),
+  connectToDevTools: true
+});
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -19,14 +25,15 @@ export default function MyApp(props: AppProps) {
         <title>My page</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <MUIThemeProvider theme={theme}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <UserProvider>
+
+      <ApolloProvider client={apolloClient}>
+        <MUIThemeProvider theme={theme}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
             <Component {...pageProps} />
-          </UserProvider>
-        </ThemeProvider>
-      </MUIThemeProvider>
+          </ThemeProvider>
+        </MUIThemeProvider>
+      </ApolloProvider>
     </CacheProvider>
   );
 }

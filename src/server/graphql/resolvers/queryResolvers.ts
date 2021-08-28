@@ -3,7 +3,8 @@ import { Estimate, EstimateState } from '../../../generated/graphql';
 
 export const resolvers: IResolvers = {
   Query: {
-    async getActiveEstimate(parent, args, context): Promise<Estimate> {
+    getActiveEstimate(parent, args, context): Estimate {
+      console.log('resolving query');
       return { _id: '', state: EstimateState.Collect, values: [] };
     }
   }
