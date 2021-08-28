@@ -1,13 +1,33 @@
-import { ApolloServer } from 'apollo-server-micro';
+import { ApolloServer, AuthenticationError } from 'apollo-server-micro';
+import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { CookieName } from '../../src/cookies';
 import { basicResolvers, mutationResolvers, queryResolvers } from '../../src/server/graphql/resolvers';
 import * as typeDefs from '../../src/server/graphql/schema.graphql';
+import getDatabase, { getObjectId } from '../../src/server/mongo';
 
 console.time('Apollo Server Startup Time');
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers: { ...basicResolvers, ...queryResolvers, ...mutationResolvers }
+  resolvers: { ...basicResolvers, ...queryResolvers, ...mutationResolvers },
+  context: async ({ req, res }) => {
+    const { db } = await getDatabase();
+
+    const estimateId = getObjectId(new Cookies(req, res).get(CookieName.ESTIMATE_ID));
+    const userId = getObjectId(new Cookies(req, res).get(CookieName.ESTIMATE_ID));
+
+    if (!estimateId || !userId) {
+      throw new AuthenticationError('No active Session found!');
+    }
+
+    return {
+      db,
+      estimateId,
+      userId,
+      context: { req, res }
+    };
+  }
 });
 
 const startServer = apolloServer.start();

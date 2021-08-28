@@ -1,11 +1,10 @@
 import { IResolvers } from '@graphql-tools/utils';
-import { Estimate, EstimateState } from '../../../generated/graphql';
+import { Estimate } from '../../../generated/graphql';
 
 export const resolvers: IResolvers = {
   Query: {
-    getActiveEstimate(parent, args, context): Estimate {
-      console.log('resolving query');
-      return { _id: '', state: EstimateState.Collect, values: [] };
+    async getActiveEstimate(parent, args, { db, estimateId }): Promise<Estimate> {
+      return await db.collection('estimates').findOne({ _id: estimateId });
     }
   }
 };

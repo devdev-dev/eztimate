@@ -4,7 +4,7 @@ type Query {
 
 type Estimate {
     _id: ID!
-    values: [EstimateValue]!
+    values: [EstimateValue!]!
     state: EstimateState!
 }
 
@@ -14,7 +14,6 @@ enum EstimateState {
 }
 
 type EstimateValue {
-    _id: ID!
     value: String!
     user: User!
 }

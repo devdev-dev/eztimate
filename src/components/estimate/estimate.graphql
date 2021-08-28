@@ -1,5 +1,13 @@
 query ActiveEstimate {
     getActiveEstimate {
         _id
+        state
+        values {
+            user {
+                _id
+                name
+            }
+            value
+        }
     }
 }

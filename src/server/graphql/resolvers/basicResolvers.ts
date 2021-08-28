@@ -3,13 +3,13 @@ import { Estimate, EstimateValue, User } from '../../../generated/graphql';
 
 export const resolvers: IResolvers = {
   Estimate: {
-    values(estimate: Estimate, args, { db }): EstimateValue[] {
-      return [];
+    values(estimate: Estimate): EstimateValue[] {
+      return estimate.values;
     }
   },
   EstimateValue: {
-    user(estimate: EstimateValue, args, { db }): User {
-      return { _id: '123' };
+    async user(estimateValue: EstimateValue, args, { db }): Promise<User> {
+      return await db.collection('users').findOne({ _id: estimateValue.user });
     }
   }
 };
