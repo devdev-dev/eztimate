@@ -12,10 +12,7 @@ if (!process.env.MONGODB_DB) {
 
 export default async function getDatabase() {
   if (!global.mongo.client) {
-    global.mongo.client = new MongoClient(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    global.mongo.client = new MongoClient(process.env.MONGODB_URI!, {});
     await global.mongo.client.connect();
   }
 

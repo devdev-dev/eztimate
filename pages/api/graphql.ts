@@ -6,20 +6,18 @@ import { basicResolvers, mutationResolvers, queryResolvers } from '../../src/ser
 import * as typeDefs from '../../src/server/graphql/schema.graphql';
 import getDatabase, { getObjectId } from '../../src/server/mongo';
 
-console.time('Apollo Server Startup Time');
-
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers: { ...basicResolvers, ...queryResolvers, ...mutationResolvers },
   context: async ({ req, res }) => {
-    const { db } = await getDatabase();
-
     const estimateId = getObjectId(new Cookies(req, res).get(CookieName.ESTIMATE_ID));
     const userId = getObjectId(new Cookies(req, res).get(CookieName.ESTIMATE_ID));
 
     if (!estimateId || !userId) {
       throw new AuthenticationError('No active Session found!');
     }
+
+    const { db } = await getDatabase();
 
     return {
       db,
@@ -53,5 +51,3 @@ export const config = {
     bodyParser: false
   }
 };
-
-console.timeEnd('Apollo Server Startup Time');
