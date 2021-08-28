@@ -1,7 +1,25 @@
 type Query {
-    activeEstimate: Estimate
+    getActiveEstimate: Estimate
 }
 
 type Estimate {
     _id: ID!
+    values: [EstimateValue]!
+    state: EstimateState!
+}
+
+enum EstimateState {
+    COLLECT
+    DISCUSS
+}
+
+type EstimateValue {
+    _id: ID!
+    value: String!
+    user: User!
+}
+
+type User {
+    _id: ID!
+    name: String
 }
