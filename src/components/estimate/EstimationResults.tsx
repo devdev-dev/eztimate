@@ -1,55 +1,66 @@
 import { css } from '@emotion/css';
-import { Avatar, lighten } from '@material-ui/core';
+import { Avatar, lighten, Tooltip } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PersonIcon from '@material-ui/icons/Person';
+import { keys, max, values } from 'lodash';
 import * as React from 'react';
+import { useMemo } from 'react';
 import { useActiveEstimateQuery } from '../../generated/graphql';
 
 export default function EstimationResults() {
+  const { data, loading, error } = useActiveEstimateQuery();
 
-  const {data, loading, error} = useActiveEstimateQuery()
+  const results = useMemo(() => {
+    if (data && data.getActiveEstimate) {
+      return data.getActiveEstimate.values.reduce<Record<string, string[]>>(function (acc, currentValue) {
+        (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user._id);
+        return acc;
+      }, {});
+    }
+  }, [data]);
 
-  console.log(data)
-
-  const display = [
-    {value: 0, weight: 3},
-    {value: 4, weight: 2},
-    {value: 3, weight: 1}
-  ];
-  const maxWeight = display.map(v => v.weight).reduce((previousValue, currentValue) => Math.max(previousValue, currentValue));
+  const maxWeight = max(values(results).map(v => v.length)) ?? 0;
 
   return (
-      <div className={styles.bar}>
-        {display.map((d, index) => (
-            <Box key={index} sx={{flexGrow: d.weight}}>
+    <div className={styles.bar}>
+      {results &&
+        keys(results).map((value, index) => {
+          const users = results[value];
+          const weight = users.length;
+
+          return (
+            <Box key={index} sx={{ flexGrow: weight }}>
               <Box
-                  sx={{
-                    flexGrow: d.weight,
-                    bgcolor: lighten('#556cd6', 1 - d.weight / maxWeight),
-                    color: 'white',
-                    border: 1,
-                    textAlign: 'center'
-                  }}
+                sx={{
+                  flexGrow: weight,
+                  bgcolor: lighten('#556cd6', 1 - weight / maxWeight),
+                  color: 'white',
+                  border: 1,
+                  textAlign: 'center'
+                }}
               >
-                {d.value}
+                {value}
               </Box>
-              <Box sx={{p: 2, display: 'flex', justifyContent: 'center'}}>
-                {new Array(d.weight).fill(' ').map((n, i) => (
-                    <Box key={i} sx={{display: 'flex', alignItems: 'center'}}>
-                      <Avatar variant="rounded" title="Test" sx={{mx: 1, my: 1}}>
-                        <PersonIcon/>
+              <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                {users.map(userId => (
+                  <Box key={userId} sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Tooltip title={userId}>
+                      <Avatar variant="rounded" title="Test" sx={{ mx: 1, my: 1 }}>
+                        <PersonIcon />
                       </Avatar>
-                    </Box>
+                    </Tooltip>
+                  </Box>
                 ))}
               </Box>
             </Box>
-        ))}
-      </div>
+          );
+        })}
+    </div>
   );
 }
 
 const styles = {
-  bar: css`
-    display: flex;
-  `
+    bar: css`
+      display: flex;
+    `
 };
