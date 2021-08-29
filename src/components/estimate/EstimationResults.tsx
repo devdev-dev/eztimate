@@ -45,7 +45,7 @@ export default function EstimationResults() {
                 {users.map(userId => (
                   <Box key={userId} sx={{ display: 'flex', alignItems: 'center' }}>
                     <Tooltip title={userId}>
-                      <Avatar variant="rounded" title="Test" sx={{ mx: 1, my: 1 }}>
+                      <Avatar variant="rounded" sx={{ mx: 1, my: 1 }}>
                         <PersonIcon />
                       </Avatar>
                     </Tooltip>

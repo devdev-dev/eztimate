@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { Theme, useTheme } from '@material-ui/system';
 import * as React from 'react';
 
-const CardStack = () => {
+const EstimationCardStack = () => {
   const cards = new Array(5).fill('Card');
 
   const theme = useTheme();
@@ -63,4 +63,4 @@ const styles = {
   `
 };
 
-export default CardStack;
+export default EstimationCardStack;

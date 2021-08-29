@@ -3,10 +3,10 @@ import Cookies from 'cookies';
 import { randomUUID } from 'crypto';
 import { GetServerSideProps, NextPage } from 'next';
 import * as React from 'react';
-import AppLayout from '../../src/AppLayout';
 import { AppContextProvider } from '../../src/components/AppContext';
-import Copyright from '../../src/components/Copyright';
-import Estimate from '../../src/components/estimate/Estimate';
+import EstimationCardStack from '../../src/components/estimate/EstimationCardStack';
+import EstimationResults from '../../src/components/estimate/EstimationResults';
+import EstimationToolbar from '../../src/components/estimate/EstimationToolbar';
 import { CookieName } from '../../src/cookies';
 
 const config: PusherProviderProps = {
@@ -28,10 +28,11 @@ const InstantEstimate: NextPage<InstantEstimateProps> = ({ estimateId }) => {
   return (
     <PusherProvider {...config}>
       <AppContextProvider estimateId={estimateId}>
-        <AppLayout>
-          <Estimate />
-          <Copyright sx={{ pt: 4 }} />
-        </AppLayout>
+        <>
+          <EstimationToolbar />
+          <EstimationResults />
+          <EstimationCardStack />
+        </>
       </AppContextProvider>
     </PusherProvider>
   );
