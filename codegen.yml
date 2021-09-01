@@ -3,10 +3,13 @@ schema: ./src/server/graphql/schema.graphql
 documents: './src/**/*.graphql'
 generates:
   ./src/generated/graphql.tsx:
+    config:
+      contextType: ../server/graphql/models#ResolverContext
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
+      - "typescript-resolvers"
   ./src/generated/graphql.schema.json:
     plugins:
       - "introspection"

@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, res }
   const estimateId = query.id;
 
   if (estimateId) {
-    cookies.set(CookieName.ESTIMATE_ID, estimateId.toString());
+    cookies.set(CookieName.ISSUE_ID, estimateId.toString());
   } else {
     res.writeHead(302, { Location: '/' });
     res.end();

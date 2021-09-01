@@ -1,4 +1,11 @@
-export { resolvers as basicResolvers } from './basicResolvers';
-export { resolvers as mutationResolvers } from './mutationResolvers';
-export { resolvers as queryResolvers } from './queryResolvers';
+import { Resolvers } from '../../../generated/graphql';
+import { estimateResolvers, issueResolvers } from './basicResolvers';
+import { mutationResolvers } from './mutationResolvers';
+import { queryResolvers } from './queryResolvers';
 
+export const resolvers: Resolvers = {
+  Query: queryResolvers,
+  Mutation: mutationResolvers,
+  Issue: issueResolvers,
+  Estimate: estimateResolvers
+};

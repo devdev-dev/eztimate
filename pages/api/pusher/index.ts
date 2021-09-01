@@ -5,7 +5,7 @@ import { CookieName } from '../../../src/cookies';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const userId = new Cookies(request, response).get(CookieName.USER_ID);
-  const estimateId = new Cookies(request, response).get(CookieName.ESTIMATE_ID);
+  const estimateId = new Cookies(request, response).get(CookieName.ISSUE_ID);
 
   if (!userId) {
     response.status(403).send({ error: 'NO_USER_ID' });

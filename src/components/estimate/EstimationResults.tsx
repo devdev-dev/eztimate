@@ -5,14 +5,14 @@ import PersonIcon from '@material-ui/icons/Person';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useActiveEstimateQuery } from '../../generated/graphql';
+import { useActiveIssueQuery } from '../../generated/graphql';
 
 export default function EstimationResults() {
-  const { data, loading, error } = useActiveEstimateQuery();
+  const { data, loading, error } = useActiveIssueQuery();
 
   const results = useMemo(() => {
-    if (data && data.getActiveEstimate) {
-      return data.getActiveEstimate.values.reduce<Record<string, string[]>>(function (acc, currentValue) {
+    if (data && data.getActiveIssue) {
+      return data.getActiveIssue.estimates.reduce<Record<string, string[]>>(function (acc, currentValue) {
         (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user._id);
         return acc;
       }, {});

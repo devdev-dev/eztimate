@@ -1,19 +1,24 @@
 type Query {
-    getActiveEstimate: Estimate
+    getActiveIssue: Issue
 }
 
-type Estimate {
+type Mutation {
+    estimateActiveIssue(value: String!): Estimate
+}
+
+type Issue {
     _id: ID!
-    values: [EstimateValue!]!
-    state: EstimateState!
+    state: IssueState!
+    estimates: [Estimate!]!
 }
 
-enum EstimateState {
+enum IssueState {
     COLLECT
     DISCUSS
 }
 
-type EstimateValue {
+type Estimate {
+    _id: ID!
     value: String!
     user: User!
 }

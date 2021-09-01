@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import PersonIcon from '@material-ui/icons/Person';
 import ReplayIcon from '@material-ui/icons/Replay';
 import * as React from 'react';
 import { usePusherChannel } from '../AppContext';
@@ -26,7 +27,7 @@ export default function EstimationToolbar() {
           {channel &&
             Object.keys(channel?.members?.members).map(memberId => (
               <Avatar variant="rounded" key={memberId}>
-                {memberId.charAt(0)}
+                <PersonIcon />
               </Avatar>
             ))}
         </Box>
