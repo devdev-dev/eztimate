@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import createEmotionServer from '@emotion/server/create-instance';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import * as React from 'react';
-import theme from '../src/theme';
+import theme from '../theme';
 
 function getCache() {
   const cache = createCache({ key: 'css', prepend: true });

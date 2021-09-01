@@ -1,10 +1,10 @@
 import { ApolloServer, AuthenticationError } from 'apollo-server-micro';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { CookieName } from '../../src/cookies';
-import { resolvers } from '../../src/server/graphql/resolvers';
-import * as typeDefs from '../../src/server/graphql/schema.graphql';
-import getDatabase, { getObjectId } from '../../src/server/mongo';
+import { CookieName } from '../../cookies';
+import { resolvers } from '../../server/graphql/resolvers';
+import * as typeDefs from '../../server/graphql/schema.graphql';
+import getDatabase, { getObjectId } from '../../server/mongo';
 
 const apolloServer = new ApolloServer({
   typeDefs,

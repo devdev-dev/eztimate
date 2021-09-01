@@ -6,7 +6,7 @@ import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
-import theme from '../src/theme';
+import theme from '../theme';
 
 const cache = createCache({ key: 'css', prepend: true });
 cache.compat = true;

@@ -3,11 +3,11 @@ import Cookies from 'cookies';
 import { randomUUID } from 'crypto';
 import { GetServerSideProps, NextPage } from 'next';
 import * as React from 'react';
-import { AppContextProvider } from '../../src/components/AppContext';
-import EstimationCardStack from '../../src/components/estimate/EstimationCardStack';
-import EstimationResults from '../../src/components/estimate/EstimationResults';
-import EstimationToolbar from '../../src/components/estimate/EstimationToolbar';
-import { CookieName } from '../../src/cookies';
+import { AppContextProvider } from '../../components/AppContext';
+import EstimationCardStack from '../../components/estimate/EstimationCardStack';
+import EstimationResults from '../../components/estimate/EstimationResults';
+import EstimationToolbar from '../../components/estimate/EstimationToolbar';
+import { CookieName } from '../../cookies';
 
 const config: PusherProviderProps = {
   clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,

@@ -1,7 +1,7 @@
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
-import Pusher, { PresenceChannelData } from 'pusher';
-import { CookieName } from '../../../src/cookies';
+import Pusher from 'pusher';
+import { CookieName } from '../../../cookies';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const userId = new Cookies(request, response).get(CookieName.USER_ID);
@@ -24,16 +24,10 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!
   });
 
-  try {
-    const socketId = request.body.socket_id;
-    const channel = request.body.channel_name;
+  const { channelName, eventName, data } = JSON.parse(request.body);
+  await pusher.trigger(channelName, eventName, data, {
+    socket_id: data.socketId
+  });
 
-    const presenceData: PresenceChannelData = { user_id: userId };
-    const auth = pusher.authenticate(socketId, channel, presenceData);
-
-    return response.send(auth);
-  } catch (err) {
-    console.log('Pusher Auth Error: ', err);
-    response.status(403).end();
-  }
+  response.status(200).send({});
 };
