@@ -10,6 +10,12 @@ mutation EstimateActiveIssue($value: String!) {
     }
 }
 
+mutation ResetActiveIssue {
+    resetActiveIssue {
+        ...IssueFields
+    }
+}
+
 fragment IssueFields on Issue {
     _id
     state

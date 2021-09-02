@@ -1,4 +1,4 @@
-import { Issue, MutationResolvers } from '../../../generated/graphql';
+import { Issue, IssueState, MutationResolvers } from '../../../generated/graphql';
 import { DatabaseError } from '../../../pages/api/graphql';
 
 export const mutationResolvers: MutationResolvers = {
@@ -25,6 +25,30 @@ export const mutationResolvers: MutationResolvers = {
       return dbIssue as Issue;
     } else {
       throw new DatabaseError('Create / Update estimate not possible. ');
+    }
+  },
+  resetActiveIssue: async (_, {}, { db, issueId }) => {
+    const dbIssue = (
+      await db.collection('issues').findOneAndUpdate(
+        { _id: issueId },
+        {
+          $set: {
+            estimates: [],
+            state: IssueState.Collect
+          },
+          $unset: {
+            estimate: ''
+          }
+        },
+        { returnDocument: 'after' }
+      )
+    ).value;
+
+    if (dbIssue) {
+      db.collection('estimates').deleteMany({ _id: { $in: dbIssue!.estimates } });
+      return dbIssue as Issue;
+    } else {
+      throw new DatabaseError('Reset issue failed. ');
     }
   }
 };

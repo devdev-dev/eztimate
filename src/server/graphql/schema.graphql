@@ -4,6 +4,7 @@ type Query {
 
 type Mutation {
     estimateActiveIssue(value: String!): Issue
+    resetActiveIssue: Issue
 }
 
 type Issue {
