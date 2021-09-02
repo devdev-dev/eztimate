@@ -1,6 +1,6 @@
 import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
 import Cookies from 'cookies';
-import { randomUUID } from 'crypto';
+import { ObjectId } from 'mongodb';
 import { GetServerSideProps, NextPage } from 'next';
 import * as React from 'react';
 import { AppContextProvider } from '../../components/AppContext';
@@ -41,7 +41,7 @@ const InstantEstimate: NextPage<InstantEstimateProps> = ({ estimateId }) => {
 export const getServerSideProps: GetServerSideProps = async ({ query, req, res }) => {
   const cookies = new Cookies(req, res);
   if (!cookies.get(CookieName.USER_ID)) {
-    cookies.set(CookieName.USER_ID, randomUUID());
+    cookies.set(CookieName.USER_ID, new ObjectId().toHexString());
   }
   const estimateId = query.id;
 

@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-errors';
 import { ApolloServer, AuthenticationError } from 'apollo-server-micro';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -27,6 +28,14 @@ const apolloServer = new ApolloServer({
     };
   }
 });
+
+export class DatabaseError extends ApolloError {
+  constructor(message: string) {
+    super(message, 'DATABASE_ERROR');
+
+    Object.defineProperty(this, 'name', { value: 'DatabaseError' });
+  }
+}
 
 const startServer = apolloServer.start();
 
