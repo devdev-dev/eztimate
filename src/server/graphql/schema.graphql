@@ -3,6 +3,7 @@ type Query {
 }
 
 type Mutation {
+    createActiveIssue: Issue
     estimateActiveIssue(value: String!): Issue
     resetActiveIssue: Issue
 }

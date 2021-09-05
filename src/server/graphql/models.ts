@@ -1,7 +1,7 @@
-import { Db } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
 
 export type ResolverContext = {
   db: Db;
-  userId: string;
-  issueId: string;
+  userId: ObjectId;
+  issueId: ObjectId;
 };

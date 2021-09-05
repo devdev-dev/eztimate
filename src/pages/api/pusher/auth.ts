@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Pusher, { PresenceChannelData } from 'pusher';
 import { CookieName } from '../../../cookies';
 
-export default async (request: NextApiRequest, response: NextApiResponse) => {
+const handler = async (request: NextApiRequest, response: NextApiResponse) => {
   const userId = new Cookies(request, response).get(CookieName.USER_ID);
   const estimateId = new Cookies(request, response).get(CookieName.ISSUE_ID);
 
@@ -37,3 +37,5 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     response.status(403).end();
   }
 };
+
+export default handler

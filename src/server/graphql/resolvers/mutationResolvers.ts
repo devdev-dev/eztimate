@@ -2,6 +2,15 @@ import { Issue, IssueState, MutationResolvers } from '../../../generated/graphql
 import { DatabaseError } from '../../../pages/api/graphql';
 
 export const mutationResolvers: MutationResolvers = {
+  createActiveIssue: async (_, {}, { db }) => {
+    console.log('Issze');
+    const { insertedId } = await db.collection('issues').insertOne({
+      state: IssueState.Collect,
+      estimates: []
+    });
+
+    return (await db.collection('issues').findOne({ _id: insertedId })) as Issue;
+  },
   estimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
     const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
       { user: userId },

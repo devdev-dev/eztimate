@@ -17,8 +17,7 @@ export const apolloClient = new ApolloClient({
   connectToDevTools: true
 });
 
-export default function MyApp(props: AppProps) {
-  const { Component, pageProps } = props;
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <CacheProvider value={cache}>
       <Head>

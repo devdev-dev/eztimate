@@ -4,6 +4,12 @@ query ActiveIssue {
     }
 }
 
+mutation CreateActiveIssue {
+    createActiveIssue {
+        _id
+    }
+}
+
 mutation EstimateActiveIssue($value: String!) {
     estimateActiveIssue(value: $value) {
         ...IssueFields

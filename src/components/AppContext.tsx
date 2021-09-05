@@ -10,7 +10,7 @@ interface IContextProps {
 export const AppContext = React.createContext({} as IContextProps);
 
 export interface AppContextProviderProps {
-  estimateId: string;
+  issueId: string;
   children: ReactElement;
 }
 
@@ -19,8 +19,8 @@ export function usePusherChannel() {
   return channel;
 }
 
-function AppContextProvider({ estimateId, children }: AppContextProviderProps) {
-  const { channel } = usePresenceChannel(`presence-${estimateId}`);
+function AppContextProvider({ issueId, children }: AppContextProviderProps) {
+  const { channel } = usePresenceChannel(`presence-${issueId}`);
 
   return <AppContext.Provider value={{ channel }}> {children}</AppContext.Provider>;
 }

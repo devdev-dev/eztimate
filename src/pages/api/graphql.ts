@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-errors';
-import { ApolloServer, AuthenticationError } from 'apollo-server-micro';
+import { ApolloServer } from 'apollo-server-micro';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CookieName } from '../../cookies';
@@ -13,10 +13,6 @@ const apolloServer = new ApolloServer({
   context: async ({ req, res }) => {
     const userId = getObjectId(new Cookies(req, res).get(CookieName.USER_ID));
     const issueId = getObjectId(new Cookies(req, res).get(CookieName.ISSUE_ID));
-
-    if (!issueId || !userId) {
-      throw new AuthenticationError('Not authenticated!!');
-    }
 
     const { db } = await getDatabase();
 
@@ -51,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await startServer;
   await apolloServer.createHandler({
-    path: '/api/graphql'
+    path: `/api/graphql`
   })(req, res);
 }
 

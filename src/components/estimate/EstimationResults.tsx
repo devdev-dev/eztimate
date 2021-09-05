@@ -60,7 +60,7 @@ export default function EstimationResults() {
 }
 
 const styles = {
-    bar: css`
-      display: flex;
-    `
+  bar: css`
+    display: flex;
+  `
 };
