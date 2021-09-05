@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@material-ui/system';
 import * as React from 'react';
-import { useActiveIssueQuery, useActiveUserQuery, useEstimateActiveIssueMutation } from '../../generated/graphql';
+import { useActiveIssueQuery, useActiveUserQuery, useCreateEstimateActiveIssueMutation, useDeleteEstimateActiveIssueMutation } from '../../generated/graphql';
 
 const EstimationCardStack = () => {
   const cards = new Array(5).fill('Card');
@@ -10,7 +10,8 @@ const EstimationCardStack = () => {
 
   const { data: userData } = useActiveUserQuery();
   const { data, loading } = useActiveIssueQuery();
-  const [estimateIssue] = useEstimateActiveIssueMutation();
+  const [createEstimateMutation] = useCreateEstimateActiveIssueMutation();
+  const [deleteEstimateMutation] = useDeleteEstimateActiveIssueMutation();
 
   const userEstimate = data?.getActiveIssue?.estimates.find(e => e.user._id === userData?.getActiveUser?._id);
   return (
@@ -21,13 +22,17 @@ const EstimationCardStack = () => {
             <div
               key={index}
               className={userEstimate?.value === `${index}` ? 'selected' : ''}
-              onClick={() =>
-                estimateIssue({
-                  variables: {
-                    value: `${index}`
-                  }
-                })
-              }
+              onClick={() => {
+                if (userEstimate && userEstimate?.value === `${index}` ? 'selected' : '') {
+                  deleteEstimateMutation({ variables: { id: userEstimate?._id! } });
+                } else {
+                  createEstimateMutation({
+                    variables: {
+                      value: `${index}`
+                    }
+                  });
+                }
+              }}
             >
               <h3>{index}</h3>
             </div>

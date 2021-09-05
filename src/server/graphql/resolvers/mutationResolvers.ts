@@ -1,5 +1,7 @@
+import { PullOperator } from 'mongodb';
 import { Issue, IssueState, MutationResolvers, User } from '../../../generated/graphql';
 import { DatabaseError } from '../../../pages/api/graphql';
+import { getObjectId } from '../../mongo';
 
 export const mutationResolvers: MutationResolvers = {
   createActiveIssue: async (_, {}, { db }) => {
@@ -11,7 +13,7 @@ export const mutationResolvers: MutationResolvers = {
     const issue: Issue = { _id: insertedId.toHexString(), state: IssueState.Collect, estimates: [] };
     return issue;
   },
-  estimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
+  createEstimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
     const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
       { user: userId },
       {
@@ -35,6 +37,20 @@ export const mutationResolvers: MutationResolvers = {
     } else {
       throw new DatabaseError('Create / Update estimate not possible. ');
     }
+  },
+  deleteEstimateActiveIssue: async (_, { id }, { db, issueId }) => {
+    const estimateObjectId = getObjectId(id);
+
+    const { value } = await db.collection('issues').findOneAndUpdate(
+      { _id: issueId },
+      { $pull: { estimates: estimateObjectId } as PullOperator<Document> },
+      {
+        returnDocument: 'after'
+      }
+    );
+
+    db.collection('estimates').deleteOne({ _id: estimateObjectId });
+    return value as Issue;
   },
   resetActiveIssue: async (_, {}, { db, issueId }) => {
     const dbIssue = (

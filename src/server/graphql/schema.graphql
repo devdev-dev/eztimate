@@ -5,7 +5,8 @@ type Query {
 
 type Mutation {
     createActiveIssue: Issue
-    estimateActiveIssue(value: String!): Issue
+    createEstimateActiveIssue(value: String!): Issue
+    deleteEstimateActiveIssue(id: ID!): Issue
     resetActiveIssue: Issue
 
     createUser: User

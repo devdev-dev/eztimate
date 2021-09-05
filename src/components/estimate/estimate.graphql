@@ -22,8 +22,14 @@ mutation CreateUser {
     }
 }
 
-mutation EstimateActiveIssue($value: String!) {
-    estimateActiveIssue(value: $value) {
+mutation CreateEstimateActiveIssue($value: String!) {
+    createEstimateActiveIssue(value: $value) {
+        ...IssueFields
+    }
+}
+
+mutation DeleteEstimateActiveIssue($id: ID!) {
+    deleteEstimateActiveIssue(id: $id) {
         ...IssueFields
     }
 }
