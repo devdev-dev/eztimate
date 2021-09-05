@@ -1,15 +1,15 @@
-import { Issue, IssueState, MutationResolvers } from '../../../generated/graphql';
+import { Issue, IssueState, MutationResolvers, User } from '../../../generated/graphql';
 import { DatabaseError } from '../../../pages/api/graphql';
 
 export const mutationResolvers: MutationResolvers = {
   createActiveIssue: async (_, {}, { db }) => {
-    console.log('Issze');
     const { insertedId } = await db.collection('issues').insertOne({
       state: IssueState.Collect,
       estimates: []
     });
 
-    return (await db.collection('issues').findOne({ _id: insertedId })) as Issue;
+    const issue: Issue = { _id: insertedId.toHexString(), state: IssueState.Collect, estimates: [] };
+    return issue;
   },
   estimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
     const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
@@ -59,5 +59,10 @@ export const mutationResolvers: MutationResolvers = {
     } else {
       throw new DatabaseError('Reset issue failed. ');
     }
+  },
+  createUser: async (_, {}, { db }) => {
+    const { insertedId } = await db.collection('users').insertOne({});
+    const user: User = { _id: insertedId.toHexString() };
+    return user;
   }
 };

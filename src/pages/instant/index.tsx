@@ -1,7 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
 import Cookies from 'cookies';
-import { ObjectId } from 'mongodb';
 import { GetServerSideProps, NextPage } from 'next';
 import absoluteUrl from 'next-absolute-url/index';
 import * as React from 'react';
@@ -10,7 +9,7 @@ import EstimationCardStack from '../../components/estimate/EstimationCardStack';
 import EstimationResults from '../../components/estimate/EstimationResults';
 import EstimationToolbar from '../../components/estimate/EstimationToolbar';
 import { CookieName } from '../../cookies';
-import { CreateActiveIssueDocument, CreateActiveIssueMutation, useActiveIssueQuery } from '../../generated/graphql';
+import { CreateActiveIssueDocument, CreateActiveIssueMutation, CreateUserDocument, CreateUserMutation, useActiveIssueQuery } from '../../generated/graphql';
 
 const config: PusherProviderProps = {
   clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,
@@ -44,18 +43,20 @@ const Instant: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req, res }) => {
+  const apolloClient = new ApolloClient({
+    uri: `${absoluteUrl(req).origin}/api/graphql`,
+    cache: new InMemoryCache(),
+    connectToDevTools: true
+  });
+
   const cookies = new Cookies(req, res);
   if (!cookies.get(CookieName.USER_ID)) {
-    cookies.set(CookieName.USER_ID, new ObjectId().toHexString());
+    const { data } = await apolloClient.mutate<CreateUserMutation>({ mutation: CreateUserDocument });
+    cookies.set(CookieName.USER_ID, data?.createUser?._id);
   }
 
   let issueId = cookies.get(CookieName.ISSUE_ID);
   if (!issueId) {
-    const apolloClient = new ApolloClient({
-      uri: `${absoluteUrl(req).origin}/api/graphql`,
-      cache: new InMemoryCache(),
-      connectToDevTools: true
-    });
     const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
     cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id);
   }

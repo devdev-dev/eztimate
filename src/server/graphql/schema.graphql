@@ -6,6 +6,8 @@ type Mutation {
     createActiveIssue: Issue
     estimateActiveIssue(value: String!): Issue
     resetActiveIssue: Issue
+
+    createUser: User
 }
 
 type Issue {

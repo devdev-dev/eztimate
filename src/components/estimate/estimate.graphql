@@ -10,6 +10,12 @@ mutation CreateActiveIssue {
     }
 }
 
+mutation CreateUser {
+    createUser {
+        _id
+    }
+}
+
 mutation EstimateActiveIssue($value: String!) {
     estimateActiveIssue(value: $value) {
         ...IssueFields
