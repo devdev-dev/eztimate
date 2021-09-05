@@ -4,6 +4,12 @@ query ActiveIssue {
     }
 }
 
+query ActiveUser {
+    getActiveUser {
+        ...UserFields
+    }
+}
+
 mutation CreateActiveIssue {
     createActiveIssue {
         _id
@@ -34,6 +40,10 @@ fragment IssueFields on Issue {
     estimates {
         ...EstimateFields
     }
+}
+
+fragment UserFields on User {
+    _id
 }
 
 fragment EstimateFields on Estimate {

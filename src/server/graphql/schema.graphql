@@ -1,5 +1,6 @@
 type Query {
     getActiveIssue: Issue
+    getActiveUser: User
 }
 
 type Mutation {

@@ -55,8 +55,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, res }
     cookies.set(CookieName.USER_ID, data?.createUser?._id);
   }
 
-  let issueId = cookies.get(CookieName.ISSUE_ID);
-  if (!issueId) {
+  if (!cookies.get(CookieName.ISSUE_ID)) {
     const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
     cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id);
   }
