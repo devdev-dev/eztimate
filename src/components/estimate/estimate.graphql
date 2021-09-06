@@ -10,7 +10,7 @@ mutation CreateActiveIssue {
     }
 }
 
-mutation UpdateActiveIssue($state: IssueState!, $name: String) {
+mutation UpdateActiveIssue($state: IssueState, $name: String) {
     updateActiveIssue(state: $state, name: $name) {
         ...IssueFields
     }
