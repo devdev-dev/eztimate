@@ -39,7 +39,7 @@ export default function EstimationToolbar() {
             onBlur={e => updateActiveIssue({ variables: { name: e.target.value } })}
             onKeyDown={e => {
               if (e.key === 'Escape') setIssueName(data?.getActiveIssue?.name);
-              if (e.key === 'Enter') updateActiveIssue({ variables: { name: e.target.value } });
+              if (e.key === 'Enter') updateActiveIssue({ variables: { name: issueName } });
             }}
             sx={{ ml: 1, flex: 1 }}
             placeholder="Rename Issue"
