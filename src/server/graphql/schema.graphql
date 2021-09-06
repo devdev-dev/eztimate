@@ -5,9 +5,11 @@ type Query {
 
 type Mutation {
     createActiveIssue: Issue
+    updateActiveIssue(state: IssueState): Issue
+    resetActiveIssue: Issue
+
     createEstimateActiveIssue(value: String!): Issue
     deleteEstimateActiveIssue(id: ID!): Issue
-    resetActiveIssue: Issue
 
     createUser: User
 }

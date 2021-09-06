@@ -4,21 +4,15 @@ query ActiveIssue {
     }
 }
 
-query ActiveUser {
-    getActiveUser {
-        ...UserFields
-    }
-}
-
 mutation CreateActiveIssue {
     createActiveIssue {
         _id
     }
 }
 
-mutation CreateUser {
-    createUser {
-        _id
+mutation UpdateActiveIssue($state: IssueState!) {
+    updateActiveIssue(state: $state) {
+        ...IssueFields
     }
 }
 
@@ -48,14 +42,26 @@ fragment IssueFields on Issue {
     }
 }
 
-fragment UserFields on User {
-    _id
-}
-
 fragment EstimateFields on Estimate {
     _id
     user {
         _id
     }
     value
+}
+
+
+mutation CreateUser {
+    createUser {
+        _id
+    }
+}
+query ActiveUser {
+    getActiveUser {
+        ...UserFields
+    }
+}
+
+fragment UserFields on User {
+    _id
 }

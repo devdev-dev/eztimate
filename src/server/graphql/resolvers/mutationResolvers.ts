@@ -6,12 +6,49 @@ import { getObjectId } from '../../mongo';
 export const mutationResolvers: MutationResolvers = {
   createActiveIssue: async (_, {}, { db }) => {
     const { insertedId } = await db.collection('issues').insertOne({
-      state: IssueState.Collect,
+      state: IssueState.COLLECT,
       estimates: []
     });
 
-    const issue: Issue = { _id: insertedId.toHexString(), state: IssueState.Collect, estimates: [] };
+    const issue: Issue = { _id: insertedId.toHexString(), state: IssueState.COLLECT, estimates: [] };
     return issue;
+  },
+  updateActiveIssue: async (_, { state }, { db, issueId }) => {
+    let update = {};
+    if (state !== undefined) update = { ...update, state: state };
+    return (
+      await db.collection('issues').findOneAndUpdate(
+        { _id: issueId },
+        {
+          $set: update
+        },
+        { returnDocument: 'after' }
+      )
+    ).value as Issue;
+  },
+  resetActiveIssue: async (_, {}, { db, issueId }) => {
+    const dbIssue = (
+      await db.collection('issues').findOneAndUpdate(
+        { _id: issueId },
+        {
+          $set: {
+            estimates: [],
+            state: IssueState.COLLECT
+          },
+          $unset: {
+            estimate: ''
+          }
+        },
+        { returnDocument: 'after' }
+      )
+    ).value;
+
+    if (dbIssue) {
+      db.collection('estimates').deleteMany({ _id: { $in: dbIssue!.estimates } });
+      return dbIssue as Issue;
+    } else {
+      throw new DatabaseError('Reset issue failed. ');
+    }
   },
   createEstimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
     const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
@@ -51,30 +88,6 @@ export const mutationResolvers: MutationResolvers = {
 
     db.collection('estimates').deleteOne({ _id: estimateObjectId });
     return value as Issue;
-  },
-  resetActiveIssue: async (_, {}, { db, issueId }) => {
-    const dbIssue = (
-      await db.collection('issues').findOneAndUpdate(
-        { _id: issueId },
-        {
-          $set: {
-            estimates: [],
-            state: IssueState.Collect
-          },
-          $unset: {
-            estimate: ''
-          }
-        },
-        { returnDocument: 'after' }
-      )
-    ).value;
-
-    if (dbIssue) {
-      db.collection('estimates').deleteMany({ _id: { $in: dbIssue!.estimates } });
-      return dbIssue as Issue;
-    } else {
-      throw new DatabaseError('Reset issue failed. ');
-    }
   },
   createUser: async (_, {}, { db }) => {
     const { insertedId } = await db.collection('users').insertOne({});

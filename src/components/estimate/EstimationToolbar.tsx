@@ -5,8 +5,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import PersonIcon from '@material-ui/icons/Person';
 import ReplayIcon from '@material-ui/icons/Replay';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import * as React from 'react';
-import { useActiveIssueQuery, useResetActiveIssueMutation } from '../../generated/graphql';
+import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import { usePusherChannel } from '../AppContext';
 
 export default function EstimationToolbar() {
@@ -14,12 +16,21 @@ export default function EstimationToolbar() {
 
   const { data, loading, error } = useActiveIssueQuery();
   const [resetActiveIssue] = useResetActiveIssueMutation();
+  const [updateActiveIssue] = useUpdateActiveIssueMutation();
 
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar>
-        <IconButton size="large" aria-label="search" color="inherit" title="New Estimation" onClick={() => resetActiveIssue()}>
+        <IconButton edge="start" title="Reset Issue" onClick={() => resetActiveIssue()}>
           <ReplayIcon />
+        </IconButton>
+        <IconButton
+          title="Toggle Issue State"
+          onClick={() =>
+            updateActiveIssue({ variables: { state: data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT } })
+          }
+        >
+          {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Estimate: {data?.getActiveIssue?._id}
