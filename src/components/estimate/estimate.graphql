@@ -10,8 +10,8 @@ mutation CreateActiveIssue {
     }
 }
 
-mutation UpdateActiveIssue($state: IssueState!) {
-    updateActiveIssue(state: $state) {
+mutation UpdateActiveIssue($state: IssueState!, $name: String) {
+    updateActiveIssue(state: $state, name: $name) {
         ...IssueFields
     }
 }
@@ -36,6 +36,7 @@ mutation ResetActiveIssue {
 
 fragment IssueFields on Issue {
     _id
+    name
     state
     estimates {
         ...EstimateFields

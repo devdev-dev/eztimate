@@ -33,7 +33,7 @@ export default function EstimationToolbar() {
           {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Estimate: {data?.getActiveIssue?._id}
+          Estimate: {data?.getActiveIssue?.name}
         </Typography>
         <Box
           sx={{

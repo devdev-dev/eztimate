@@ -6,15 +6,22 @@ import { getObjectId } from '../../mongo';
 export const mutationResolvers: MutationResolvers = {
   createActiveIssue: async (_, {}, { db }) => {
     const { insertedId } = await db.collection('issues').insertOne({
+      name: 'New Issue',
       state: IssueState.COLLECT,
       estimates: []
     });
 
-    const issue: Issue = { _id: insertedId.toHexString(), state: IssueState.COLLECT, estimates: [] };
+    const issue: Issue = {
+      _id: insertedId.toHexString(),
+      name: 'New Issue',
+      state: IssueState.COLLECT,
+      estimates: []
+    };
     return issue;
   },
-  updateActiveIssue: async (_, { state }, { db, issueId }) => {
+  updateActiveIssue: async (_, { name, state }, { db, issueId }) => {
     let update = {};
+    if (name !== undefined) update = { ...update, name: name };
     if (state !== undefined) update = { ...update, state: state };
     return (
       await db.collection('issues').findOneAndUpdate(
@@ -32,6 +39,7 @@ export const mutationResolvers: MutationResolvers = {
         { _id: issueId },
         {
           $set: {
+            name: 'New Issue',
             estimates: [],
             state: IssueState.COLLECT
           },
