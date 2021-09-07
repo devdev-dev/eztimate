@@ -20,6 +20,7 @@ type Issue {
     _id: ID!
     name: String!
     state: IssueState!
+    stack: [String!]!
     estimates: [Estimate!]!
 }
 

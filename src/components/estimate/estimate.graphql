@@ -43,6 +43,7 @@ mutation ResetActiveIssue {
 fragment IssueFields on Issue {
     _id
     name
+    stack
     state
     estimates {
         ...EstimateFields

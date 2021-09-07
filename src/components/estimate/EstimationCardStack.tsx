@@ -4,8 +4,6 @@ import * as React from 'react';
 import { useActiveIssueQuery, useActiveUserQuery, useCreateEstimateActiveIssueMutation, useDeleteEstimateActiveIssueMutation } from '../../generated/graphql';
 
 const EstimationCardStack = () => {
-  const cards = new Array(5).fill('Card');
-
   const theme = useTheme();
 
   const { data: userData } = useActiveUserQuery();
@@ -18,25 +16,28 @@ const EstimationCardStack = () => {
     <>
       {!loading && data && (
         <div className={styles.stack(theme)}>
-          {cards.map((card, index) => (
-            <div
-              key={index}
-              className={userEstimate?.value === `${index}` ? 'selected' : ''}
-              onClick={() => {
-                if (userEstimate && userEstimate?.value === `${index}` ? 'selected' : '') {
-                  deleteEstimateMutation({ variables: { id: userEstimate?._id! } });
-                } else {
-                  createEstimateMutation({
-                    variables: {
-                      value: `${index}`
-                    }
-                  });
-                }
-              }}
-            >
-              <h3>{index}</h3>
-            </div>
-          ))}
+          {data.getActiveIssue?.stack.map((card, index) => {
+            const isEstimatedCardValue = userEstimate?.value === card;
+            return (
+              <div
+                key={index}
+                className={isEstimatedCardValue ? 'selected' : ''}
+                onClick={() => {
+                  if (userEstimate && isEstimatedCardValue ? 'selected' : '') {
+                    deleteEstimateMutation({ variables: { id: userEstimate?._id! } });
+                  } else {
+                    createEstimateMutation({
+                      variables: {
+                        value: card
+                      }
+                    });
+                  }
+                }}
+              >
+                <h3>{card}</h3>
+              </div>
+            );
+          })}
         </div>
       )}
     </>

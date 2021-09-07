@@ -8,6 +8,7 @@ export const mutationResolvers: MutationResolvers = {
     const { insertedId } = await db.collection('issues').insertOne({
       name: 'New Issue',
       state: IssueState.COLLECT,
+      stack: ['1', '2', '3', '5', '8', '13', '?'],
       estimates: []
     });
 
@@ -15,6 +16,7 @@ export const mutationResolvers: MutationResolvers = {
       _id: insertedId.toHexString(),
       name: 'New Issue',
       state: IssueState.COLLECT,
+      stack: ['1', '2', '3', '5', '8', '13', '?'],
       estimates: []
     };
     return issue;
@@ -40,8 +42,8 @@ export const mutationResolvers: MutationResolvers = {
         {
           $set: {
             name: 'New Issue',
-            estimates: [],
-            state: IssueState.COLLECT
+            state: IssueState.COLLECT,
+            estimates: []
           },
           $unset: {
             estimate: ''
