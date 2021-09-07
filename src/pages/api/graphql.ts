@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server-micro';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CookieName } from '../../cookies';
+import { pusherPlugin } from '../../server/graphql/plugins/pusher';
 import { resolvers } from '../../server/graphql/resolvers';
 import * as typeDefs from '../../server/graphql/schema.graphql';
 import getDatabase, { getObjectId } from '../../server/mongo';
@@ -10,6 +11,7 @@ import getDatabase, { getObjectId } from '../../server/mongo';
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  plugins: [pusherPlugin],
   context: async ({ req, res }) => {
     const userId = getObjectId(new Cookies(req, res).get(CookieName.USER_ID));
     const issueId = getObjectId(new Cookies(req, res).get(CookieName.ISSUE_ID));
