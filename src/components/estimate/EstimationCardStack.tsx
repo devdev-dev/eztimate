@@ -23,8 +23,8 @@ const EstimationCardStack = () => {
                 key={index}
                 className={isEstimatedCardValue ? 'selected' : ''}
                 onClick={() => {
-                  if (userEstimate && isEstimatedCardValue ? 'selected' : '') {
-                    deleteEstimateMutation({ variables: { id: userEstimate?._id! } });
+                  if (userEstimate && isEstimatedCardValue) {
+                    deleteEstimateMutation({ variables: { id: userEstimate._id! } });
                   } else {
                     createEstimateMutation({
                       variables: {
