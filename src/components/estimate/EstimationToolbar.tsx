@@ -4,11 +4,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ReplayIcon from '@material-ui/icons/Replay';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import Cookies from 'js-cookie';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { CookieName } from '../../cookies';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import { usePusherChannel } from '../AppContext';
 
@@ -69,7 +72,22 @@ export default function EstimationToolbar() {
               ))}
           </AvatarGroup>
         </Box>
+        <IconButton onClick={() => handleCopyID()}>
+          <Avatar>
+            <PersonAddIcon />
+          </Avatar>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
+}
+
+function handleCopyID() {
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+  const el = document.createElement('textarea');
+  el.value = `${origin}/instant/?join=${Cookies.get(CookieName.ISSUE_ID)}`;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }

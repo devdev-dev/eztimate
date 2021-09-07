@@ -1,3 +1,9 @@
+query ValidateIssue($id: ID!) {
+    validateIssue(id: $id) {
+        _id
+    }
+}
+
 query ActiveIssue {
     getActiveIssue {
         ...IssueFields

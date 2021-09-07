@@ -9,7 +9,15 @@ import EstimationCardStack from '../../components/estimate/EstimationCardStack';
 import EstimationResults from '../../components/estimate/EstimationResults';
 import EstimationToolbar from '../../components/estimate/EstimationToolbar';
 import { CookieName } from '../../cookies';
-import { CreateActiveIssueDocument, CreateActiveIssueMutation, CreateUserDocument, CreateUserMutation, useActiveIssueQuery } from '../../generated/graphql';
+import {
+  CreateActiveIssueDocument,
+  CreateActiveIssueMutation,
+  CreateUserDocument,
+  CreateUserMutation,
+  useActiveIssueQuery,
+  ValidateIssueDocument,
+  ValidateIssueQuery
+} from '../../generated/graphql';
 
 const config: PusherProviderProps = {
   clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,
@@ -43,21 +51,32 @@ const Instant: NextPage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req, res }) => {
+  const cookies = new Cookies(req, res);
   const apolloClient = new ApolloClient({
     uri: `${absoluteUrl(req).origin}/api/graphql`,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
 
-  const cookies = new Cookies(req, res);
   if (!cookies.get(CookieName.USER_ID)) {
     const { data } = await apolloClient.mutate<CreateUserMutation>({ mutation: CreateUserDocument });
-    cookies.set(CookieName.USER_ID, data?.createUser?._id);
+    cookies.set(CookieName.USER_ID, data?.createUser?._id, { maxAge: 31536000000, httpOnly: false });
   }
 
-  if (!cookies.get(CookieName.ISSUE_ID)) {
+  if (query.join) {
+    const { data } = await apolloClient.query<ValidateIssueQuery>({
+      query: ValidateIssueDocument,
+      variables: { id: query.join }
+    });
+    if (data && data.validateIssue) {
+      cookies.set(CookieName.ISSUE_ID, query.join.toString(), { maxAge: 31536000000, httpOnly: false });
+    } else {
+      const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
+      cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id, { maxAge: 31536000000, httpOnly: false });
+    }
+  } else if (!cookies.get(CookieName.ISSUE_ID)) {
     const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
-    cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id);
+    cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id, { maxAge: 31536000000, httpOnly: false });
   }
 
   return { props: {} };

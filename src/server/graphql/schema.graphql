@@ -1,4 +1,6 @@
 type Query {
+    validateIssue(id: ID!): Issue
+
     getActiveIssue: Issue
     getActiveUser: User
 }
