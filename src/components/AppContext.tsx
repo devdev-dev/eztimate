@@ -4,25 +4,29 @@ import * as React from 'react';
 import { ReactElement, useContext } from 'react';
 
 interface IContextProps {
+  issueId: string;
   channel: PresenceChannel | undefined;
 }
 
 export const AppContext = React.createContext({} as IContextProps);
+
+export function usePusherChannel() {
+  return useContext(AppContext).channel;
+}
+
+export function useIssueId() {
+  return useContext(AppContext).issueId;
+}
 
 export interface AppContextProviderProps {
   issueId: string;
   children: ReactElement;
 }
 
-export function usePusherChannel() {
-  const { channel } = useContext(AppContext);
-  return channel;
-}
-
 function AppContextProvider({ issueId, children }: AppContextProviderProps) {
   const { channel } = usePresenceChannel(`presence-${issueId}`);
 
-  return <AppContext.Provider value={{ channel }}> {children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ issueId, channel }}> {children}</AppContext.Provider>;
 }
 
 export { AppContextProvider };

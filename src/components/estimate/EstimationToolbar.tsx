@@ -8,15 +8,14 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ReplayIcon from '@material-ui/icons/Replay';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import Cookies from 'js-cookie';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { CookieName } from '../../cookies';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
-import { usePusherChannel } from '../AppContext';
+import { useIssueId, usePusherChannel } from '../AppContext';
 
 export default function EstimationToolbar() {
   const channel = usePusherChannel();
+  const issueId = useIssueId();
 
   const { data, loading, error } = useActiveIssueQuery();
   const [resetActiveIssue] = useResetActiveIssueMutation();
@@ -72,7 +71,7 @@ export default function EstimationToolbar() {
               ))}
           </AvatarGroup>
         </Box>
-        <IconButton onClick={() => handleCopyID()}>
+        <IconButton onClick={() => handleCopyID(issueId)}>
           <Avatar>
             <PersonAddIcon />
           </Avatar>
@@ -82,10 +81,10 @@ export default function EstimationToolbar() {
   );
 }
 
-function handleCopyID() {
+function handleCopyID(issueId: string) {
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
   const el = document.createElement('textarea');
-  el.value = `${origin}/instant/?join=${Cookies.get(CookieName.ISSUE_ID)}`;
+  el.value = `${origin}/instant/?join=${issueId}`;
   document.body.appendChild(el);
   el.select();
   document.execCommand('copy');
