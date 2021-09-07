@@ -31,20 +31,26 @@ const config: PusherProviderProps = {
 };
 
 const Instant: NextPage = () => {
+  return (
+    <PusherProvider {...config}>
+      <InstantPage />
+    </PusherProvider>
+  );
+};
+
+const InstantPage: NextPage = () => {
   const { data, loading } = useActiveIssueQuery();
 
   return (
     <>
       {!loading && data && data.getActiveIssue && (
-        <PusherProvider {...config}>
-          <AppContextProvider issueId={data.getActiveIssue?._id}>
-            <>
-              <EstimationToolbar />
-              <EstimationResults />
-              <EstimationCardStack />
-            </>
-          </AppContextProvider>
-        </PusherProvider>
+        <AppContextProvider issueId={data.getActiveIssue?._id}>
+          <>
+            <EstimationToolbar />
+            <EstimationResults />
+            <EstimationCardStack />
+          </>
+        </AppContextProvider>
       )}
     </>
   );
