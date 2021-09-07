@@ -33,7 +33,7 @@ export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
               <Box
                 sx={{
                   flexGrow: weight,
-                  bgcolor: lighten('#556cd6', 1 - weight / maxWeight),
+                  bgcolor: lighten('#334080', 1 - weight / maxWeight),
                   color: 'white',
                   textAlign: 'center'
                 }}
