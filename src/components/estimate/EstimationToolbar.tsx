@@ -2,7 +2,6 @@ import { Avatar, AvatarGroup, Box, Divider, InputBase, Paper } from '@material-u
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -12,6 +11,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import { useIssueId, usePusherChannel } from '../AppContext';
+import EstimationSettingsDialogButton from './EstimationSettingsDialogButton';
 
 export default function EstimationToolbar() {
   const channel = usePusherChannel();
@@ -29,10 +29,8 @@ export default function EstimationToolbar() {
   return (
     <AppBar position="static">
       <Toolbar>
+        <EstimationSettingsDialogButton />
         <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
-          <IconButton sx={{ p: '10px' }} aria-label="menu">
-            <MoreVertIcon />
-          </IconButton>
           <InputBase
             autoComplete="off"
             onChange={e => {
