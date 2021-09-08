@@ -13,31 +13,31 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import * as React from 'react';
-import { useUpdateActiveIssueMutation } from '../../generated/graphql';
+import { useEffect } from 'react';
+import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children?: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const CUSTOM_STACK_ID = 'customstack';
 
 export default function EstimationSettingsDialogButton() {
   const [open, setOpen] = React.useState(false);
+
+  const { data, loading, error } = useActiveIssueQuery();
+  const [updateActiveIssue] = useUpdateActiveIssueMutation();
+
   const [selectedId, setSelectedId] = React.useState('');
   const [customStack, setCustomStack] = React.useState<string[]>([]);
 
-  const [updateActiveIssue] = useUpdateActiveIssueMutation();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    const storedStack = data?.getActiveIssue?.stack ?? [];
+    const defaultStack = DEFAULT_CARD_STACKS.find(s => {
+      return s.values.length === storedStack.length && s.values.every((val, index) => val === storedStack[index]);
+    });
+    if (defaultStack) {
+      handleStackSelect(defaultStack.id, defaultStack.values);
+    } else {
+      handleStackSelect(CUSTOM_STACK_ID, storedStack);
+    }
+  }, [data]);
 
   const handleSave = () => {
     const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId);
@@ -46,7 +46,7 @@ export default function EstimationSettingsDialogButton() {
     } else {
       updateActiveIssue({ variables: { stack: customStack } });
     }
-    handleClose();
+    setOpen(false);
   };
 
   const handleStackSelect = (id: string, values: string[]) => {
@@ -56,13 +56,33 @@ export default function EstimationSettingsDialogButton() {
 
   return (
     <div>
-      <IconButton edge="start" color="inherit" onClick={handleClickOpen}>
+      <IconButton
+        edge="start"
+        color="inherit"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
         <MoreVertIcon />
       </IconButton>
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+        TransitionComponent={Transition}
+      >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setOpen(false);
+              }}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
@@ -86,7 +106,7 @@ export default function EstimationSettingsDialogButton() {
                 </ListItem>
               ))}
               <Divider />
-              <ListItem button selected={selectedId === 'customstack'} onClick={() => handleStackSelect('customstack', customStack)}>
+              <ListItem button selected={selectedId === CUSTOM_STACK_ID} onClick={() => handleStackSelect(CUSTOM_STACK_ID, customStack)}>
                 <ListItemText primary="Custom Card Stack" secondary="Create your own card stack" />
                 <TextField
                   autoComplete="off"
@@ -131,3 +151,12 @@ const DEFAULT_CARD_STACKS = [
     values: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   }
 ];
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children?: React.ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
