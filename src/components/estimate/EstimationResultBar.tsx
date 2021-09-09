@@ -4,12 +4,15 @@ import PersonIcon from '@material-ui/icons/Person';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
+import { usePusherChannel } from '../AppContext';
 
 export interface EstimationResultBarProps {
   estimates: Array<{ value: string; user: { _id: string } }>;
 }
 
 export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
+  const channel = usePusherChannel();
+
   const results = useMemo(() => {
     if (estimates) {
       return estimates.reduce<Record<string, string[]>>(function (acc, currentValue) {
@@ -23,6 +26,7 @@ export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
 
   return (
     <>
+      {!results || (keys(results).length === 0 && <EstimationResultBarHidden estimates={[]} />)}
       {results &&
         keys(results).map((value, index) => {
           const users = results[value];
@@ -41,7 +45,7 @@ export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
                 {value}
               </Box>
               <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-                <AvatarGroup max={6}>
+                <AvatarGroup>
                   {users.map(userId => (
                     <Avatar key={userId}>
                       <PersonIcon />
@@ -57,6 +61,7 @@ export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
 }
 
 export function EstimationResultBarHidden({ estimates }: EstimationResultBarProps) {
+  const channel = usePusherChannel();
   return (
     <Box sx={{ width: '100%' }}>
       <Box
@@ -68,7 +73,7 @@ export function EstimationResultBarHidden({ estimates }: EstimationResultBarProp
         &nbsp;
       </Box>
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-        <AvatarGroup max={6}>
+        <AvatarGroup>
           {estimates.map(e => (
             <Avatar key={e.user._id}>
               <PersonIcon />
