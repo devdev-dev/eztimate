@@ -1,5 +1,4 @@
 import { Avatar, AvatarGroup, Box, Divider, InputBase, Paper } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import PersonIcon from '@material-ui/icons/Person';
@@ -27,55 +26,53 @@ export default function EstimationToolbar() {
   }, [data]);
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <EstimationSettingsDialogButton />
-        <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
-          <InputBase
-            autoComplete="off"
-            onChange={e => {
-              setIssueName(e.target.value);
-            }}
-            onBlur={e => updateActiveIssue({ variables: { name: e.target.value } })}
-            onKeyDown={e => {
-              if (e.key === 'Escape') setIssueName(data?.getActiveIssue?.name);
-              if (e.key === 'Enter') updateActiveIssue({ variables: { name: issueName } });
-            }}
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Rename Issue"
-            value={issueName}
-          />
-          <IconButton
-            type="submit"
-            sx={{ p: '10px' }}
-            onClick={() =>
-              updateActiveIssue({ variables: { state: data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT } })
-            }
-          >
-            {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
-          </IconButton>
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-          <IconButton color="primary" sx={{ p: '10px' }} onClick={() => resetActiveIssue()}>
-            <ReplayIcon />
-          </IconButton>
-        </Paper>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
-          <AvatarGroup max={6}>
-            {channel &&
-              Object.keys(channel?.members?.members).map(memberId => (
-                <Avatar key={memberId}>
-                  <PersonIcon />
-                </Avatar>
-              ))}
-          </AvatarGroup>
-        </Box>
-        <IconButton onClick={() => handleCopyID(issueId)}>
-          <Avatar>
-            <PersonAddIcon />
-          </Avatar>
+    <Toolbar disableGutters>
+      <EstimationSettingsDialogButton />
+      <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
+        <InputBase
+          autoComplete="off"
+          onChange={e => {
+            setIssueName(e.target.value);
+          }}
+          onBlur={e => updateActiveIssue({ variables: { name: e.target.value } })}
+          onKeyDown={e => {
+            if (e.key === 'Escape') setIssueName(data?.getActiveIssue?.name);
+            if (e.key === 'Enter') updateActiveIssue({ variables: { name: issueName } });
+          }}
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Rename Issue"
+          value={issueName}
+        />
+        <IconButton
+          type="submit"
+          sx={{ p: '10px' }}
+          onClick={() =>
+            updateActiveIssue({ variables: { state: data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT } })
+          }
+        >
+          {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </IconButton>
-      </Toolbar>
-    </AppBar>
+        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+        <IconButton color="primary" sx={{ p: '10px' }} onClick={() => resetActiveIssue()}>
+          <ReplayIcon />
+        </IconButton>
+      </Paper>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
+        <AvatarGroup max={6}>
+          {channel &&
+            Object.keys(channel?.members?.members).map(memberId => (
+              <Avatar key={memberId}>
+                <PersonIcon />
+              </Avatar>
+            ))}
+        </AvatarGroup>
+      </Box>
+      <IconButton onClick={() => handleCopyID(issueId)}>
+        <Avatar>
+          <PersonAddIcon />
+        </Avatar>
+      </IconButton>
+    </Toolbar>
   );
 }
 

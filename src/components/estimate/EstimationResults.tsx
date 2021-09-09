@@ -19,7 +19,6 @@ export default function EstimationResults() {
 const styles = {
   bar: css`
     display: flex;
-    height: 100px;
     overflow: hidden;
   `
 };

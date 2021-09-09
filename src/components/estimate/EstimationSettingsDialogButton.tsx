@@ -1,4 +1,4 @@
-import { Container, Paper, Slide, TextField } from '@material-ui/core';
+import { Container, DialogContent, DialogTitle, Paper, Slide, TextField } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Toolbar from '@material-ui/core/Toolbar';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
@@ -15,6 +14,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
+import { StyledToolbar } from '../../pages/instant';
 
 const CUSTOM_STACK_ID = 'customstack';
 
@@ -57,7 +57,6 @@ export default function EstimationSettingsDialogButton() {
   return (
     <div>
       <IconButton
-        edge="start"
         color="inherit"
         onClick={() => {
           setOpen(true);
@@ -73,29 +72,26 @@ export default function EstimationSettingsDialogButton() {
         }}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
+        <AppBar position="sticky" color="transparent" variant="outlined" sx={{ bgcolor: 'white' }}>
+          <StyledToolbar>
             <IconButton
               edge="start"
               color="inherit"
               onClick={() => {
                 setOpen(false);
               }}
-              aria-label="close"
             >
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Estimation Settings
-            </Typography>
+            <DialogTitle sx={{ ml: 2, flex: 1 }}>Estimation Settings</DialogTitle>
             <Button autoFocus color="inherit" onClick={handleSave}>
               save
             </Button>
-          </Toolbar>
+          </StyledToolbar>
         </AppBar>
 
-        <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-          <Paper elevation={2} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+        <DialogContent sx={{ mb: 4 }} dividers>
+          <Container component={Paper} maxWidth="md" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
             <Typography component="h2" variant="h5">
               Card Stack
             </Typography>
@@ -117,8 +113,8 @@ export default function EstimationSettingsDialogButton() {
                 />
               </ListItem>
             </List>
-          </Paper>
-        </Container>
+          </Container>
+        </DialogContent>
       </Dialog>
     </div>
   );
