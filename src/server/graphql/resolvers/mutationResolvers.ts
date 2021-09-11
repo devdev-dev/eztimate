@@ -1,7 +1,6 @@
 import { PullOperator } from 'mongodb';
 import { Issue, IssueState, MutationResolvers, User } from '../../../generated/graphql';
 import { DatabaseError } from '../../../pages/api/graphql';
-import { getObjectId } from '../../mongo';
 
 export const mutationResolvers: MutationResolvers = {
   createActiveIssue: async (_, {}, { db }) => {
@@ -61,44 +60,47 @@ export const mutationResolvers: MutationResolvers = {
       throw new DatabaseError('Reset issue failed. ');
     }
   },
-  createEstimateActiveIssue: async (_, { value }, { db, issueId, userId }) => {
-    const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
-      { user: userId },
-      {
-        value: value,
-        user: userId
-      },
-      { upsert: true, returnDocument: 'after' }
-    );
-
-    if (dbEstimate) {
-      const { value: dbIssue } = await db.collection('issues').findOneAndUpdate(
-        { _id: issueId },
+  updateUserEstimate: async (_, { value }, { db, issueId, userId }) => {
+    if (value) {
+      const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
+        { user: userId },
         {
-          $addToSet: {
-            estimates: dbEstimate._id
-          }
+          value: value,
+          user: userId
         },
-        { returnDocument: 'after' }
+        { upsert: true, returnDocument: 'after' }
       );
-      return dbIssue as Issue;
-    } else {
-      throw new DatabaseError('Create / Update estimate not possible. ');
-    }
-  },
-  deleteEstimateActiveIssue: async (_, { id }, { db, issueId }) => {
-    const estimateObjectId = getObjectId(id);
 
-    const { value } = await db.collection('issues').findOneAndUpdate(
-      { _id: issueId },
-      { $pull: { estimates: estimateObjectId } as PullOperator<Document> },
-      {
-        returnDocument: 'after'
+      if (dbEstimate) {
+        const { value: dbIssue } = await db.collection('issues').findOneAndUpdate(
+          { _id: issueId },
+          {
+            $addToSet: {
+              estimates: dbEstimate._id
+            }
+          },
+          { returnDocument: 'after' }
+        );
+        return dbIssue as Issue;
+      } else {
+        throw new DatabaseError('Create / Update estimate not possible. ');
       }
-    );
+    } else {
+      const { value: deletedDbEstimate } = await db.collection('estimates').findOneAndDelete({ user: userId });
 
-    db.collection('estimates').deleteOne({ _id: estimateObjectId });
-    return value as Issue;
+      if (deletedDbEstimate) {
+        const { value: dbIssue } = await db.collection('issues').findOneAndUpdate(
+          { _id: issueId },
+          { $pull: { estimates: deletedDbEstimate._id } as PullOperator<Document> },
+          {
+            returnDocument: 'after'
+          }
+        );
+        return dbIssue as Issue;
+      } else {
+        throw new DatabaseError('Create / Update estimate not possible. ');
+      }
+    }
   },
   createUser: async (_, {}, { db }) => {
     const { insertedId } = await db.collection('users').insertOne({});

@@ -10,6 +10,7 @@ type Mutation {
     updateActiveIssue(state: IssueState, name: String, stack: [String!]): Issue
     resetActiveIssue: Issue
 
+    updateUserEstimate(value: String): Issue
     createEstimateActiveIssue(value: String!): Issue
     deleteEstimateActiveIssue(id: ID!): Issue
 

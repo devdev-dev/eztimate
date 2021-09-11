@@ -22,14 +22,8 @@ mutation UpdateActiveIssue($state: IssueState, $name: String, $stack: [String!])
     }
 }
 
-mutation CreateEstimateActiveIssue($value: String!) {
-    createEstimateActiveIssue(value: $value) {
-        ...IssueFields
-    }
-}
-
-mutation DeleteEstimateActiveIssue($id: ID!) {
-    deleteEstimateActiveIssue(id: $id) {
+mutation UpdateUserEstimate($value: String) {
+    updateUserEstimate(value: $value) {
         ...IssueFields
     }
 }

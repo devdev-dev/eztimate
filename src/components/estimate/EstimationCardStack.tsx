@@ -1,40 +1,45 @@
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@mui/material';
 import * as React from 'react';
-import { useActiveIssueQuery, useActiveUserQuery, useCreateEstimateActiveIssueMutation, useDeleteEstimateActiveIssueMutation } from '../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { useActiveIssueQuery, useActiveUserQuery, useUpdateUserEstimateMutation } from '../../generated/graphql';
 
 const EstimationCardStack = () => {
   const theme = useTheme();
+  const [userEstimate, setUserEstimate] = useState<string | undefined>(undefined);
 
-  const { data: userData } = useActiveUserQuery();
   const { data, loading } = useActiveIssueQuery();
-  const [createEstimateMutation] = useCreateEstimateActiveIssueMutation();
-  const [deleteEstimateMutation] = useDeleteEstimateActiveIssueMutation();
+  const { data: userData } = useActiveUserQuery();
 
-  const userEstimate = data?.getActiveIssue?.estimates.find(e => e.user._id === userData?.getActiveUser?._id);
+  useEffect(() => {
+    setUserEstimate(data?.getActiveIssue?.estimates.find(e => e.user._id === userData?.getActiveUser?._id)?.value);
+  }, [data, userData, setUserEstimate]);
+
+  const [updateEstimate] = useUpdateUserEstimateMutation();
+
   return (
     <>
       {!loading && data && (
         <div className={styles.stack(theme)}>
-          {data.getActiveIssue?.stack.map((card, index) => {
-            const isEstimatedCardValue = userEstimate?.value === card;
+          {data.getActiveIssue?.stack.map((value, index) => {
+            const isEstimatedCardValue = userEstimate === value;
             return (
               <div
                 key={index}
                 className={isEstimatedCardValue ? 'selected' : ''}
                 onClick={() => {
                   if (userEstimate && isEstimatedCardValue) {
-                    deleteEstimateMutation({ variables: { id: userEstimate._id! } });
+                    updateEstimate({ variables: { value: null } });
+                    setUserEstimate(undefined);
                   } else {
-                    createEstimateMutation({
-                      variables: {
-                        value: card
-                      }
+                    updateEstimate({
+                      variables: { value }
                     });
+                    setUserEstimate(value);
                   }
                 }}
               >
-                <h3>{card}</h3>
+                <h3>{value}</h3>
               </div>
             );
           })}
