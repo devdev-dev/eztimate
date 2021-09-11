@@ -1,16 +1,23 @@
-import { Container, DialogContent, DialogTitle, Paper, Slide, TextField } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { TransitionProps } from '@material-ui/core/transitions';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CloseIcon from '@mui/icons-material/Close';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+  AppBar,
+  Button,
+  Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Slide,
+  TextField,
+  Typography
+} from '@mui/material';
+import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
@@ -72,7 +79,7 @@ export default function EstimationSettingsDialogButton() {
         }}
         TransitionComponent={Transition}
       >
-        <AppBar position="sticky" color="transparent" variant="outlined" sx={{ bgcolor: 'white' }}>
+        <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
           <StyledToolbar>
             <IconButton
               edge="start"

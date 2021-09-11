@@ -1,8 +1,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline, ThemeProvider as MUIThemeProvider } from '@mui/material';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';

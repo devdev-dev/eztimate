@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { Theme, useTheme } from '@material-ui/system';
+import { Theme, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useActiveIssueQuery, useActiveUserQuery, useCreateEstimateActiveIssueMutation, useDeleteEstimateActiveIssueMutation } from '../../generated/graphql';
 

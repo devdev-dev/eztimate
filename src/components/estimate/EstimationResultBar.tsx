@@ -1,6 +1,5 @@
-import { Avatar, AvatarGroup, BoxProps, lighten, styled } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from '@mui/icons-material/Person';
+import { Avatar, AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';

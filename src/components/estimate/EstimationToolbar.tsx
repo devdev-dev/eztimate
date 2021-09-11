@@ -1,11 +1,9 @@
-import { Avatar, AvatarGroup, Box, Divider, InputBase, Paper } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import PersonIcon from '@material-ui/icons/Person';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ReplayIcon from '@material-ui/icons/Replay';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ReplayIcon from '@mui/icons-material/Replay';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Avatar, AvatarGroup, Box, Divider, IconButton, InputBase, Paper, Toolbar } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';

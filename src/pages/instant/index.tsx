@@ -1,8 +1,8 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
-import { AppBar, Box, Container, IconButton, Paper, styled, Toolbar, Typography } from '@material-ui/core';
-import BoltIcon from '@material-ui/icons/Bolt';
-import HomeIcon from '@material-ui/icons/Home';
+import BoltIcon from '@mui/icons-material/Bolt';
+import HomeIcon from '@mui/icons-material/Home';
+import { AppBar, Box, Container, IconButton, Paper, styled, Toolbar, Typography } from '@mui/material';
 import Cookies from 'cookies';
 import { GetServerSideProps, NextPage } from 'next';
 import absoluteUrl from 'next-absolute-url/index';
@@ -54,7 +54,7 @@ const Instant: NextPage = () => {
         width: '100%'
       }}
     >
-      <AppBar position="relative" color="transparent" variant="outlined" sx={{ bgcolor: 'white' }}>
+      <AppBar position="relative" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
         <StyledToolbar>
           <Box>
             <IconButton color="inherit">
