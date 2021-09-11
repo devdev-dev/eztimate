@@ -41,7 +41,7 @@ export const mutationResolvers: MutationResolvers = {
         { _id: issueId },
         {
           $set: {
-            name: 'New Issue',
+            name: '',
             state: IssueState.COLLECT,
             estimates: []
           },
