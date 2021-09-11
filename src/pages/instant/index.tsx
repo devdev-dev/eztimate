@@ -11,6 +11,7 @@ import { AppContextProvider } from '../../components/AppContext';
 import EstimationCardStack from '../../components/estimate/EstimationCardStack';
 import EstimationResults from '../../components/estimate/EstimationResults';
 import EstimationToolbar from '../../components/estimate/EstimationToolbar';
+import NotificationSnackbar from '../../components/NotificationSnackbar';
 import { CookieName } from '../../cookies';
 import {
   CreateActiveIssueDocument,
@@ -46,6 +47,7 @@ export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 const Instant: NextPage = () => {
   const { data, loading } = useActiveIssueQuery();
+
   return (
     <Box
       sx={{
@@ -68,19 +70,19 @@ const Instant: NextPage = () => {
       </AppBar>
 
       <Container maxWidth="lg">
-        <Typography variant={'h4'} sx={{ py: 4 }}>
-          Quick Estimate
-        </Typography>
-
         <PusherProvider {...config}>
           {!loading && data && data.getActiveIssue && (
             <AppContextProvider issueId={data.getActiveIssue?._id}>
               <>
+                <Typography variant={'h4'} sx={{ py: 4 }}>
+                  Quick Estimate
+                </Typography>
                 <EstimationToolbar />
                 <Paper sx={{ mt: 2, p: 2 }}>
                   <EstimationResults />
                   <EstimationCardStack />
                 </Paper>
+                <NotificationSnackbar />
               </>
             </AppContextProvider>
           )}

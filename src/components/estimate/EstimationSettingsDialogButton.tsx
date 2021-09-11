@@ -68,6 +68,7 @@ export default function EstimationSettingsDialogButton() {
         onClick={() => {
           setOpen(true);
         }}
+        sx={{ mr: 1 }}
       >
         <MoreVertIcon />
       </IconButton>

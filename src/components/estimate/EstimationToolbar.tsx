@@ -1,3 +1,4 @@
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -7,6 +8,7 @@ import { Avatar, AvatarGroup, Box, Divider, IconButton, InputBase, Paper, Toolba
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
+import { useNotificationTrigger } from '../../pusher';
 import { useIssueId, usePusherChannel } from '../AppContext';
 import EstimationSettingsDialogButton from './EstimationSettingsDialogButton';
 
@@ -17,6 +19,8 @@ export default function EstimationToolbar() {
   const { data, loading, error } = useActiveIssueQuery();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
+
+  const triggerNotification = useNotificationTrigger();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [issueName, setIssueName] = useState(data?.getActiveIssue?.name);
@@ -41,7 +45,7 @@ export default function EstimationToolbar() {
   return (
     <Toolbar disableGutters>
       <EstimationSettingsDialogButton />
-      <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
+      <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '420px' }}>
         <InputBase
           inputRef={inputRef}
           autoComplete="off"
@@ -60,9 +64,18 @@ export default function EstimationToolbar() {
           placeholder="Issue under Estimation"
           value={issueName}
         />
-        <IconButton type="submit" sx={{ p: '10px' }} onClick={toggleIssueState}>
-          {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
+
+        <IconButton
+          onClick={() =>
+            triggerNotification({
+              message: 'Active Estimation in Progress.',
+              systemNotification: true
+            })
+          }
+        >
+          <NotificationsIcon />
         </IconButton>
+        <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
           color="primary"
