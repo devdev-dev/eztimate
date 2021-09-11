@@ -1,86 +1,69 @@
-import { Avatar, AvatarGroup, lighten } from '@material-ui/core';
+import { Avatar, AvatarGroup, BoxProps, lighten, styled } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PersonIcon from '@material-ui/icons/Person';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { usePusherChannel } from '../AppContext';
+import theme from '../../theme';
 
 export interface EstimationResultBarProps {
   estimates: Array<{ value: string; user: { _id: string } }>;
+  hideResults: boolean;
 }
 
-export function EstimationResultBar({ estimates }: EstimationResultBarProps) {
-  const channel = usePusherChannel();
+export function EstimationResultBar({ estimates, hideResults }: EstimationResultBarProps) {
+  const noData = estimates?.length > 0;
+  const showData = estimates && estimates.length > 0 && !hideResults;
 
   const results = useMemo(() => {
-    if (estimates) {
+    if (showData) {
       return estimates.reduce<Record<string, string[]>>(function (acc, currentValue) {
         (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user._id);
         return acc;
       }, {});
     }
-  }, [estimates]);
+
+    return { '\u00A0': [''] };
+  }, [estimates, hideResults]);
 
   const maxWeight = max(values(results).map(v => v.length)) ?? 0;
+  const barColor = showData ? theme.palette.primary.main : theme.palette.grey['400'];
 
   return (
     <>
-      {!results || (keys(results).length === 0 && <EstimationResultBarHidden estimates={[]} />)}
-      {results &&
-        keys(results).map((value, index) => {
-          const users = results[value];
-          const weight = users.length;
+      {keys(results).map((value, index) => {
+        const users = results[value];
+        const weight = users.length;
 
-          return (
-            <Box key={index} sx={{ flexGrow: weight }}>
-              <Box
-                sx={{
-                  flexGrow: weight,
-                  bgcolor: lighten('#334080', 1 - weight / maxWeight),
-                  color: 'white',
-                  textAlign: 'center'
-                }}
-              >
-                {value}
-              </Box>
-              <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-                <AvatarGroup>
-                  {users.map(userId => (
-                    <Avatar key={userId}>
-                      <PersonIcon />
-                    </Avatar>
-                  ))}
-                </AvatarGroup>
-              </Box>
-            </Box>
-          );
-        })}
+        return (
+          <Box key={index} sx={{ flexGrow: weight }}>
+            <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
+              {value}
+            </StyledResultBar>
+            <AvatarGroup sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
+              {users.map(userId => (
+                <Avatar key={userId} sx={{}}>
+                  <PersonIcon />
+                </Avatar>
+              ))}
+            </AvatarGroup>
+          </Box>
+        );
+      })}
     </>
   );
 }
 
-export function EstimationResultBarHidden({ estimates }: EstimationResultBarProps) {
-  const channel = usePusherChannel();
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Box
-        sx={{
-          width: '100%',
-          bgcolor: '#BBB'
-        }}
-      >
-        &nbsp;
-      </Box>
-      <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-        <AvatarGroup>
-          {estimates.map(e => (
-            <Avatar key={e.user._id}>
-              <PersonIcon />
-            </Avatar>
-          ))}
-        </AvatarGroup>
-      </Box>
-    </Box>
-  );
+interface StyledResultBarProps {
+  weight: number;
+  maxWeight: number;
+  disabled: boolean;
 }
+
+const StyledResultBar = styled((props: StyledResultBarProps & BoxProps) => <Box {...props} />)(({ theme, weight, maxWeight, disabled }) => ({
+  flexGrow: weight,
+  backgroundColor: lighten(disabled ? theme.palette.grey['400'] : theme.palette.primary.main, 1 - weight / maxWeight),
+  color: 'white',
+  textAlign: 'center',
+  marginInline: theme.spacing(1)
+}));

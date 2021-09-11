@@ -1,17 +1,17 @@
 import { css } from '@emotion/css';
 import * as React from 'react';
 import { IssueState, useActiveIssueQuery } from '../../generated/graphql';
-import { EstimationResultBar, EstimationResultBarHidden } from './EstimationResultBar';
+import { EstimationResultBar } from './EstimationResultBar';
 
 export default function EstimationResults() {
   const { data, loading, error } = useActiveIssueQuery();
 
   return (
     <div className={styles.bar}>
-      {data && data.getActiveIssue && data.getActiveIssue.state === IssueState.COLLECT && (
-        <EstimationResultBarHidden estimates={data.getActiveIssue.estimates} />
-      )}
-      {data && data.getActiveIssue && data.getActiveIssue.state === IssueState.DISCUSS && <EstimationResultBar estimates={data.getActiveIssue.estimates} />}
+      <EstimationResultBar
+        estimates={data?.getActiveIssue?.estimates ?? []}
+        hideResults={(data && data?.getActiveIssue && data?.getActiveIssue?.state === IssueState.COLLECT) ?? true}
+      />
     </div>
   );
 }
