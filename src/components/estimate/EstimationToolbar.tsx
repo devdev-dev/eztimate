@@ -14,63 +14,74 @@ export default function EstimationToolbar() {
   const channel = usePusherChannel();
   const issueId = useIssueId();
 
-  const { data, loading, error } = useActiveIssueQuery();
+  const {data, loading, error} = useActiveIssueQuery();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
-
   const [issueName, setIssueName] = useState(data?.getActiveIssue?.name);
   useEffect(() => {
     setIssueName(data?.getActiveIssue?.name);
   }, [data]);
 
-  return (
-    <Toolbar disableGutters>
-      <EstimationSettingsDialogButton />
-      <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-        <InputBase
-          autoComplete="off"
-          onChange={e => {
-            setIssueName(e.target.value);
-          }}
-          onBlur={e => updateActiveIssue({ variables: { name: e.target.value } })}
-          onKeyDown={e => {
-            if (e.key === 'Escape') setIssueName(data?.getActiveIssue?.name);
-            if (e.key === 'Enter') updateActiveIssue({ variables: { name: issueName } });
-          }}
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Rename Issue"
-          value={issueName}
-        />
-        <IconButton
-          type="submit"
-          sx={{ p: '10px' }}
-          onClick={() =>
-            updateActiveIssue({ variables: { state: data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT } })
+  const toggleIssueState = () => {
+    const newState = data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT;
+    if (data && data.getActiveIssue)
+      updateActiveIssue({
+        variables: {state: newState},
+        optimisticResponse: {
+          updateActiveIssue: {
+            ...data!.getActiveIssue,
+            state: newState
           }
-        >
-          {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
-        </IconButton>
-        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <IconButton color="primary" sx={{ p: '10px' }} onClick={() => resetActiveIssue()}>
-          <ReplayIcon />
-        </IconButton>
-      </Paper>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
-        <AvatarGroup max={6}>
-          {channel &&
+        }
+      });
+  }
+
+  return (
+      <Toolbar disableGutters>
+        <EstimationSettingsDialogButton/>
+        <Paper sx={{p: '2px 4px', display: 'flex', alignItems: 'center'}}>
+          <InputBase
+              autoComplete="off"
+              onChange={e => {
+                setIssueName(e.target.value);
+              }}
+              onBlur={e => updateActiveIssue({variables: {name: e.target.value}})}
+              onKeyDown={e => {
+                if (e.key === 'Escape') setIssueName(data?.getActiveIssue?.name);
+                if (e.key === 'Enter') updateActiveIssue({variables: {name: issueName}});
+              }}
+              sx={{ml: 1, flex: 1}}
+              placeholder="Rename Issue"
+              value={issueName}
+          />
+          <IconButton
+              type="submit"
+              sx={{p: '10px'}}
+              onClick={toggleIssueState}
+          >
+            {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+          </IconButton>
+          <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+          <IconButton color="primary" sx={{p: '10px'}} onClick={() => resetActiveIssue()}>
+            <ReplayIcon/>
+          </IconButton>
+        </Paper>
+        <Box sx={{display: 'flex', justifyContent: 'flex-end', flexGrow: 1}}>
+          <AvatarGroup max={6}>
+            {channel &&
             Object.keys(channel?.members?.members).map(memberId => (
-              <Avatar key={memberId}>
-                <PersonIcon />
-              </Avatar>
+                <Avatar key={memberId}>
+                  <PersonIcon/>
+                </Avatar>
             ))}
-        </AvatarGroup>
-      </Box>
-      <IconButton onClick={() => handleCopyID(issueId)}>
-        <Avatar>
-          <PersonAddIcon />
-        </Avatar>
-      </IconButton>
-    </Toolbar>
+          </AvatarGroup>
+        </Box>
+        <IconButton onClick={() => handleCopyID(issueId)}>
+          <Avatar>
+            <PersonAddIcon/>
+          </Avatar>
+        </IconButton>
+      </Toolbar>
   );
 }
 
