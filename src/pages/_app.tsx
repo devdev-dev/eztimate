@@ -2,11 +2,20 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { CssBaseline, ThemeProvider as MUIThemeProvider } from '@mui/material';
+import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import theme from '../theme';
+
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 const cache = createCache({ key: 'css', prepend: true });
 cache.compat = true;
@@ -17,8 +26,10 @@ export const apolloClient = new ApolloClient({
   connectToDevTools: true
 });
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useServiceWorker();
+
+  const getLayout = Component.getLayout ?? (page => page);
 
   return (
     <CacheProvider value={cache}>
@@ -29,10 +40,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
       <ApolloProvider client={apolloClient}>
         <MUIThemeProvider theme={theme}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeProvider>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>{getLayout(<Component {...pageProps} />)}</ThemeProvider>
         </MUIThemeProvider>
       </ApolloProvider>
     </CacheProvider>

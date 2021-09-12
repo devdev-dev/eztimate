@@ -1,27 +1,10 @@
-import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {
-  AppBar,
-  Button,
-  Container,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Slide,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Container, Dialog, DialogContent, Divider, IconButton, List, ListItem, ListItemText, Paper, Slide, TextField, Typography } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
-import { StyledToolbar } from '../../pages/instant';
+import MyAppSettingsLayout from '../layout/MyAppSettingsLayout';
 
 const CUSTOM_STACK_ID = 'customstack';
 
@@ -53,6 +36,10 @@ export default function EstimationSettingsDialogButton() {
     } else {
       updateActiveIssue({ variables: { stack: customStack } });
     }
+    handleClose();
+  };
+
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -80,49 +67,33 @@ export default function EstimationSettingsDialogButton() {
         }}
         TransitionComponent={Transition}
       >
-        <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
-          <StyledToolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-            <DialogTitle sx={{ ml: 2, flex: 1 }}>Estimation Settings</DialogTitle>
-            <Button autoFocus color="inherit" onClick={handleSave}>
-              save
-            </Button>
-          </StyledToolbar>
-        </AppBar>
-
-        <DialogContent sx={{ mb: 4 }} dividers>
-          <Container component={Paper} maxWidth="md" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-            <Typography component="h2" variant="h5">
-              Card Stack
-            </Typography>
-            <List>
-              {DEFAULT_CARD_STACKS.map(stack => (
-                <ListItem key={stack.id} button selected={selectedId === stack.id} onClick={() => handleStackSelect(stack.id, stack.values)}>
-                  <ListItemText primary={stack.name} secondary={stack.values.join(', ')} />
+        <MyAppSettingsLayout title="Estimation Settings" onClose={handleClose} onSave={handleSave}>
+          <DialogContent>
+            <Container component={Paper} maxWidth="md" sx={{ p: { xs: 2, md: 3 } }}>
+              <Typography component="h2" variant="h5">
+                Card Stack
+              </Typography>
+              <List>
+                {DEFAULT_CARD_STACKS.map(stack => (
+                  <ListItem key={stack.id} button selected={selectedId === stack.id} onClick={() => handleStackSelect(stack.id, stack.values)}>
+                    <ListItemText primary={stack.name} secondary={stack.values.join(', ')} />
+                  </ListItem>
+                ))}
+                <Divider />
+                <ListItem button selected={selectedId === CUSTOM_STACK_ID} onClick={() => handleStackSelect(CUSTOM_STACK_ID, customStack)}>
+                  <ListItemText primary="Custom Card Stack" secondary="Create your own card stack" />
+                  <TextField
+                    autoComplete="off"
+                    onChange={e => {
+                      setCustomStack(e.target.value.replaceAll(' ', '').split(','));
+                    }}
+                    value={customStack.join(', ')}
+                  />
                 </ListItem>
-              ))}
-              <Divider />
-              <ListItem button selected={selectedId === CUSTOM_STACK_ID} onClick={() => handleStackSelect(CUSTOM_STACK_ID, customStack)}>
-                <ListItemText primary="Custom Card Stack" secondary="Create your own card stack" />
-                <TextField
-                  autoComplete="off"
-                  onChange={e => {
-                    setCustomStack(e.target.value.replaceAll(' ', '').split(','));
-                  }}
-                  value={customStack.join(', ')}
-                />
-              </ListItem>
-            </List>
-          </Container>
-        </DialogContent>
+              </List>
+            </Container>
+          </DialogContent>
+        </MyAppSettingsLayout>
       </Dialog>
     </div>
   );
