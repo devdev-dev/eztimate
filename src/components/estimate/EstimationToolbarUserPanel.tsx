@@ -10,29 +10,27 @@ export default function EstimationToolbarUserPanel() {
   const channel = usePusherChannel();
   const issueId = useIssueId();
 
-  const {data, loading, error} = useActiveIssueQuery();
+  const { data, loading, error } = useActiveIssueQuery();
 
   return (
-      <>
-        <Box sx={{display: 'flex', justifyContent: 'flex-end', flexGrow: 1}}>
-          <AvatarGroup>
-            {channel &&
-            Object.keys(channel?.members?.members).map(memberId => {
-              const badge = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId) ? 'ONLINE_READY' : 'ONLINE';
-              return (
-                  <MyAppAvatar key={memberId} onlineBadge={badge}>
-                    <PersonIcon/>
-                  </MyAppAvatar>
-              );
-            })}
-          </AvatarGroup>
-        </Box>
-        <IconButton onClick={() => handleCopyID(issueId)}>
-          <MyAppAvatar>
-            <PersonAddIcon/>
-          </MyAppAvatar>
-        </IconButton>
-      </>
+    <Box sx={{ width: '100%', m: 1, display: 'flex', flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
+      <AvatarGroup>
+        {channel &&
+          Object.keys(channel?.members?.members).map(memberId => {
+            const badge = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId) ? 'ONLINE_READY' : 'ONLINE';
+            return (
+              <MyAppAvatar key={memberId} onlineBadge={badge}>
+                <PersonIcon />
+              </MyAppAvatar>
+            );
+          })}
+      </AvatarGroup>
+      <IconButton onClick={() => handleCopyID(issueId)}>
+        <MyAppAvatar>
+          <PersonAddIcon />
+        </MyAppAvatar>
+      </IconButton>
+    </Box>
   );
 }
 

@@ -37,43 +37,41 @@ export default function EstimationToolbarIssueControl() {
   };
 
   return (
-    <>
-      <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '420px' }}>
-        <InputBase
-          inputRef={inputRef}
-          autoComplete="off"
-          onChange={e => {
-            setIssueName(e.target.value);
-          }}
-          onBlur={e => {
-            if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { name: issueName } });
-          }}
-          onKeyDown={e => {
-            if (e.key === 'Escape' || e.key === 'Enter') {
-              inputRef.current?.blur();
-            }
-          }}
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Issue under Estimation"
-          value={issueName}
-        />
+    <Paper sx={{ p: 1, display: 'flex', alignItems: 'center', width: '100%' }}>
+      <InputBase
+        inputRef={inputRef}
+        autoComplete="off"
+        onChange={e => {
+          setIssueName(e.target.value);
+        }}
+        onBlur={e => {
+          if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { name: issueName } });
+        }}
+        onKeyDown={e => {
+          if (e.key === 'Escape' || e.key === 'Enter') {
+            inputRef.current?.blur();
+          }
+        }}
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Issue under Estimation"
+        value={issueName}
+      />
 
-        <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
-        <IssueMenu />
+      <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
+      <IssueMenu />
 
-        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
-        <IconButton
-          color="primary"
-          sx={{ p: '10px' }}
-          onClick={() => {
-            resetActiveIssue().then(() => inputRef.current?.focus());
-          }}
-        >
-          <ReplayIcon />
-        </IconButton>
-      </Paper>
-    </>
+      <IconButton
+        color="primary"
+        sx={{ p: '10px' }}
+        onClick={() => {
+          resetActiveIssue().then(() => inputRef.current?.focus());
+        }}
+      >
+        <ReplayIcon />
+      </IconButton>
+    </Paper>
   );
 }
 
