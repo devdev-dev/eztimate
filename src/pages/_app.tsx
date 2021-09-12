@@ -5,6 +5,7 @@ import { CssBaseline, ThemeProvider as MUIThemeProvider } from '@mui/material';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
+import { useEffect } from 'react';
 import theme from '../theme';
 
 const cache = createCache({ key: 'css', prepend: true });
@@ -17,6 +18,8 @@ export const apolloClient = new ApolloClient({
 });
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  useServiceWorker();
+
   return (
     <CacheProvider value={cache}>
       <Head>
@@ -34,4 +37,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </ApolloProvider>
     </CacheProvider>
   );
+}
+
+function useServiceWorker() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/serviceworker.js').then(
+          function (registration) {
+            console.log('Service Worker registration successful with scope: ', registration.scope);
+          },
+          function (err) {
+            console.log('Service Worker registration failed: ', err);
+          }
+        );
+      });
+    }
+  }, []);
 }
