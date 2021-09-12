@@ -23,7 +23,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <CacheProvider value={cache}>
       <Head>
-        <title>My page</title>
+        <title>Eztimate App</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
 

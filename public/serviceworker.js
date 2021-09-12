@@ -1,5 +1,5 @@
 self.addEventListener('install', function (event) {
-  console.log('Hello world from the Service Worker 🤙');
+  console.log('Eztimate.App Service Worker successfully installed 🤙');
 });
 
 self.addEventListener(
@@ -7,10 +7,8 @@ self.addEventListener(
   function (event) {
     event.notification.close();
 
-    console.log(event);
-
     if (event.action === 'estimate-action') {
-      clients.openWindow('www.google.de');
+      clients.openWindow('/instant');
     }
   },
   false

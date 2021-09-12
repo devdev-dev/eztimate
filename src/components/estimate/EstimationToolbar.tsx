@@ -1,4 +1,4 @@
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -73,7 +73,7 @@ export default function EstimationToolbar() {
             })
           }
         >
-          <NotificationsIcon />
+          <CampaignIcon />
         </IconButton>
         <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

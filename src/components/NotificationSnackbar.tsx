@@ -106,7 +106,11 @@ function showDesktopNotification(message: string) {
           ]
         });
       } else {
-        console.error('Browser Notification failed!');
+        console.error('Service Worker Notitfications not available. Fallback to client notifications.');
+        new Notification('Instant Estimation', {
+          body: message,
+          icon: 'https://images.pexels.com/photos/853168/pexels-photo-853168.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+        });
       }
     });
   }
