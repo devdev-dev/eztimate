@@ -20,14 +20,12 @@ export default function MyAppLayout({ title, children }: MyAppLayoutProps) {
     >
       <AppBar position="relative" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
         <StyledToolbar>
-          <Box>
-            <IconButton color="inherit">
-              <HomeIcon />
-            </IconButton>
-            <IconButton color="inherit">
-              <BoltIcon />
-            </IconButton>
-          </Box>
+          <IconButton color="inherit">
+            <HomeIcon />
+          </IconButton>
+          <IconButton color="inherit">
+            <BoltIcon />
+          </IconButton>
         </StyledToolbar>
       </AppBar>
 
