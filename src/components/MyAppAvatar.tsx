@@ -48,7 +48,7 @@ const StyledBadge = styled(Badge)(() => ({
       width: '100%',
       height: '100%',
       borderRadius: '50%',
-      animation: 'ripple 2s 1 ease-in-out',
+      animation: 'ripple 2s 1 ease',
       border: '1px solid currentColor',
       content: '""',
       transform: 'scale(0.6)'
@@ -59,7 +59,7 @@ const StyledBadge = styled(Badge)(() => ({
       opacity: 0.8
     },
     '100%': {
-      transform: 'scale(2)',
+      transform: 'scale(2.5)',
       opacity: 0
     }
   }

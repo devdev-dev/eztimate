@@ -17,9 +17,10 @@ export default function EstimationToolbarUserPanel() {
       <AvatarGroup>
         {channel &&
           Object.keys(channel?.members?.members).map(memberId => {
-            const badge = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId) ? 'ONLINE_READY' : 'ONLINE';
+            const userEstimate = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId);
+            const badge = userEstimate ? 'ONLINE_READY' : 'ONLINE';
             return (
-              <MyAppAvatar key={memberId} onlineBadge={badge}>
+              <MyAppAvatar key={memberId + userEstimate?.value} onlineBadge={badge}>
                 <PersonIcon />
               </MyAppAvatar>
             );
