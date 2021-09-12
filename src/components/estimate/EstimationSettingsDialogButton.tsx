@@ -1,4 +1,4 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Container, Dialog, DialogContent, Divider, IconButton, List, ListItem, ListItemText, Paper, Slide, TextField, Typography } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
@@ -57,7 +57,7 @@ export default function EstimationSettingsDialogButton() {
         }}
         sx={{ mr: 1 }}
       >
-        <MoreVertIcon />
+        <SettingsIcon />
       </IconButton>
       <Dialog
         fullScreen
