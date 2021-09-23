@@ -1,6 +1,6 @@
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { IconButton } from '@mui/material';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { IconButton, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
@@ -20,12 +20,17 @@ export default function ActiveUserPanel() {
     <>
       <ActiveUserSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Box>Anonymous Anonymous</Box>
+        <Box>
+          <Typography variant="subtitle2" noWrap>
+            Anonymous
+          </Typography>
+          <Typography variant="caption">Login / Register</Typography>
+        </Box>
         <Stack direction="row" spacing={2}>
           <IconButton onClick={handleOpenSettings}>
-            <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<ArrowDropDownIcon />}>
+            <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<SettingsIcon fontSize="small" />}>
               <Avatar>
-                <PersonAddIcon />
+                <SentimentVerySatisfiedIcon />
               </Avatar>
             </MenuBadge>
           </IconButton>
