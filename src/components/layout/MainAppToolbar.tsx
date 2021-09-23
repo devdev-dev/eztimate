@@ -4,9 +4,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import { Grid, IconButton, styled, Toolbar } from '@mui/material';
 import Link from 'next/link';
 import * as React from 'react';
-import ActiveUser from './ActiveUser';
+import ActiveUserPanel from './activeuser/ActiveUserPanel';
 
-export default function MyAppToolbar() {
+export default function MainAppToolbar() {
   return (
     <StyledToolbar>
       <Grid container>
@@ -26,7 +26,7 @@ export default function MyAppToolbar() {
           </Link>
         </Grid>
         <Grid item xs={3} className={styles.activeUser}>
-          <ActiveUser />
+          <ActiveUserPanel />
         </Grid>
       </Grid>
     </StyledToolbar>

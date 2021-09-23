@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import * as React from 'react';
 import { ReactElement } from 'react';
-import MyAppLayout from '../components/layout/MyAppLayout';
+import MainAppLayout from '../components/layout/MainAppLayout';
 
 const IndexPage = () => {
   return (
@@ -29,7 +29,7 @@ const IndexPage = () => {
 };
 
 IndexPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyAppLayout title="Eztimate App">{page}</MyAppLayout>;
+  return <MainAppLayout title="Eztimate App">{page}</MainAppLayout>;
 };
 
 export default IndexPage;

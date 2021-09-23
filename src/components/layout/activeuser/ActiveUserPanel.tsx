@@ -10,7 +10,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import ActiveUserSettingsDialog from './ActiveUserSettingsDialog';
 
-export default function ActiveUser() {
+export default function ActiveUserPanel() {
   const [openSettings, setOpenSettings] = useState(false);
   const handleOpenSettings = () => {
     setOpenSettings(true);

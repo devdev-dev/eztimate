@@ -1,13 +1,13 @@
 import { AppBar, Box, Container, Typography } from '@mui/material';
 import * as React from 'react';
-import MyAppToolbar from './toolbar/MyAppToolbar';
+import MainAppToolbar from './MainAppToolbar';
 
 export interface MyAppLayoutProps {
   title: string;
   children: React.ReactElement;
 }
 
-export default function MyAppLayout({ title, children }: MyAppLayoutProps) {
+export default function MainAppLayout({ title, children }: MyAppLayoutProps) {
   return (
     <Box
       sx={{
@@ -17,7 +17,7 @@ export default function MyAppLayout({ title, children }: MyAppLayoutProps) {
       }}
     >
       <AppBar position="relative" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
-        <MyAppToolbar />
+        <MainAppToolbar />
       </AppBar>
 
       <Container maxWidth="lg">

@@ -10,7 +10,7 @@ import { AppContextProvider } from '../../components/AppContext';
 import EstimationCardStack from '../../components/estimate/EstimationCardStack';
 import EstimationResults from '../../components/estimate/EstimationResults';
 import EstimationToolbar from '../../components/estimate/EstimationToolbar';
-import MyAppLayout from '../../components/layout/MyAppLayout';
+import MainAppLayout from '../../components/layout/MainAppLayout';
 import NotificationSnackbar from '../../components/NotificationSnackbar';
 import { CookieName } from '../../cookies';
 import {
@@ -56,7 +56,7 @@ const InstantPage = () => {
 };
 
 InstantPage.getLayout = function getLayout(page: ReactElement) {
-  return <MyAppLayout title="Quick Estimate">{page}</MyAppLayout>;
+  return <MainAppLayout title="Quick Estimate">{page}</MainAppLayout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req, res }) => {
