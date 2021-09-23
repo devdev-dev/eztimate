@@ -9,7 +9,7 @@ export interface MyAppLayoutProps {
   children: React.ReactElement;
 }
 
-export default function MyAppSettingsLayout({ title, onClose, onSave, children }: MyAppLayoutProps) {
+export default function SettingsLayout({ title, onClose, onSave, children }: MyAppLayoutProps) {
   return (
     <Box
       sx={{

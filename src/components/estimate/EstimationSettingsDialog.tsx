@@ -3,7 +3,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
-import MyAppSettingsLayout from '../layout/MyAppSettingsLayout';
+import SettingsLayout from '../layout/SettingsLayout';
 
 const CUSTOM_STACK_ID = 'customstack';
 
@@ -12,7 +12,7 @@ export interface EstimationSettingsDialogProps {
   onClose: () => void;
 }
 
-export default function EstimationSettingsDialogButton({ open, onClose }: EstimationSettingsDialogProps) {
+export default function EstimationSettingsDialog({ open, onClose }: EstimationSettingsDialogProps) {
   const { data, loading, error } = useActiveIssueQuery();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
 
@@ -50,7 +50,7 @@ export default function EstimationSettingsDialogButton({ open, onClose }: Estima
       }}
       TransitionComponent={Transition}
     >
-      <MyAppSettingsLayout
+      <SettingsLayout
         title="Estimation Settings"
         onClose={() => {
           onClose();
@@ -82,7 +82,7 @@ export default function EstimationSettingsDialogButton({ open, onClose }: Estima
             </List>
           </Container>
         </DialogContent>
-      </MyAppSettingsLayout>
+      </SettingsLayout>
     </Dialog>
   );
 }

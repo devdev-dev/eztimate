@@ -7,21 +7,31 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import * as React from 'react';
+import { useState } from 'react';
+import ActiveUserSettingsDialog from './ActiveUserSettingsDialog';
 
 export default function ActiveUser() {
+  const [openSettings, setOpenSettings] = useState(false);
+  const handleOpenSettings = () => {
+    setOpenSettings(true);
+  };
+
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-      <Box>Anonymous Anonymous</Box>
-      <Stack direction="row" spacing={2}>
-        <IconButton onClick={() => {}}>
-          <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<ArrowDropDownIcon />}>
-            <Avatar>
-              <PersonAddIcon />
-            </Avatar>
-          </MenuBadge>
-        </IconButton>
-      </Stack>
-    </Box>
+    <>
+      <ActiveUserSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <Box>Anonymous Anonymous</Box>
+        <Stack direction="row" spacing={2}>
+          <IconButton onClick={handleOpenSettings}>
+            <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<ArrowDropDownIcon />}>
+              <Avatar>
+                <PersonAddIcon />
+              </Avatar>
+            </MenuBadge>
+          </IconButton>
+        </Stack>
+      </Box>
+    </>
   );
 }
 

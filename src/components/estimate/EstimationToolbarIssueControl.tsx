@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import { useNotificationTrigger } from '../../pusher';
-import EstimationSettingsDialogButton from './EstimationSettingsDialogButton';
+import EstimationSettingsDialog from './EstimationSettingsDialog';
 
 export default function EstimationToolbarIssueControl() {
   const { data, loading, error } = useActiveIssueQuery();
@@ -111,7 +111,7 @@ const IssueMenu = () => {
 
   return (
     <>
-      <EstimationSettingsDialogButton open={openSettings} onClose={() => setOpenSettings(false)} />
+      <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
       <IconButton onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
