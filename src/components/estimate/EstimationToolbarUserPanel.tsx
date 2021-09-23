@@ -4,7 +4,7 @@ import { AvatarGroup, Box, IconButton } from '@mui/material';
 import * as React from 'react';
 import { useActiveIssueQuery } from '../../generated/graphql';
 import { useIssueId, usePusherChannel } from '../AppContext';
-import MyAppAvatar from '../MyAppAvatar';
+import OnlineBadgeAvatar from './OnlineBadgeAvatar';
 
 export default function EstimationToolbarUserPanel() {
   const channel = usePusherChannel();
@@ -20,16 +20,16 @@ export default function EstimationToolbarUserPanel() {
             const userEstimate = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId);
             const badge = userEstimate ? 'ONLINE_READY' : 'ONLINE';
             return (
-              <MyAppAvatar key={memberId + userEstimate?.value} onlineBadge={badge}>
+              <OnlineBadgeAvatar key={memberId + userEstimate?.value} onlineBadge={badge}>
                 <PersonIcon />
-              </MyAppAvatar>
+              </OnlineBadgeAvatar>
             );
           })}
       </AvatarGroup>
       <IconButton onClick={() => handleCopyID(issueId)}>
-        <MyAppAvatar>
+        <OnlineBadgeAvatar>
           <PersonAddIcon />
-        </MyAppAvatar>
+        </OnlineBadgeAvatar>
       </IconButton>
     </Box>
   );

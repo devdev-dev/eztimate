@@ -8,29 +8,28 @@ import * as React from 'react';
 
 export type BadgeType = 'ONLINE' | 'ONLINE_READY';
 
-export interface MyAppAvatarProps {
+export interface OnlineBadgeAvatarProps {
   onlineBadge?: BadgeType;
   children: React.ReactElement;
 }
 
-export default function MyAppAvatar({ children, onlineBadge }: MyAppAvatarProps) {
+export default function OnlineBadgeAvatar({ children, onlineBadge }: OnlineBadgeAvatarProps) {
+  let BadgeIcon = undefined;
+  switch (onlineBadge) {
+    case 'ONLINE':
+      BadgeIcon = <CircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
+      break;
+    case 'ONLINE_READY':
+      BadgeIcon = <CheckCircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
+      break;
+  }
+
   return (
     <Stack direction="row" spacing={2}>
       {onlineBadge ? (
-        <StyledBadge
-          key={onlineBadge}
-          overlap="circular"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          badgeContent={
-            onlineBadge === 'ONLINE' ? (
-              <CircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />
-            ) : (
-              <CheckCircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />
-            )
-          }
-        >
+        <OnlineBadge key={onlineBadge} overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={BadgeIcon}>
           <Avatar>{children}</Avatar>
-        </StyledBadge>
+        </OnlineBadge>
       ) : (
         <Avatar>{children}</Avatar>
       )}
@@ -38,7 +37,7 @@ export default function MyAppAvatar({ children, onlineBadge }: MyAppAvatarProps)
   );
 }
 
-const StyledBadge = styled(Badge)(() => ({
+const OnlineBadge = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
     zIndex: 400,
     color: '#44b700',

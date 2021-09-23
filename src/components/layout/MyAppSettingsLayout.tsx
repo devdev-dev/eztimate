@@ -1,6 +1,6 @@
 import { AppBar, Box, Button, Container, Typography } from '@mui/material';
 import * as React from 'react';
-import { StyledToolbar } from './MyAppToolbar';
+import { StyledToolbar } from './toolbar/MyAppToolbar';
 
 export interface MyAppLayoutProps {
   title: string;

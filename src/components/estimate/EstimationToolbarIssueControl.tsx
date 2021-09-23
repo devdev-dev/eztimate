@@ -37,7 +37,14 @@ export default function EstimationToolbarIssueControl() {
   };
 
   return (
-    <Paper sx={{ p: 1, display: 'flex', alignItems: 'center', width: '100%' }}>
+    <Paper
+      sx={{
+        p: 1,
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%'
+      }}
+    >
       <InputBase
         inputRef={inputRef}
         autoComplete="off"

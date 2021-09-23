@@ -1,6 +1,9 @@
 import Image from 'next/image';
+import * as React from 'react';
+import { ReactElement } from 'react';
+import MyAppLayout from '../components/layout/MyAppLayout';
 
-export default function Home() {
+const IndexPage = () => {
   return (
     <div>
       <main>
@@ -23,4 +26,10 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+};
+
+IndexPage.getLayout = function getLayout(page: ReactElement) {
+  return <MyAppLayout title="Eztimate App">{page}</MyAppLayout>;
+};
+
+export default IndexPage;
