@@ -1,0 +1,12 @@
+query ActiveUser {
+    getActiveUser {
+        ...UserFields
+    }
+}
+
+fragment UserFields on User {
+    _id
+    name
+    email
+    avatar
+}

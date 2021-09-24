@@ -1,4 +1,10 @@
-import { Estimate, EstimateResolvers, IssueResolvers, User } from '../../../generated/graphql';
+import { Estimate, EstimateResolvers, IssueResolvers, User, UserResolvers } from '../../../generated/graphql';
+
+export const usersResolvers: UserResolvers = {
+  name(user) {
+    return user.name && user.name.length > 0 ? user.name : 'Anonymous';
+  }
+};
 
 export const estimateResolvers: EstimateResolvers = {
   async user(estimate, args, { db, userId }) {

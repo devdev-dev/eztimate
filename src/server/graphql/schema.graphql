@@ -39,4 +39,6 @@ type Estimate {
 type User {
     _id: ID!
     name: String
+    email: String
+    avatar: String
 }

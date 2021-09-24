@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import * as React from 'react';
 import { useState } from 'react';
+import { useActiveUserQuery } from '../../../generated/graphql';
 import ActiveUserSettingsDialog from './ActiveUserSettingsDialog';
 
 export default function ActiveUserPanel() {
@@ -16,15 +17,16 @@ export default function ActiveUserPanel() {
     setOpenSettings(true);
   };
 
+  const { data, loading, error } = useActiveUserQuery();
+
   return (
     <>
       <ActiveUserSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <Box>
           <Typography variant="subtitle2" noWrap>
-            Anonymous
+            {data?.getActiveUser?.name}
           </Typography>
-          <Typography variant="caption">Login / Register</Typography>
         </Box>
         <Stack direction="row" spacing={2}>
           <IconButton onClick={handleOpenSettings}>

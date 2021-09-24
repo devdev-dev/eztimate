@@ -1,7 +1,7 @@
 import { Alert, Container, Dialog, DialogContent, Paper, Slide, Typography } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
-import { usePusherChannel } from '../../AppContext';
+import { useActiveUserQuery } from '../../../generated/graphql';
 import SettingsLayout from '../SettingsLayout';
 
 export interface ActiveUserSettingsDialog {
@@ -10,7 +10,7 @@ export interface ActiveUserSettingsDialog {
 }
 
 export default function ActiveUserSettingsDialog({ open, onClose }: ActiveUserSettingsDialog) {
-  const channel = usePusherChannel();
+  const { data, loading, error } = useActiveUserQuery();
 
   const handleSave = () => {};
 
@@ -32,15 +32,18 @@ export default function ActiveUserSettingsDialog({ open, onClose }: ActiveUserSe
       >
         <DialogContent>
           <Container component={Paper} maxWidth="md" sx={{ p: { xs: 2, md: 3 } }}>
-            <Alert severity="warning">
-              You are not registered and your user and all settings are stored as a cookie in your browser. Register now to access your account from everywhere.
-            </Alert>
-            <Typography component="h2" variant="h5">
+            <Typography component="h2" variant="h5" gutterBottom>
               User Info
             </Typography>
-            <Typography>User ID: XXX</Typography>
-            <Typography>User Name: Anonymous</Typography>
-            <Typography>AVATAR:</Typography>
+            {!data?.getActiveUser?.email && (
+              <Alert severity="warning">
+                You are not registered and your user and all settings are stored as a cookie in your browser. Register now to access your account from
+                everywhere.
+              </Alert>
+            )}
+            <Typography>User ID: {data?.getActiveUser?._id}</Typography>
+            <Typography>User Name: {data?.getActiveUser?.name}</Typography>
+            <Typography>AVATAR: {data?.getActiveUser?.avatar}</Typography>
           </Container>
         </DialogContent>
       </SettingsLayout>

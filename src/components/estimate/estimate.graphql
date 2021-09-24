@@ -58,12 +58,3 @@ mutation CreateUser {
         _id
     }
 }
-query ActiveUser {
-    getActiveUser {
-        ...UserFields
-    }
-}
-
-fragment UserFields on User {
-    _id
-}
