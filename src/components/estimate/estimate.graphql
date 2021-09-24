@@ -51,10 +51,3 @@ fragment EstimateFields on Estimate {
     }
     value
 }
-
-
-mutation CreateUser {
-    createUser {
-        _id
-    }
-}

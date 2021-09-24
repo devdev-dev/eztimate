@@ -102,9 +102,23 @@ export const mutationResolvers: MutationResolvers = {
       }
     }
   },
-  createUser: async (_, {}, { db }) => {
+  createActiveUser: async (_, {}, { db }) => {
     const { insertedId } = await db.collection('users').insertOne({});
     const user: User = { _id: insertedId.toHexString() };
     return user;
+  },
+  updateActiveUser: async (_, { avatar }, { db, userId }) => {
+    let update = {};
+    if (avatar !== undefined) update = { ...update, avatar };
+
+    const { value: user } = await db.collection('users').findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: update
+      },
+      { returnDocument: 'after' }
+    );
+
+    return user as User;
   }
 };

@@ -4,6 +4,12 @@ query ActiveUser {
     }
 }
 
+mutation CreateActiveUser {
+    createActiveUser {
+        _id
+    }
+}
+
 fragment UserFields on User {
     _id
     name

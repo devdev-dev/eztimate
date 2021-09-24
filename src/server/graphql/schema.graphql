@@ -14,7 +14,8 @@ type Mutation {
     createEstimateActiveIssue(value: String!): Issue
     deleteEstimateActiveIssue(id: ID!): Issue
 
-    createUser: User
+    createActiveUser: User
+    updateActiveUser(avatar: String): User
 }
 
 type Issue {

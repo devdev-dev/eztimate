@@ -16,8 +16,8 @@ import { CookieName } from '../../cookies';
 import {
   CreateActiveIssueDocument,
   CreateActiveIssueMutation,
-  CreateUserDocument,
-  CreateUserMutation,
+  CreateActiveUserDocument,
+  CreateActiveUserMutation,
   useActiveIssueQuery,
   ValidateIssueDocument,
   ValidateIssueQuery
@@ -68,8 +68,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, res }
   });
 
   if (!cookies.get(CookieName.USER_ID)) {
-    const { data } = await apolloClient.mutate<CreateUserMutation>({ mutation: CreateUserDocument });
-    cookies.set(CookieName.USER_ID, data?.createUser?._id, { maxAge: 31536000000, httpOnly: false });
+    const { data } = await apolloClient.mutate<CreateActiveUserMutation>({ mutation: CreateActiveUserDocument });
+    cookies.set(CookieName.USER_ID, data?.createActiveUser?._id, { maxAge: 31536000000, httpOnly: false });
   }
 
   if (query.join) {

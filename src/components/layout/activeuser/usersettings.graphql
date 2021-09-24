@@ -1,0 +1,5 @@
+mutation ActiveUserUpdate($avatar: String) {
+    updateActiveUser(avatar: $avatar) {
+        ...UserFields
+    }
+}
