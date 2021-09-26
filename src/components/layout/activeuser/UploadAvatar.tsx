@@ -3,11 +3,14 @@ import PublishIcon from '@mui/icons-material/Publish';
 import { Box, IconButton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
-import Dropzone from 'react-dropzone';
-import { useActiveUserQuery, useActiveUserUpdateMutation } from '../../../generated/graphql';
+import Dropzone, { DropzoneRef } from 'react-dropzone';
+import { useActiveUserUpdateMutation, User } from '../../../generated/graphql';
 
-export default function UploadAvatar() {
-  const { data, loading, error } = useActiveUserQuery();
+export interface UploadAvatarProps {
+  user: Pick<User, '_id' | 'avatar'>;
+}
+
+export default function UploadAvatar({ user }: UploadAvatarProps) {
   const [updateUser] = useActiveUserUpdateMutation();
 
   const [image, setImage] = useState<File | null>(null);
@@ -15,17 +18,25 @@ export default function UploadAvatar() {
   const [rotation, setRotation] = React.useState<number>(0);
 
   const editorRef = useRef<AvatarEditor>(null);
-  const dropzoneRef = useRef(null);
+  const dropzoneRef = useRef<DropzoneRef>(null);
 
-  const updateUserAvatar = async () => {
-    if (image) {
+  useEffect(() => {
+    if (user.avatar) {
+      fetch(user.avatar)
+        .then(r => r.blob())
+        .then(blobFile => setImage(new File([blobFile], 'avatar', { type: 'image/jpeg' })));
+    }
+  }, []);
+
+  const updateAvatar = async () => {
+    if (user && image) {
       editorRef?.current?.getImageScaledToCanvas().toBlob(
         blob => {
           if (blob) {
             const formData = new FormData();
             formData.append('avatar', blob);
-            formData.append('name', data?.getActiveUser?._id + '_' + Math.random().toString(36).substr(2, 9));
-            formData.append('oldimage', data?.getActiveUser?.avatar ?? undefined);
+            formData.append('name', user._id + '_' + Math.random().toString(36).substr(2, 9));
+            formData.append('oldimage', user.avatar ?? '');
             fetch('/api/s3', {
               method: 'POST',
               body: formData
@@ -41,18 +52,12 @@ export default function UploadAvatar() {
         'image/jpeg',
         0.9
       );
-    } else {
-      updateUser({ variables: { avatar: null } });
     }
   };
 
-  useEffect(() => {
-    if (data?.getActiveUser?.avatar) {
-      fetch(data?.getActiveUser?.avatar)
-        .then(r => r.blob())
-        .then(blobFile => setImage(new File([blobFile], 'avatar', { type: 'image/jpeg' })));
-    }
-  }, []);
+  const clearAvatar = async () => {
+    updateUser({ variables: { avatar: null } });
+  };
 
   return (
     <Box>
@@ -90,7 +95,7 @@ export default function UploadAvatar() {
               <IconButton
                 onClick={() => {
                   setImage(null);
-                  updateUserAvatar();
+                  clearAvatar();
                 }}
               >
                 <CloseIcon />
@@ -98,8 +103,8 @@ export default function UploadAvatar() {
             </Box>
             <AvatarEditor
               ref={editorRef}
-              onImageReady={updateUserAvatar}
-              onMouseUp={updateUserAvatar}
+              onImageReady={updateAvatar}
+              onMouseUp={updateAvatar}
               width={150}
               height={150}
               borderRadius={125}

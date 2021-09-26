@@ -1,7 +1,5 @@
-import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { IconButton, Typography } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
@@ -9,6 +7,7 @@ import { Box } from '@mui/system';
 import * as React from 'react';
 import { useState } from 'react';
 import { useActiveUserQuery } from '../../../generated/graphql';
+import UserAvatar from '../../UserAvatar';
 import ActiveUserSettingsDialog from './ActiveUserSettingsDialog';
 
 export default function ActiveUserPanel() {
@@ -21,7 +20,6 @@ export default function ActiveUserPanel() {
 
   return (
     <>
-      <ActiveUserSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <Box>
           <Typography variant="subtitle2" noWrap>
@@ -31,13 +29,12 @@ export default function ActiveUserPanel() {
         <Stack direction="row" spacing={2}>
           <IconButton onClick={handleOpenSettings}>
             <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<SettingsIcon fontSize="small" />}>
-              <Avatar>
-                <SentimentVerySatisfiedIcon />
-              </Avatar>
+              <UserAvatar user={data?.getActiveUser!} />
             </MenuBadge>
           </IconButton>
         </Stack>
       </Box>
+      {openSettings && <ActiveUserSettingsDialog onClose={() => setOpenSettings(false)} />}
     </>
   );
 }
