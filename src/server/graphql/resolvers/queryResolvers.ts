@@ -10,5 +10,8 @@ export const queryResolvers: QueryResolvers = {
   },
   async getActiveUser(parent, args, { db, userId }) {
     return (await db.collection('users').findOne({ _id: userId })) as User;
+  },
+  async getUser(parent, { id }, { db }) {
+    return (await db.collection('users').findOne({ _id: getObjectId(id) })) as User;
   }
 };

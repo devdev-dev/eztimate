@@ -11,7 +11,6 @@ export interface ActiveUserSettingsDialog {
 
 export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettingsDialog) {
   const { data, loading, error } = useActiveUserQuery();
-  console.log(loading);
 
   const handleSave = () => {};
 

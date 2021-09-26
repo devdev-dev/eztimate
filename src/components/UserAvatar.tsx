@@ -3,22 +3,22 @@ import React from 'react';
 import { User } from '../generated/graphql';
 
 export type UserAvatarProps = {
-  user?: Pick<User, 'name' | 'avatar'>;
+  user: Pick<User, 'name' | 'avatar'>;
 };
 
 export default function UserAvatar({ user }: UserAvatarProps) {
   return (
-    <>
-      {!user ? (
-        <Skeleton variant="circular" height="100%">
-          <Avatar />
-        </Skeleton>
-      ) : (
-        <Tooltip title={`${user.name}`}>
-          <Avatar src={`${user.avatar}`}>{getInitials(`${user.name}`)}</Avatar>
-        </Tooltip>
-      )}
-    </>
+    <Tooltip title={user.name ?? ''}>
+      <Avatar src={`${user.avatar}`}>{getInitials(`${user.name}`)}</Avatar>
+    </Tooltip>
+  );
+}
+
+export function UserAvatarSkeleton() {
+  return (
+    <Skeleton variant="circular" height="100%">
+      <Avatar />
+    </Skeleton>
   );
 }
 

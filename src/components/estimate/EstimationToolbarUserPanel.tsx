@@ -1,14 +1,13 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { AvatarGroup, Box, IconButton } from '@mui/material';
-import Badge from '@mui/material/Badge';
+import { AvatarGroup, Badge, Box, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import * as React from 'react';
-import { useActiveIssueQuery } from '../../generated/graphql';
+import { useActiveIssueQuery, useGetUserQuery } from '../../generated/graphql';
 import { useIssueId, usePusherChannel } from '../AppContext';
-import UserAvatar from '../UserAvatar';
+import UserAvatar, { UserAvatarSkeleton } from '../UserAvatar';
 import OnlineBadgeAvatar from './OnlineBadgeAvatar';
 
 export default function EstimationToolbarUserPanel() {
@@ -17,25 +16,17 @@ export default function EstimationToolbarUserPanel() {
 
   const { data, loading, error } = useActiveIssueQuery();
 
-  const BadgeIcon = <CircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
-  const CheckBadgeIcon = <CheckCircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
-
   return (
     <Box sx={{ width: '100%', m: 1, display: 'flex', flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
       <AvatarGroup>
         {channel &&
           Object.keys(channel?.members?.members).map(memberId => {
-            const userEstimate = data && data.getActiveIssue && data.getActiveIssue?.estimates.find(e => e.user._id === memberId);
             return (
-              <Stack key={memberId + userEstimate?.value} direction="row" spacing={2}>
-                <OnlineBadge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  badgeContent={userEstimate ? CheckBadgeIcon : BadgeIcon}
-                >
-                  <UserAvatar user={userEstimate?.user} />
-                </OnlineBadge>
-              </Stack>
+              <UserAvatarWrapper
+                key={memberId}
+                userId={memberId}
+                hasEstimated={(data && data.getActiveIssue && data.getActiveIssue?.estimates.some(e => e.user._id === memberId)) ?? false}
+              />
             );
           })}
       </AvatarGroup>
@@ -45,6 +36,24 @@ export default function EstimationToolbarUserPanel() {
         </OnlineBadgeAvatar>
       </IconButton>
     </Box>
+  );
+}
+
+function UserAvatarWrapper({ userId, hasEstimated }: { userId: string; hasEstimated?: boolean }) {
+  const { data, loading, error } = useGetUserQuery({ variables: { id: userId } });
+  const BadgeIcon = <CircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
+  const CheckBadgeIcon = <CheckCircleIcon sx={{ height: '16px', width: '16px', zIndex: 500 }} />;
+
+  return (
+    <>
+      {data && !loading && (
+        <Stack direction="row" spacing={2}>
+          <OnlineBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={hasEstimated ? CheckBadgeIcon : BadgeIcon}>
+            {data?.getUser ? <UserAvatar user={data?.getUser} /> : <UserAvatarSkeleton />}
+          </OnlineBadge>
+        </Stack>
+      )}
+    </>
   );
 }
 

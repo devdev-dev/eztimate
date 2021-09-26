@@ -48,7 +48,6 @@ fragment EstimateFields on Estimate {
     _id
     user {
         _id
-        avatar
     }
     value
 }

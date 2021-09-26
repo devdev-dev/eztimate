@@ -2,7 +2,9 @@ type Query {
     validateIssue(id: ID!): Issue
 
     getActiveIssue: Issue
+
     getActiveUser: User
+    getUser(id: ID!): User
 }
 
 type Mutation {

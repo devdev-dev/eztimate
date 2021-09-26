@@ -7,7 +7,7 @@ import { Box } from '@mui/system';
 import * as React from 'react';
 import { useState } from 'react';
 import { useActiveUserQuery } from '../../../generated/graphql';
-import UserAvatar from '../../UserAvatar';
+import UserAvatar, { UserAvatarSkeleton } from '../../UserAvatar';
 import ActiveUserSettingsDialog from './ActiveUserSettingsDialog';
 
 export default function ActiveUserPanel() {
@@ -29,7 +29,7 @@ export default function ActiveUserPanel() {
         <Stack direction="row" spacing={2}>
           <IconButton onClick={handleOpenSettings}>
             <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<SettingsIcon fontSize="small" />}>
-              <UserAvatar user={data?.getActiveUser!} />
+              {data?.getActiveUser ? <UserAvatar user={data?.getActiveUser} /> : <UserAvatarSkeleton />}
             </MenuBadge>
           </IconButton>
         </Stack>
