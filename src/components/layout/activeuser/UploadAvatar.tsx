@@ -24,12 +24,16 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
     if (user.avatar) {
       fetch(user.avatar)
         .then(r => r.blob())
-        .then(blobFile => setImage(new File([blobFile], 'avatar', { type: 'image/jpeg' })));
+        .then(blobFile => setImage(new File([blobFile], 'initial', { type: 'image/jpeg', lastModified: -1 })));
     }
-  }, []);
+  }, [user.avatar]);
 
   const updateAvatar = async () => {
     if (user && image) {
+      if (image.lastModified === -1) {
+        return;
+      }
+
       editorRef?.current?.getImageScaledToCanvas().toBlob(
         blob => {
           if (blob) {
