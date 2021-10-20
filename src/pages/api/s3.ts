@@ -1,7 +1,9 @@
 import aws from 'aws-sdk';
+import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
+import SendData = ManagedUpload.SendData;
 
 export const config = {
   api: {
@@ -37,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       Body: reqForm.data,
       ACL: 'public-read'
     },
-    function (s3Err, data) {
+    function (s3Err: Error, data: SendData) {
       if (s3Err) throw s3Err;
 
       if (reqForm.oldiamge) {
