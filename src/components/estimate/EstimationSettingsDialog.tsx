@@ -31,32 +31,17 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
     }
   }, [data]);
 
-  const handleSave = () => {
-    const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId)?.values ?? customStack;
-    updateActiveIssue({ variables: { stack: selectedStack } }).then(() => onClose());
-  };
-
-  const handleStackSelect = (id: string, values: string[]) => {
-    setSelectedId(id);
+  const handleStackSelect = (selectedId: string, values: string[]) => {
+    setSelectedId(selectedId);
     setCustomStack(values);
+
+    const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId)?.values ?? values;
+    updateActiveIssue({ variables: { stack: selectedStack } });
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={open}
-      onClose={() => {
-        onClose();
-      }}
-      TransitionComponent={Transition}
-    >
-      <SettingsLayout
-        title="Estimation Settings"
-        onClose={() => {
-          onClose();
-        }}
-        onSave={handleSave}
-      >
+    <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition}>
+      <SettingsLayout title="Estimation Settings" onClose={onClose}>
         <DialogContent>
           <Container component={Paper} maxWidth="md" sx={{ p: { xs: 2, md: 3 } }}>
             <Typography component="h2" variant="h5">

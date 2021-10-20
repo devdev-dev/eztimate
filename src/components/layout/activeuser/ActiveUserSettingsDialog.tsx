@@ -13,8 +13,6 @@ export interface ActiveUserSettingsDialog {
 export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettingsDialog) {
   const { data, loading, error } = useActiveUserQuery();
 
-  const handleSave = () => {};
-
   return (
     <Dialog
       fullScreen
@@ -24,13 +22,7 @@ export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettings
       }}
       TransitionComponent={Transition}
     >
-      <SettingsLayout
-        title="Active User Settings"
-        onClose={() => {
-          onClose();
-        }}
-        onSave={handleSave}
-      >
+      <SettingsLayout title="Active User Settings" onClose={onClose}>
         <DialogContent>
           {loading || (!data && <Skeleton />)}
           {!loading && data && data.getActiveUser && (

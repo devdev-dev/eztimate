@@ -2,14 +2,13 @@ import { AppBar, Box, Button, Container, Typography } from '@mui/material';
 import * as React from 'react';
 import { StyledToolbar } from './MainAppToolbar';
 
-export interface MyAppLayoutProps {
+export interface SettingsLayoutProps {
   title: string;
   onClose: () => void;
-  onSave: () => void;
   children: React.ReactElement;
 }
 
-export default function SettingsLayout({ title, onClose, onSave, children }: MyAppLayoutProps) {
+export default function SettingsLayout({ title, onClose, children }: SettingsLayoutProps) {
   return (
     <Box
       sx={{
@@ -20,11 +19,8 @@ export default function SettingsLayout({ title, onClose, onSave, children }: MyA
     >
       <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
         <StyledToolbar>
-          <Button color="inherit" onClick={onClose}>
+          <Button autoFocus onClick={onClose} variant="contained">
             close
-          </Button>
-          <Button autoFocus onClick={onSave} variant="contained">
-            save
           </Button>
         </StyledToolbar>
       </AppBar>

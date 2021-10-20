@@ -2,12 +2,12 @@ import { AppBar, Box, Container, Typography } from '@mui/material';
 import * as React from 'react';
 import MainAppToolbar from './MainAppToolbar';
 
-export interface MyAppLayoutProps {
+export interface AppLayoutProps {
   title: string;
   children: React.ReactElement;
 }
 
-export default function MainAppLayout({ title, children }: MyAppLayoutProps) {
+export default function AppLayout({ title, children }: AppLayoutProps) {
   return (
     <Box
       sx={{
