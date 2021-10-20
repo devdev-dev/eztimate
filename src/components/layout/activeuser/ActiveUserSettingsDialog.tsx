@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useActiveUserQuery } from '../../../generated/graphql';
 import SettingsLayout from '../SettingsLayout';
 import UploadAvatar from './UploadAvatar';
+import UserInformation from './UserInformation';
 
 export interface ActiveUserSettingsDialog {
   onClose: () => void;
@@ -54,8 +55,7 @@ export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettings
                   <UploadAvatar user={data.getActiveUser} />
                 </Grid>
                 <Grid item xs={12} sm>
-                  <Typography>User ID: {data.getActiveUser._id}</Typography>
-                  <Typography>User Name: {data.getActiveUser.name}</Typography>
+                  <UserInformation user={data.getActiveUser} />
                 </Grid>
               </Grid>
 

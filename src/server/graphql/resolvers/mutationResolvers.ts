@@ -107,11 +107,12 @@ export const mutationResolvers: MutationResolvers = {
     const user: User = { _id: insertedId.toHexString() };
     return user;
   },
-  updateActiveUser: async (_, { avatar }, { db, userId }) => {
+  updateActiveUser: async (_, { input }, { db, userId }) => {
     let update = {};
-    if (avatar !== undefined) update = { ...update, avatar };
+    if (input.avatar !== undefined) update = { ...update, avatar: input.avatar };
+    if (input.name !== undefined) update = { ...update, name: input.name };
 
-    const { value: user } = await db.collection('users').findOneAndUpdate(
+    const { value } = await db.collection('users').findOneAndUpdate(
       { _id: userId },
       {
         $set: update
@@ -119,6 +120,6 @@ export const mutationResolvers: MutationResolvers = {
       { returnDocument: 'after' }
     );
 
-    return user as User;
+    return value as User;
   }
 };

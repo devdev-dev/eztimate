@@ -21,7 +21,7 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
   const dropzoneRef = useRef<DropzoneRef>(null);
 
   useEffect(() => {
-    if (image === null && user.avatar) {
+    if (image === null && user && user.avatar) {
       fetch(user.avatar)
         .then(r => r.blob())
         .then(blobFile => setImage(new File([blobFile], 'initial', { type: 'image/jpeg', lastModified: -1 })));
@@ -110,24 +110,30 @@ function useUpdateUserImage(user: Pick<User, '_id' | 'avatar'>) {
   return {
     updateUserImage: (blob: Blob | null) => {
       if (blob === null) {
-        updateUser({ variables: { avatar: null } });
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('avatar', blob);
-      formData.append('name', user._id + '_' + Math.random().toString(36).substr(2, 9));
-      formData.append('oldimage', user.avatar ?? '');
-      fetch('/api/s3', {
-        method: 'POST',
-        body: formData
-      })
-        .then(response => {
-          return response.json();
-        })
-        .then(body => {
-          updateUser({ variables: { avatar: body.url } });
+        updateUser({
+          variables: {
+            input: {
+              avatar: null
+            }
+          }
         });
+        return;
+      } else {
+        const formData = new FormData();
+        formData.append('avatar', blob);
+        formData.append('name', user._id + '_' + Math.random().toString(36).substr(2, 9));
+        formData.append('oldimage', user.avatar ?? '');
+        fetch('/api/s3', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => {
+            return response.json();
+          })
+          .then(body => {
+            updateUser({ variables: { input: { avatar: body.url } } });
+          });
+      }
     }
   };
 }

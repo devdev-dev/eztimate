@@ -1,5 +1,5 @@
-mutation ActiveUserUpdate($avatar: String) {
-    updateActiveUser(avatar: $avatar) {
+mutation ActiveUserUpdate($input: UserInput!) {
+    updateActiveUser(input: $input) {
         ...UserFields
     }
 }
