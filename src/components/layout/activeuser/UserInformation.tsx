@@ -21,6 +21,8 @@ export default function UserInformation({ user }: UserInformationProps) {
         value={userName}
         onChange={e => {
           setUserName(e.target.value);
+        }}
+        onBlur={e => {
           updateUser({
             variables: {
               input: {
@@ -29,7 +31,6 @@ export default function UserInformation({ user }: UserInformationProps) {
             }
           });
         }}
-        onBlur={e => {}}
         onKeyDown={e => {
           if (e.key === 'Escape' || e.key === 'Enter') {
             userNameRef.current?.blur();
