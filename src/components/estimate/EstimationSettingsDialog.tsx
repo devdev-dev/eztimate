@@ -1,7 +1,6 @@
 import { Container, Dialog, DialogContent, Divider, List, ListItem, ListItemText, Paper, Slide, TextField, Typography } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { useActiveIssueQuery, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import SettingsLayout from '../layout/SettingsLayout';
 
@@ -16,20 +15,8 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
   const { data, loading, error } = useActiveIssueQuery();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
 
-  const [selectedId, setSelectedId] = React.useState('');
-  const [customStack, setCustomStack] = React.useState<string[]>([]);
-
-  useEffect(() => {
-    const storedStack = data?.getActiveIssue?.stack ?? [];
-    const defaultStack = DEFAULT_CARD_STACKS.find(s => {
-      return s.values.length === storedStack.length && s.values.every((val, index) => val === storedStack[index]);
-    });
-    if (defaultStack) {
-      handleStackSelect(defaultStack.id, defaultStack.values);
-    } else {
-      handleStackSelect(CUSTOM_STACK_ID, storedStack);
-    }
-  }, [data]);
+  const [selectedId, setSelectedId] = React.useState(getStackId(data?.getActiveIssue?.stack));
+  const [customStack, setCustomStack] = React.useState<string[]>(data?.getActiveIssue?.stack ?? []);
 
   const handleStackSelect = (selectedId: string, values: string[]) => {
     setSelectedId(selectedId);
@@ -70,6 +57,16 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
       </SettingsLayout>
     </Dialog>
   );
+}
+
+function getStackId(stack: string[] | undefined) {
+  if (!stack) {
+    return '';
+  } else {
+    return DEFAULT_CARD_STACKS.find(s => {
+      return s.values.length === stack.length && s.values.every((val, index) => val === stack[index]);
+    })?.id;
+  }
 }
 
 const DEFAULT_CARD_STACKS = [

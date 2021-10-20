@@ -111,7 +111,7 @@ const IssueMenu = () => {
 
   return (
     <>
-      <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
+      {openSettings && <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />}
       <IconButton onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
