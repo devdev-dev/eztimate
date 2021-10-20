@@ -53,6 +53,7 @@
     "@graphql-codegen/typescript-resolvers": "^2.1.2",
     "@graphql-codegen/visitor-plugin-common": "^2.1.1",
     "@types/cookies": "^0.7.6",
+    "@types/formidable": "^1.2.4",
     "@types/graphql": "^14.5.0",
     "@types/js-cookie": "^2.2.7",
     "@types/mongodb": "^4.0.7",
