@@ -36,7 +36,7 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
     setCustomStack(values);
 
     const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId)?.values ?? values;
-    updateActiveIssue({ variables: { stack: selectedStack } });
+    updateActiveIssue({ variables: { input: { stack: selectedStack } } });
   };
 
   return (

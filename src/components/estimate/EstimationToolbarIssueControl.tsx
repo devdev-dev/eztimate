@@ -26,7 +26,7 @@ export default function EstimationToolbarIssueControl() {
     const newState = data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT;
     if (data && data.getActiveIssue)
       updateActiveIssue({
-        variables: { state: newState },
+        variables: { input: { state: newState } },
         optimisticResponse: {
           updateActiveIssue: {
             ...data!.getActiveIssue,
@@ -52,7 +52,7 @@ export default function EstimationToolbarIssueControl() {
           setIssueName(e.target.value);
         }}
         onBlur={e => {
-          if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { name: issueName } });
+          if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { input: { name: issueName } } });
         }}
         onKeyDown={e => {
           if (e.key === 'Escape' || e.key === 'Enter') {

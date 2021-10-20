@@ -23,7 +23,7 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
     }
 
     return { '\u00A0': [''] };
-  }, [estimates, hideResults]);
+  }, [estimates, showData]);
 
   const maxWeight = max(values(results).map(v => v.length)) ?? 0;
   const barColor = showData ? theme.palette.primary.main : theme.palette.grey['400'];

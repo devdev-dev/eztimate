@@ -16,8 +16,8 @@ mutation CreateActiveIssue {
     }
 }
 
-mutation UpdateActiveIssue($state: IssueState, $name: String, $stack: [String!]) {
-    updateActiveIssue(state: $state, name: $name, stack: $stack) {
+mutation UpdateActiveIssue($input: IssueInput!) {
+    updateActiveIssue(input: $input) {
         ...IssueFields
     }
 }

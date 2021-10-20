@@ -9,7 +9,7 @@ type Query {
 
 type Mutation {
     createActiveIssue: Issue
-    updateActiveIssue(state: IssueState, name: String, stack: [String!]): Issue
+    updateActiveIssue(input: IssueInput!): Issue
     resetActiveIssue: Issue
 
     updateUserEstimate(value: String): Issue
@@ -26,6 +26,12 @@ type Issue {
     state: IssueState!
     stack: [String!]!
     estimates: [Estimate!]!
+}
+
+input IssueInput {
+    name: String
+    state: IssueState
+    stack: [String!]
 }
 
 enum IssueState {

@@ -20,11 +20,11 @@ export const mutationResolvers: MutationResolvers = {
     };
     return issue;
   },
-  updateActiveIssue: async (_, { name, state, stack }, { db, issueId }) => {
+  updateActiveIssue: async (_, { input }, { db, issueId }) => {
     let update = {};
-    if (name !== undefined) update = { ...update, name: name };
-    if (state !== undefined) update = { ...update, state: state };
-    if (stack !== undefined) update = { ...update, stack: stack };
+    if (input.name !== undefined) update = { ...update, name: input.name };
+    if (input.state !== undefined) update = { ...update, state: input.state };
+    if (input.stack !== undefined) update = { ...update, stack: input.stack };
     return (
       await db.collection('issues').findOneAndUpdate(
         { _id: issueId },
