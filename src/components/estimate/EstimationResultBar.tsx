@@ -1,12 +1,14 @@
-import PersonIcon from '@mui/icons-material/Person';
-import { Avatar, AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
+import { AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
-import theme from '../../theme';
+import { User } from '../../generated/graphql';
+import UserAvatar from '../UserAvatar';
+
+type UserPropsInput = Pick<User, '_id' | 'name' | 'avatar'>;
 
 export interface EstimationResultBarProps {
-  estimates: Array<{ value: string; user: { _id: string } }>;
+  estimates: Array<{ value: string; user: UserPropsInput }>;
   hideResults: boolean;
 }
 
@@ -15,40 +17,39 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
   const showData = estimates && estimates.length > 0 && !hideResults;
 
   const results = useMemo(() => {
-    if (showData) {
-      return estimates.reduce<Record<string, string[]>>(function (acc, currentValue) {
-        (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user._id);
-        return acc;
-      }, {});
-    }
-
-    return { '\u00A0': [''] };
-  }, [estimates, showData]);
+    return estimates.reduce<Record<string, UserPropsInput[]>>(function (acc, currentValue) {
+      (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user);
+      return acc;
+    }, {});
+  }, [estimates]);
 
   const maxWeight = max(values(results).map(v => v.length)) ?? 0;
-  const barColor = showData ? theme.palette.primary.main : theme.palette.grey['400'];
 
   return (
     <>
-      {keys(results).map((value, index) => {
-        const users = results[value];
-        const weight = users.length;
+      {!showData && (
+        <StyledResultBar weight={1} maxWeight={1} disabled={!showData}>
+          {'\u00A0'}
+        </StyledResultBar>
+      )}
+      {showData &&
+        keys(results).map((value, index) => {
+          const users: UserPropsInput[] = results[value];
+          const weight = users.length;
 
-        return (
-          <Box key={index} sx={{ flexGrow: weight }}>
-            <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
-              {value}
-            </StyledResultBar>
-            <AvatarGroup sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
-              {users.map(userId => (
-                <Avatar key={userId} sx={{}}>
-                  <PersonIcon />
-                </Avatar>
-              ))}
-            </AvatarGroup>
-          </Box>
-        );
-      })}
+          return (
+            <Box key={index} sx={{ flexGrow: weight }}>
+              <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
+                {value}
+              </StyledResultBar>
+              <AvatarGroup sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
+                {users.map(user => (
+                  <UserAvatar key={user._id} user={user} />
+                ))}
+              </AvatarGroup>
+            </Box>
+          );
+        })}
     </>
   );
 }
