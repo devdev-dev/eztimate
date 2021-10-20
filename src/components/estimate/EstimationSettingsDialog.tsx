@@ -18,12 +18,14 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
   const [selectedId, setSelectedId] = React.useState(getStackId(data?.getActiveIssue?.stack));
   const [customStack, setCustomStack] = React.useState<string[]>(data?.getActiveIssue?.stack ?? []);
 
-  const handleStackSelect = (selectedId: string, values: string[]) => {
+  const handleStackSelect = (selectedId: string, values: string[], update = true) => {
     setSelectedId(selectedId);
     setCustomStack(values);
 
-    const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId)?.values ?? values;
-    updateActiveIssue({ variables: { input: { stack: selectedStack } } });
+    if (update) {
+      const selectedStack = DEFAULT_CARD_STACKS.find(s => s.id === selectedId)?.values ?? values;
+      updateActiveIssue({ variables: { input: { stack: selectedStack } } });
+    }
   };
 
   return (
@@ -41,14 +43,17 @@ export default function EstimationSettingsDialog({ open, onClose }: EstimationSe
                 </ListItem>
               ))}
               <Divider />
-              <ListItem button selected={selectedId === CUSTOM_STACK_ID} onClick={() => handleStackSelect(CUSTOM_STACK_ID, customStack)}>
+              <ListItem button selected={selectedId === CUSTOM_STACK_ID} onClick={() => handleStackSelect(CUSTOM_STACK_ID, customStack, false)}>
                 <ListItemText primary="Custom Card Stack" secondary="Create your own card stack" />
                 <TextField
                   autoComplete="off"
                   onChange={e => {
                     setCustomStack(e.target.value.replaceAll(' ', '').split(','));
                   }}
-                  value={customStack.join(', ')}
+                  onBlur={e => {
+                    handleStackSelect(CUSTOM_STACK_ID, customStack);
+                  }}
+                  value={customStack.join(',')}
                 />
               </ListItem>
             </List>
