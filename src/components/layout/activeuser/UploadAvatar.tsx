@@ -4,7 +4,7 @@ import { Box, IconButton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
-import { useActiveUserUpdateMutation, User } from '../../../generated/graphql';
+import { User, useUpdateActiveUserMutation } from '../../../generated/graphql';
 
 export interface UploadAvatarProps {
   user: Pick<User, '_id' | 'avatar'>;
@@ -105,7 +105,7 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
 }
 
 function useUpdateUserImage(user: Pick<User, '_id' | 'avatar'>) {
-  const [updateUser] = useActiveUserUpdateMutation();
+  const [updateUser] = useUpdateActiveUserMutation();
 
   return {
     updateUserImage: (blob: Blob | null) => {

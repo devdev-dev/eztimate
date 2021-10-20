@@ -2,7 +2,7 @@ import { usePresenceChannel } from '@harelpls/use-pusher';
 import { PresenceChannel } from 'pusher-js';
 import * as React from 'react';
 import { ReactElement, useContext } from 'react';
-import { useIssueUpdateEvent } from '../pusher';
+import { useIssueUpdateEvent, useUserUpdateEvent } from '../pusher';
 
 interface IContextProps {
   issueId: string;
@@ -27,6 +27,7 @@ export interface AppContextProviderProps {
 function AppContextProvider({ issueId, children }: AppContextProviderProps) {
   const { channel } = usePresenceChannel(`presence-${issueId}`);
   useIssueUpdateEvent(channel);
+  useUserUpdateEvent(channel);
 
   return <AppContext.Provider value={{ issueId, channel }}> {children}</AppContext.Provider>;
 }

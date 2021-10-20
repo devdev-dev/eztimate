@@ -1,13 +1,13 @@
 import { Box, TextField } from '@mui/material';
 import React, { useRef, useState } from 'react';
-import { useActiveUserUpdateMutation, User } from '../../../generated/graphql';
+import { User, useUpdateActiveUserMutation } from '../../../generated/graphql';
 
 export interface UserInformationProps {
   user: Pick<User, '_id' | 'name'>;
 }
 
 export default function UserInformation({ user }: UserInformationProps) {
-  const [updateUser] = useActiveUserUpdateMutation();
+  const [updateUser] = useUpdateActiveUserMutation();
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const [userName, setUserName] = useState(user.name);

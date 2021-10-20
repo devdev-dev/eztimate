@@ -1,4 +1,4 @@
-mutation ActiveUserUpdate($input: UserInput!) {
+mutation UpdateActiveUser($input: UserInput!) {
     updateActiveUser(input: $input) {
         ...UserFields
     }

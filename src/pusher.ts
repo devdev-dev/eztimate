@@ -5,6 +5,7 @@ import { usePusherChannel } from './components/AppContext';
 
 export enum PusherEvents {
   IssueUpdate = 'app:issueupdate',
+  UserUpdate = 'app:userupdate',
   NotifyClient = 'app:notifyclient'
 }
 
@@ -13,6 +14,14 @@ export function useIssueUpdateEvent(channel: PresenceChannel | undefined) {
 
   useEvent(channel, PusherEvents.IssueUpdate, issueId => {
     apolloClient.cache.evict({ id: `Issue:${issueId}` });
+  });
+}
+
+export function useUserUpdateEvent(channel: PresenceChannel | undefined) {
+  const apolloClient = useApolloClient();
+
+  useEvent(channel, PusherEvents.UserUpdate, userId => {
+    apolloClient.cache.evict({ id: `User:${userId}` });
   });
 }
 
