@@ -11,7 +11,7 @@ export interface UploadAvatarProps {
 }
 
 export default function UploadAvatar({ user }: UploadAvatarProps) {
-  const [updateUser] = useActiveUserUpdateMutation();
+  const { updateUserImage } = useUpdateUserImage(user);
 
   const [image, setImage] = useState<File | null>(null);
   const [scale, setScale] = React.useState<number>(1);
@@ -21,53 +21,23 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
   const dropzoneRef = useRef<DropzoneRef>(null);
 
   useEffect(() => {
-    if (user.avatar) {
+    if (image === null && user.avatar) {
       fetch(user.avatar)
         .then(r => r.blob())
         .then(blobFile => setImage(new File([blobFile], 'initial', { type: 'image/jpeg', lastModified: -1 })));
     }
   }, [user.avatar]);
 
-  const updateAvatar = async () => {
-    if (user && image) {
-      if (image.lastModified === -1) {
-        return;
-      }
-
-      editorRef?.current?.getImageScaledToCanvas().toBlob(
-        blob => {
-          if (blob) {
-            const formData = new FormData();
-            formData.append('avatar', blob);
-            formData.append('name', user._id + '_' + Math.random().toString(36).substr(2, 9));
-            formData.append('oldimage', user.avatar ?? '');
-            fetch('/api/s3', {
-              method: 'POST',
-              body: formData
-            })
-              .then(response => {
-                return response.json();
-              })
-              .then(body => {
-                updateUser({ variables: { avatar: body.url } });
-              });
-          }
-        },
-        'image/jpeg',
-        0.9
-      );
-    }
-  };
-
-  const clearAvatar = async () => {
-    updateUser({ variables: { avatar: null } });
-  };
-
   return (
     <Box>
       <Dropzone
         ref={dropzoneRef}
-        onDrop={e => setImage(e[0])}
+        onDrop={e => {
+          if (e[0]) {
+            setImage(e[0]);
+            updateUserImage(e[0].slice());
+          }
+        }}
         accept={['image/jpeg', 'image/png']}
         maxFiles={1}
         multiple={false}
@@ -99,7 +69,7 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
               <IconButton
                 onClick={() => {
                   setImage(null);
-                  clearAvatar();
+                  updateUserImage(null);
                 }}
               >
                 <CloseIcon />
@@ -107,8 +77,17 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
             </Box>
             <AvatarEditor
               ref={editorRef}
-              onImageReady={updateAvatar}
-              onMouseUp={updateAvatar}
+              onMouseUp={() => {
+                editorRef?.current?.getImageScaledToCanvas().toBlob(
+                  blob => {
+                    if (blob) {
+                      updateUserImage(blob);
+                    }
+                  },
+                  'image/jpeg',
+                  0.9
+                );
+              }}
               width={150}
               height={150}
               borderRadius={125}
@@ -123,4 +102,32 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
       </Dropzone>
     </Box>
   );
+}
+
+function useUpdateUserImage(user: Pick<User, '_id' | 'avatar'>) {
+  const [updateUser] = useActiveUserUpdateMutation();
+
+  return {
+    updateUserImage: (blob: Blob | null) => {
+      if (blob === null) {
+        updateUser({ variables: { avatar: null } });
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', blob);
+      formData.append('name', user._id + '_' + Math.random().toString(36).substr(2, 9));
+      formData.append('oldimage', user.avatar ?? '');
+      fetch('/api/s3', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(body => {
+          updateUser({ variables: { avatar: body.url } });
+        });
+    }
+  };
 }
