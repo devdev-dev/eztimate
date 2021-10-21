@@ -27,6 +27,7 @@ export default function EstimationToolbarUserPanel() {
               />
             );
           })}
+        
       </AvatarGroup>
       <IconButton onClick={() => handleCopyID(issueId)}>
         <Avatar>
