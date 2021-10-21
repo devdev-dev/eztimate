@@ -4,7 +4,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Divider, IconButton, InputBase, Menu, MenuItem, Paper } from '@mui/material';
+import { Divider, IconButton, InputBase, Menu, MenuItem, Paper, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
@@ -64,7 +64,9 @@ export default function EstimationToolbarIssueControl() {
         value={issueName}
       />
 
-      <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
+      <Tooltip title={data?.getActiveIssue?.state === IssueState.COLLECT ? 'Reveal Results' : 'Hide Results'}>
+        <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
+      </Tooltip>
       <IssueMenu />
 
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

@@ -1,6 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
 import PublishIcon from '@mui/icons-material/Publish';
-import { Box, IconButton } from '@mui/material';
+import PhotoSizeSelectLargeIcon from '@mui/icons-material/PhotoSizeSelectLarge';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
+import { Box, Button, Grid, IconButton, Slider } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
@@ -54,12 +56,33 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
             }}
           >
             <input {...getInputProps()} />
+            <AvatarEditor
+              ref={editorRef}
+              onMouseUp={() => {
+                editorRef?.current?.getImageScaledToCanvas().toBlob(
+                  blob => {
+                    if (blob) {
+                      updateUserImage(blob);
+                    }
+                  },
+                  'image/jpeg',
+                  0.9
+                );
+              }}
+              style={{ width: '100%', height: '100%', aspectRatio: '1/1' }}
+              borderRadius={125}
+              image={image!}
+              color={[238, 238, 238, 0.8]}
+              rotate={rotation}
+              scale={scale}
+              disableBoundaryChecks={true}
+            />
             <Box
               sx={{
                 display: 'flex',
                 position: 'absolute',
                 left: '50%',
-                bottom: '0%',
+                top: '0',
                 transform: 'translate(-50%, 0%)'
               }}
             >
@@ -75,28 +98,20 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
                 <CloseIcon />
               </IconButton>
             </Box>
-            <AvatarEditor
-              ref={editorRef}
-              onMouseUp={() => {
-                editorRef?.current?.getImageScaledToCanvas().toBlob(
-                  blob => {
-                    if (blob) {
-                      updateUserImage(blob);
-                    }
-                  },
-                  'image/jpeg',
-                  0.9
-                );
-              }}
-              width={150}
-              height={150}
-              borderRadius={125}
-              image={image!}
-              color={[238, 238, 238, 0.8]}
-              rotate={rotation}
-              scale={scale}
-              disableBoundaryChecks={true}
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <PhotoSizeSelectLargeIcon />
+              </Grid>
+              <Grid item xs={10}>
+                <Slider value={scale} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
+              </Grid>
+              <Grid item xs={2}>
+                <RotateRightIcon />
+              </Grid>
+              <Grid item xs={10}>
+                <Slider value={rotation} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
+              </Grid>
+            </Grid>
           </Box>
         )}
       </Dropzone>
