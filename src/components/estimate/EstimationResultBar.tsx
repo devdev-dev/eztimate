@@ -1,4 +1,4 @@
-import { AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
+import { Avatar, AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -17,39 +17,39 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
   const showData = estimates && estimates.length > 0 && !hideResults;
 
   const results = useMemo(() => {
+    if (!showData) {
+      return { '\u00A0': estimates.map(e => e.user) };
+    }
     return estimates.reduce<Record<string, UserPropsInput[]>>(function (acc, currentValue) {
       (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user);
       return acc;
     }, {});
-  }, [estimates]);
+  }, [estimates, showData]);
 
   const maxWeight = max(values(results).map(v => v.length)) ?? 0;
 
   return (
     <>
-      {!showData && (
-        <StyledResultBar weight={1} maxWeight={1} disabled={!showData}>
-          {'\u00A0'}
-        </StyledResultBar>
-      )}
-      {showData &&
-        keys(results).map((value, index) => {
-          const users: UserPropsInput[] = results[value];
-          const weight = users.length;
+      {keys(results).map((value, index) => {
+        const users: UserPropsInput[] = results[value];
+        const weight = users.length;
 
-          return (
-            <Box key={index} sx={{ flexGrow: weight }}>
-              <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
-                {value}
-              </StyledResultBar>
-              <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
-                {users.map(user => (
-                  <UserAvatar key={user._id} user={user} />
-                ))}
-              </AvatarGroup>
-            </Box>
-          );
-        })}
+        return (
+          <Box key={index} sx={{ flexGrow: weight }}>
+            <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
+              {value}
+            </StyledResultBar>
+            <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
+              {users.map(user => (
+                <>
+                  {showData && <UserAvatar key={user._id} user={user} />}
+                  {!showData && <Avatar>?</Avatar>}
+                </>
+              ))}
+            </AvatarGroup>
+          </Box>
+        );
+      })}
     </>
   );
 }
