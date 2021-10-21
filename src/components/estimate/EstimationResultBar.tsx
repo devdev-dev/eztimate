@@ -40,12 +40,7 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
               {value}
             </StyledResultBar>
             <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
-              {users.map(user => (
-                <>
-                  {showData && <UserAvatar key={user._id} user={user} />}
-                  {!showData && <Avatar>?</Avatar>}
-                </>
-              ))}
+              {users.map(user => (showData ? <UserAvatar key={user._id} user={user} /> : <Avatar key={user._id}>?</Avatar>))}
             </AvatarGroup>
           </Box>
         );
