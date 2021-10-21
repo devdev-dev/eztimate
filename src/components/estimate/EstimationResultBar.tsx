@@ -42,7 +42,7 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
               <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
                 {value}
               </StyledResultBar>
-              <AvatarGroup sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
+              <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
                 {users.map(user => (
                   <UserAvatar key={user._id} user={user} />
                 ))}

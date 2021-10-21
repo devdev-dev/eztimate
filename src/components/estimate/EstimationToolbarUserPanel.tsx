@@ -16,7 +16,7 @@ export default function EstimationToolbarUserPanel() {
 
   return (
     <Box sx={{ width: '100%', m: 1, display: 'flex', flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-      <AvatarGroup>
+      <AvatarGroup max={10}>
         {channel &&
           Object.keys(channel?.members?.members).map(memberId => {
             return (
