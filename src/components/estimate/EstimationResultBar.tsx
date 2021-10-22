@@ -13,12 +13,12 @@ export interface EstimationResultBarProps {
 }
 
 export function EstimationResultBar({ estimates, hideResults }: EstimationResultBarProps) {
-  const noData = estimates?.length > 0;
   const showData = estimates && estimates.length > 0 && !hideResults;
 
   const results = useMemo(() => {
     if (!showData) {
-      return { '\u00A0': estimates.map(e => e.user) };
+      const users = estimates.length > 0 ? estimates.map(e => e.user) : [{ _id: '', name: '', avatar: '' }];
+      return { '\u00A0': users };
     }
     return estimates.reduce<Record<string, UserPropsInput[]>>(function (acc, currentValue) {
       (acc[currentValue.value] = acc[currentValue.value] || []).push(currentValue.user);
@@ -39,7 +39,7 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
             <StyledResultBar weight={weight} maxWeight={maxWeight} disabled={!showData}>
               {value}
             </StyledResultBar>
-            <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: noData ? 'visible' : 'hidden' }}>
+            <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center', visibility: estimates?.length > 0 ? 'visible' : 'hidden' }}>
               {users.map(user => (showData ? <UserAvatar key={user._id} user={user} /> : <Avatar key={user._id}>?</Avatar>))}
             </AvatarGroup>
           </Box>
