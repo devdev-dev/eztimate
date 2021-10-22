@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
 import { useNotificationTrigger } from '../../pusher';
-import EstimationSettingsDialog from './EstimationSettingsDialog';
+import EstimationSettingsDialog from './settings/EstimationSettingsDialog';
 
 export default function EstimationToolbarIssueControl() {
   const { data, loading, error } = useActiveIssueQuery();

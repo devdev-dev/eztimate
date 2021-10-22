@@ -1,10 +1,10 @@
 import { Container, Dialog, DialogContent, Paper, Slide, Typography } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
-import { useActiveIssueQuery } from '../../generated/graphql';
-import SettingsLayout from '../layout/SettingsLayout';
-import EstimationCardStackSelection from './settings/EstimationCardStackSelection';
-import EstimationInformation from './settings/EstimationInformation';
+import { useActiveIssueQuery } from '../../../generated/graphql';
+import SettingsLayout from '../../layout/SettingsLayout';
+import EstimationCardStackSelection from './EstimationCardStackSelection';
+import EstimationInformation from './EstimationInformation';
 
 export interface EstimationSettingsDialogProps {
   open: boolean;
