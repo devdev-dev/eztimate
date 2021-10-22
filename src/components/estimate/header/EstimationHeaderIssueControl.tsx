@@ -86,7 +86,7 @@ export default function EstimationHeaderIssueControl() {
       </Tooltip>
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
-      <Tooltip title="Rest Estimation">
+      <Tooltip title="Reset Estimation">
         <IconButton color="primary" sx={{ p: '10px' }} onClick={handleReset}>
           <ReplayIcon />
         </IconButton>
