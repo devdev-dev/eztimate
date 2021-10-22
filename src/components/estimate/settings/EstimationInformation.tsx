@@ -1,9 +1,9 @@
 import { Alert, Box, TextField } from '@mui/material';
 import React, { useRef, useState } from 'react';
-import { Estimate, User, useUpdateActiveUserMutation } from '../../../generated/graphql';
+import { Estimate, Issue, User, useUpdateActiveUserMutation } from '../../../generated/graphql';
 
 export interface EstimationInformationProps {
-  estimate: Pick<Estimate, '_id'>;
+  estimate: Pick<Issue, '_id'>;
 }
 
 export default function EstimationInformation({ estimate }: EstimationInformationProps) {
