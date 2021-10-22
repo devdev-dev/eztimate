@@ -7,9 +7,11 @@ import absoluteUrl from 'next-absolute-url/index';
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { AppContextProvider } from '../../components/AppContext';
-import EstimationCardStack from '../../components/estimate/EstimationCardStack';
-import EstimationResults from '../../components/estimate/EstimationResults';
-import EstimationToolbar from '../../components/estimate/EstimationToolbar';
+import EstimationBody from '../../components/estimate/body/EstimationBody';
+import EstimationCardStack from '../../components/estimate/body/EstimationCardStack';
+import EstimationMenu from '../../components/estimate/EstimationMenu';
+import EstimationResults from '../../components/estimate/body/EstimationResults';
+import EstimationHeader from '../../components/estimate/header/EstimationHeader';
 import AppLayout from '../../components/layout/AppLayout';
 import NotificationSnackbar from '../../components/NotificationSnackbar';
 import { CookieName } from '../../cookies';
@@ -42,11 +44,9 @@ const InstantPage = () => {
       {!loading && data && data.getActiveIssue && (
         <AppContextProvider issueId={data.getActiveIssue?._id}>
           <>
-            <EstimationToolbar />
-            <Paper sx={{ mt: 2, p: 2 }}>
-              <EstimationResults />
-              <EstimationCardStack />
-            </Paper>
+            <EstimationHeader />
+            <EstimationBody />
+            <EstimationMenu />
             <NotificationSnackbar />
           </>
         </AppContextProvider>

@@ -4,11 +4,11 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Avatar, AvatarGroup, Badge, Box, IconButton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
-import { useActiveIssueQuery, useGetUserQuery } from '../../generated/graphql';
-import { useIssueId, usePusherChannel } from '../AppContext';
-import UserAvatar, { UserAvatarSkeleton } from '../UserAvatar';
+import { useActiveIssueQuery, useGetUserQuery } from '../../../generated/graphql';
+import { useIssueId, usePusherChannel } from '../../AppContext';
+import UserAvatar, { UserAvatarSkeleton } from '../../UserAvatar';
 
-export default function EstimationToolbarUserPanel() {
+export default function EstimationHeaderUserPanel() {
   const channel = usePusherChannel();
   const issueId = useIssueId();
 
@@ -27,7 +27,6 @@ export default function EstimationToolbarUserPanel() {
               />
             );
           })}
-        
       </AvatarGroup>
       <IconButton onClick={() => handleCopyID(issueId)}>
         <Avatar>

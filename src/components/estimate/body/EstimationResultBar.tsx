@@ -2,8 +2,8 @@ import { Avatar, AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/materi
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { User } from '../../generated/graphql';
-import UserAvatar from '../UserAvatar';
+import { User } from '../../../generated/graphql';
+import UserAvatar from '../../UserAvatar';
 
 type UserPropsInput = Pick<User, '_id' | 'name' | 'avatar'>;
 
