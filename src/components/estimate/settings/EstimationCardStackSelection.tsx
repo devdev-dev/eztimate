@@ -22,7 +22,7 @@ export default function EstimationCardStackSelection({ stack }: EstimationCardSt
           label="Card Stack"
           autoComplete="off"
           onChange={e => {
-            setSelectedStackId('customstack');
+            setSelectedStackId(CUSTOM_STACK_ID);
             setCustomStack(e.target.value.replaceAll(' ', '').split(','));
           }}
           onBlur={e => {
@@ -60,12 +60,14 @@ function getStackId(stack: string[] | undefined) {
   if (!stack) {
     return '';
   } else {
-    return DEFAULT_CARD_STACKS.find(s => {
+    const defaultStackId = DEFAULT_CARD_STACKS.find(s => {
       return s.values.length === stack.length && s.values.every((val, index) => val === stack[index]);
     })?.id;
+    return defaultStackId ?? CUSTOM_STACK_ID;
   }
 }
 
+const CUSTOM_STACK_ID = 'customstack';
 const DEFAULT_CARD_STACKS = [
   {
     id: 'simpledescriptive',
@@ -93,7 +95,7 @@ const DEFAULT_CARD_STACKS = [
     values: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
-    id: 'customstack',
+    id: CUSTOM_STACK_ID,
     name: 'Custom Stack',
     values: []
   }
