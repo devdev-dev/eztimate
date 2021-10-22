@@ -13,6 +13,7 @@ import EstimationSettingsDialog from '../settings/EstimationSettingsDialog';
 
 export default function EstimationHeaderIssueControl() {
   const { data, loading, error } = useActiveIssueQuery();
+  const triggerNotification = useNotificationTrigger();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
 
@@ -34,6 +35,22 @@ export default function EstimationHeaderIssueControl() {
           }
         }
       });
+  };
+
+  const handleReset = () => {
+    resetActiveIssue().then(() => inputRef.current?.focus());
+  };
+
+  const handleNotification = () => {
+    triggerNotification({
+      message: 'Active Estimation in Progress.',
+      systemNotification: true
+    });
+  };
+
+  const [openSettings, setOpenSettings] = useState(false);
+  const handleOpenSettings = () => {
+    setOpenSettings(true);
   };
 
   return (
@@ -67,76 +84,27 @@ export default function EstimationHeaderIssueControl() {
       <Tooltip title={data?.getActiveIssue?.state === IssueState.COLLECT ? 'Reveal Results' : 'Hide Results'}>
         <IconButton onClick={toggleIssueState}>{data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}</IconButton>
       </Tooltip>
-      <IssueMenu />
+
+      <Tooltip title="Send Notification">
+        <IconButton onClick={handleNotification}>
+          <CampaignIcon />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Open Settings">
+        <IconButton onClick={handleOpenSettings}>
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
+      {openSettings && <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />}
 
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
-      <IconButton
-        color="primary"
-        sx={{ p: '10px' }}
-        onClick={() => {
-          resetActiveIssue().then(() => inputRef.current?.focus());
-        }}
-      >
-        <ReplayIcon />
-      </IconButton>
+      <Tooltip title="Rest Estimation">
+        <IconButton color="primary" sx={{ p: '10px' }} onClick={handleReset}>
+          <ReplayIcon />
+        </IconButton>
+      </Tooltip>
     </Paper>
   );
 }
-
-const IssueMenu = () => {
-  const triggerNotification = useNotificationTrigger();
-
-  const [menuAnchorElement, setMenuAnchorElement] = React.useState<null | HTMLElement>(null);
-  const menuOpen = Boolean(menuAnchorElement);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setMenuAnchorElement(event.currentTarget);
-  };
-
-  const handleNotification = () => {
-    triggerNotification({
-      message: 'Active Estimation in Progress.',
-      systemNotification: true
-    });
-    handleClose();
-  };
-
-  const [openSettings, setOpenSettings] = useState(false);
-  const handleOpenSettings = () => {
-    setOpenSettings(true);
-    handleClose();
-  };
-
-  const handleClose = () => {
-    setMenuAnchorElement(null);
-  };
-
-  return (
-    <>
-      {openSettings && <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />}
-      <IconButton onClick={handleClick}>
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        id="basic-menu"
-        anchorEl={menuAnchorElement}
-        open={menuOpen}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button'
-        }}
-      >
-        <MenuItem onClick={handleNotification}>
-          <CampaignIcon />
-          <Divider sx={{ height: 16, m: 1 }} orientation="vertical" />
-          Call to Estimation
-        </MenuItem>
-        <MenuItem onClick={handleOpenSettings}>
-          <SettingsIcon />
-          <Divider sx={{ height: 16, m: 1 }} orientation="vertical" />
-          Settings
-        </MenuItem>
-      </Menu>
-    </>
-  );
-};
