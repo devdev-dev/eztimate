@@ -1,5 +1,4 @@
 import CampaignIcon from '@mui/icons-material/Campaign';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -48,11 +47,6 @@ export default function EstimationHeaderIssueControl() {
     });
   };
 
-  const [openSettings, setOpenSettings] = useState(false);
-  const handleOpenSettings = () => {
-    setOpenSettings(true);
-  };
-
   return (
     <Paper
       sx={{
@@ -90,14 +84,6 @@ export default function EstimationHeaderIssueControl() {
           <CampaignIcon />
         </IconButton>
       </Tooltip>
-
-      <Tooltip title="Open Settings">
-        <IconButton onClick={handleOpenSettings}>
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-      {openSettings && <EstimationSettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />}
-
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
       <Tooltip title="Rest Estimation">

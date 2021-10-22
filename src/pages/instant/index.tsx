@@ -45,8 +45,8 @@ const InstantPage = () => {
         <AppContextProvider issueId={data.getActiveIssue?._id}>
           <>
             <EstimationHeader />
-            <EstimationMenu />
             <EstimationBody />
+            <EstimationMenu />
             <NotificationSnackbar />
           </>
         </AppContextProvider>
