@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import * as React from 'react';
-import { IssueState, useActiveIssueQuery } from '../../generated/graphql';
+import { IssueState, useActiveIssueQuery } from '../../../generated/graphql';
 import { EstimationResultBar } from './EstimationResultBar';
 
 export default function EstimationResults() {

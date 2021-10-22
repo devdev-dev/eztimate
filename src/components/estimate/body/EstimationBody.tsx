@@ -1,7 +1,7 @@
 import { Paper } from '@mui/material';
 import * as React from 'react';
-import EstimationCardStack from '../EstimationCardStack';
-import EstimationResults from '../EstimationResults';
+import EstimationCardStack from './EstimationCardStack';
+import EstimationResults from './EstimationResults';
 
 export default function EstimationBody() {
   return (
