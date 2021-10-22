@@ -7,11 +7,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Divider, IconButton, InputBase, Menu, MenuItem, Paper, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../generated/graphql';
-import { useNotificationTrigger } from '../../pusher';
-import EstimationSettingsDialog from './settings/EstimationSettingsDialog';
+import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../../generated/graphql';
+import { useNotificationTrigger } from '../../../pusher';
+import EstimationSettingsDialog from '../settings/EstimationSettingsDialog';
 
-export default function EstimationToolbarIssueControl() {
+export default function EstimationHeaderIssueControl() {
   const { data, loading, error } = useActiveIssueQuery();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();

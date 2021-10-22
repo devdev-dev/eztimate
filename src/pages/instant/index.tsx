@@ -9,7 +9,7 @@ import { ReactElement } from 'react';
 import { AppContextProvider } from '../../components/AppContext';
 import EstimationCardStack from '../../components/estimate/EstimationCardStack';
 import EstimationResults from '../../components/estimate/EstimationResults';
-import EstimationToolbar from '../../components/estimate/EstimationToolbar';
+import EstimationHeader from '../../components/estimate/header/EstimationHeader';
 import AppLayout from '../../components/layout/AppLayout';
 import NotificationSnackbar from '../../components/NotificationSnackbar';
 import { CookieName } from '../../cookies';
@@ -42,7 +42,7 @@ const InstantPage = () => {
       {!loading && data && data.getActiveIssue && (
         <AppContextProvider issueId={data.getActiveIssue?._id}>
           <>
-            <EstimationToolbar />
+            <EstimationHeader />
             <Paper sx={{ mt: 2, p: 2 }}>
               <EstimationResults />
               <EstimationCardStack />
