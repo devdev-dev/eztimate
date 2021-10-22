@@ -7,7 +7,9 @@ import absoluteUrl from 'next-absolute-url/index';
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { AppContextProvider } from '../../components/AppContext';
+import EstimationBody from '../../components/estimate/body/EstimationBody';
 import EstimationCardStack from '../../components/estimate/EstimationCardStack';
+import EstimationMenu from '../../components/estimate/EstimationMenu';
 import EstimationResults from '../../components/estimate/EstimationResults';
 import EstimationHeader from '../../components/estimate/header/EstimationHeader';
 import AppLayout from '../../components/layout/AppLayout';
@@ -43,10 +45,8 @@ const InstantPage = () => {
         <AppContextProvider issueId={data.getActiveIssue?._id}>
           <>
             <EstimationHeader />
-            <Paper sx={{ mt: 2, p: 2 }}>
-              <EstimationResults />
-              <EstimationCardStack />
-            </Paper>
+            <EstimationMenu />
+            <EstimationBody />
             <NotificationSnackbar />
           </>
         </AppContextProvider>
