@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { Theme, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useActiveIssueQuery, useActiveUserQuery, useUpdateUserEstimateMutation } from '../../generated/graphql';
+import { useActiveIssueQuery, useActiveUserQuery, useUpdateUserEstimateMutation } from '../../../generated/graphql';
 
 const EstimationCardStack = () => {
   const theme = useTheme();
