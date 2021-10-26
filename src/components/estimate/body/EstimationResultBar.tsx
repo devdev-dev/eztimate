@@ -1,4 +1,5 @@
-import { Avatar, AvatarGroup, Box, BoxProps, lighten, styled } from '@mui/material';
+import { Avatar, AvatarGroup, Box, BoxProps, lighten, Skeleton, styled } from '@mui/material';
+import { bgcolor } from '@mui/system';
 import { keys, max, values } from 'lodash';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -46,6 +47,21 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
         );
       })}
     </>
+  );
+}
+
+export function EstimationResultBarSkeleton() {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <StyledResultBar sx={{ bgcolor: 'transparent' }} weight={1} maxWeight={1} disabled>
+        <Skeleton variant="rectangular" width="100%" height="24px" />
+      </StyledResultBar>
+      <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center' }}>
+        <Skeleton variant="circular">
+          <Avatar />
+        </Skeleton>
+      </AvatarGroup>
+    </Box>
   );
 }
 
