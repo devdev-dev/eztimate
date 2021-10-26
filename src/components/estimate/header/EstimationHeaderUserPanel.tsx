@@ -1,7 +1,7 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Avatar, AvatarGroup, Badge, Box, IconButton } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, IconButton, Skeleton } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 import { useActiveIssueQuery, useGetUserQuery } from '../../../generated/graphql';
@@ -16,23 +16,43 @@ export default function EstimationHeaderUserPanel() {
 
   return (
     <Box sx={{ width: '100%', m: 1, display: 'flex', flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-      <AvatarGroup max={10}>
-        {channel &&
-          Object.keys(channel?.members?.members).map(memberId => {
-            return (
-              <UserAvatarWrapper
-                key={memberId}
-                userId={memberId}
-                hasEstimated={(data && data.getActiveIssue && data.getActiveIssue?.estimates.some(e => e.user._id === memberId)) ?? false}
-              />
-            );
-          })}
-      </AvatarGroup>
-      <IconButton onClick={() => handleCopyID(issueId)}>
-        <Avatar>
-          <PersonAddIcon />
-        </Avatar>
-      </IconButton>
+      {loading && !data && (
+        <>
+          <Skeleton variant="rectangular">
+            <AvatarGroup>
+              <Avatar />
+              <Avatar />
+              <Avatar />
+            </AvatarGroup>
+          </Skeleton>
+          <IconButton>
+            <Skeleton variant="circular">
+              <Avatar />
+            </Skeleton>
+          </IconButton>
+        </>
+      )}
+      {!loading && data && (
+        <>
+          <AvatarGroup max={10}>
+            {channel &&
+              Object.keys(channel?.members?.members).map(memberId => {
+                return (
+                  <UserAvatarWrapper
+                    key={memberId}
+                    userId={memberId}
+                    hasEstimated={(data && data.getActiveIssue && data.getActiveIssue?.estimates.some(e => e.user._id === memberId)) ?? false}
+                  />
+                );
+              })}
+          </AvatarGroup>
+          <IconButton onClick={() => handleCopyID(issueId)}>
+            <Avatar>
+              <PersonAddIcon />
+            </Avatar>
+          </IconButton>
+        </>
+      )}
     </Box>
   );
 }
