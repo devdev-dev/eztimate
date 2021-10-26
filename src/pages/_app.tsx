@@ -4,6 +4,7 @@ import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { CssBaseline, ThemeProvider as MUIThemeProvider } from '@mui/material';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import * as React from 'react';
 import { ReactElement, ReactNode, useEffect } from 'react';
@@ -26,7 +27,7 @@ export const apolloClient = new ApolloClient({
   connectToDevTools: true
 });
 
-export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useServiceWorker();
 
   const getLayout = Component.getLayout ?? (page => page);
@@ -47,6 +48,10 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     </CacheProvider>
   );
 }
+
+export default dynamic(() => Promise.resolve(MyApp), {
+  ssr: false
+});
 
 function useServiceWorker() {
   useEffect(() => {
