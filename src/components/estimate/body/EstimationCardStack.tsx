@@ -97,7 +97,7 @@ const styles = {
       }
 
       &.skeleton {
-        background: transparent;
+        background: white;
         box-shadow: none;
       }
 
