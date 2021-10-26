@@ -3,10 +3,11 @@ import PublishIcon from '@mui/icons-material/Publish';
 import PhotoSizeSelectLargeIcon from '@mui/icons-material/PhotoSizeSelectLarge';
 import RotateRightIcon from '@mui/icons-material/RotateRight';
 import { Box, Button, Grid, IconButton, Slider } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
 import { User, useUpdateActiveUserMutation } from '../../../generated/graphql';
+import debounce from 'lodash/debounce';
 
 export interface UploadAvatarProps {
   user: Pick<User, '_id' | 'avatar'>;
@@ -29,6 +30,20 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
         .then(blobFile => setImage(new File([blobFile], 'initial', { type: 'image/jpeg', lastModified: -1 })));
     }
   }, [user.avatar]);
+
+  const updateImageFromEditor = useCallback(
+    () =>
+      editorRef?.current?.getImageScaledToCanvas().toBlob(
+        blob => {
+          if (blob) {
+            updateUserImage(blob);
+          }
+        },
+        'image/jpeg',
+        0.9
+      ),
+    []
+  );
 
   return (
     <Box>
@@ -58,17 +73,7 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
             <input {...getInputProps()} />
             <AvatarEditor
               ref={editorRef}
-              onMouseUp={() => {
-                editorRef?.current?.getImageScaledToCanvas().toBlob(
-                  blob => {
-                    if (blob) {
-                      updateUserImage(blob);
-                    }
-                  },
-                  'image/jpeg',
-                  0.9
-                );
-              }}
+              onMouseUp={updateImageFromEditor}
               style={{ width: '100%', height: '100%', aspectRatio: '1/1' }}
               borderRadius={125}
               image={image!}
@@ -103,13 +108,13 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
                 <PhotoSizeSelectLargeIcon />
               </Grid>
               <Grid item xs={10}>
-                <Slider value={scale} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
+                <Slider value={scale} onChangeCommitted={updateImageFromEditor} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
               </Grid>
               <Grid item xs={2}>
                 <RotateRightIcon />
               </Grid>
               <Grid item xs={10}>
-                <Slider value={rotation} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
+                <Slider value={rotation} onChangeCommitted={updateImageFromEditor} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
               </Grid>
             </Grid>
           </Box>
