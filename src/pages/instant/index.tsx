@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
-import { Paper } from '@mui/material';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import absoluteUrl from 'next-absolute-url/index';
@@ -8,9 +7,7 @@ import * as React from 'react';
 import { ReactElement } from 'react';
 import { AppContextProvider } from '../../components/AppContext';
 import EstimationBody from '../../components/estimate/body/EstimationBody';
-import EstimationCardStack from '../../components/estimate/body/EstimationCardStack';
 import EstimationMenu from '../../components/estimate/EstimationMenu';
-import EstimationResults from '../../components/estimate/body/EstimationResults';
 import EstimationHeader from '../../components/estimate/header/EstimationHeader';
 import AppLayout from '../../components/layout/AppLayout';
 import NotificationSnackbar from '../../components/NotificationSnackbar';
@@ -20,7 +17,6 @@ import {
   CreateActiveIssueMutation,
   CreateActiveUserDocument,
   CreateActiveUserMutation,
-  useActiveIssueQuery,
   ValidateIssueDocument,
   ValidateIssueQuery
 } from '../../generated/graphql';
@@ -36,21 +32,17 @@ const config: PusherProviderProps = {
   }
 };
 
-const InstantPage = () => {
-  const { data, loading } = useActiveIssueQuery();
-
+const InstantPage = ({ issueId }: { issueId: string }) => {
   return (
     <PusherProvider {...config}>
-      {!loading && data && data.getActiveIssue && (
-        <AppContextProvider issueId={data.getActiveIssue?._id}>
-          <>
-            <EstimationHeader />
-            <EstimationBody />
-            <EstimationMenu />
-            <NotificationSnackbar />
-          </>
-        </AppContextProvider>
-      )}
+      <AppContextProvider issueId={issueId}>
+        <>
+          <EstimationHeader />
+          <EstimationBody />
+          <EstimationMenu />
+          <NotificationSnackbar />
+        </>
+      </AppContextProvider>
     </PusherProvider>
   );
 };
@@ -67,28 +59,35 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, res }
     connectToDevTools: true
   });
 
-  if (!cookies.get(CookieName.USER_ID)) {
-    const { data } = await apolloClient.mutate<CreateActiveUserMutation>({ mutation: CreateActiveUserDocument });
-    cookies.set(CookieName.USER_ID, data?.createActiveUser?._id, { maxAge: 31536000000, httpOnly: false });
-  }
+  let userId = cookies.get(CookieName.USER_ID);
+  let issueId = cookies.get(CookieName.ISSUE_ID);
 
   if (query.join) {
     const { data } = await apolloClient.query<ValidateIssueQuery>({
       query: ValidateIssueDocument,
       variables: { id: query.join }
     });
-    if (data && data.validateIssue) {
-      cookies.set(CookieName.ISSUE_ID, query.join.toString(), { maxAge: 31536000000, httpOnly: false });
-    } else {
-      const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
-      cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id, { maxAge: 31536000000, httpOnly: false });
-    }
-  } else if (!cookies.get(CookieName.ISSUE_ID)) {
-    const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
-    cookies.set(CookieName.ISSUE_ID, data?.createActiveIssue?._id, { maxAge: 31536000000, httpOnly: false });
+    issueId = data?.validateIssue?._id;
+    createIssueIdCookie(cookies, CookieName.ISSUE_ID, issueId ?? '');
   }
 
-  return { props: {} };
+  if (!issueId) {
+    const { data } = await apolloClient.mutate<CreateActiveIssueMutation>({ mutation: CreateActiveIssueDocument });
+    issueId = data?.createActiveIssue?._id;
+    createIssueIdCookie(cookies, CookieName.ISSUE_ID, issueId ?? '');
+  }
+
+  if (!userId) {
+    const { data } = await apolloClient.mutate<CreateActiveUserMutation>({ mutation: CreateActiveUserDocument });
+    userId = data?.createActiveUser?._id;
+    createIssueIdCookie(cookies, CookieName.USER_ID, userId ?? '');
+  }
+
+  return { props: { issueId } };
 };
+
+function createIssueIdCookie(cookies: Cookies, name: CookieName, value: string) {
+  cookies.set(name, value, { maxAge: 31536000000, httpOnly: false });
+}
 
 export default InstantPage;
