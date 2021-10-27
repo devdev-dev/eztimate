@@ -38,11 +38,7 @@ export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettings
                 </Alert>
               )}
 
-              <Divider sx={{ my: 2 }}>
-                <Chip label="Profile Settings" />
-              </Divider>
-
-              <Grid container>
+              <Grid container sx={{ my: 2 }}>
                 <Grid item xs={12} sm="auto">
                   <UploadAvatar user={data.getActiveUser} />
                 </Grid>
@@ -50,10 +46,6 @@ export default function ActiveUserSettingsDialog({ onClose }: ActiveUserSettings
                   <UserInformation user={data.getActiveUser} />
                 </Grid>
               </Grid>
-
-              <Divider sx={{ my: 2 }}>
-                <Chip label="Notification Settings" />
-              </Divider>
             </Container>
           )}
         </DialogContent>

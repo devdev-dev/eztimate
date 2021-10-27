@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PublishIcon from '@mui/icons-material/Publish';
 import PhotoSizeSelectLargeIcon from '@mui/icons-material/PhotoSizeSelectLarge';
 import RotateRightIcon from '@mui/icons-material/RotateRight';
-import { Box, Button, Grid, IconButton, Slider } from '@mui/material';
+import { Box, Button, Grid, IconButton, Slider, Tooltip } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
@@ -67,7 +67,7 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
             {...getRootProps()}
             sx={{
               position: 'relative',
-              mx: 2
+              mr: 2
             }}
           >
             <input {...getInputProps()} />
@@ -82,39 +82,55 @@ export default function UploadAvatar({ user }: UploadAvatarProps) {
               scale={scale}
               disableBoundaryChecks={true}
             />
-            <Box
-              sx={{
-                display: 'flex',
-                position: 'absolute',
-                left: '50%',
-                top: '0',
-                transform: 'translate(-50%, 0%)'
-              }}
-            >
-              <IconButton onClick={() => dropzoneRef?.current?.open()}>
-                <PublishIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  setImage(null);
-                  updateUserImage(null);
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <PhotoSizeSelectLargeIcon />
+            <Grid container spacing={2} sx={{ mt: 0 }}>
+              <Grid item xs={6}>
+                <Button fullWidth variant="contained" onClick={() => dropzoneRef?.current?.open()}>
+                  Upload
+                </Button>
               </Grid>
-              <Grid item xs={10}>
-                <Slider value={scale} onChangeCommitted={updateImageFromEditor} onChange={(e, v) => setScale(v as number)} step={0.1} min={0.1} max={10} />
+              <Grid item xs={6}>
+                <Button
+                  disabled={image === null}
+                  fullWidth
+                  variant="contained"
+                  onClick={() => {
+                    setImage(null);
+                    updateUserImage(null);
+                  }}
+                >
+                  Clear
+                </Button>
               </Grid>
               <Grid item xs={2}>
-                <RotateRightIcon />
+                <Tooltip title="Resize the Avatar">
+                  <PhotoSizeSelectLargeIcon />
+                </Tooltip>
               </Grid>
               <Grid item xs={10}>
-                <Slider value={rotation} onChangeCommitted={updateImageFromEditor} onChange={(e, v) => setRotation(v as number)} min={-180} max={180} />
+                <Slider
+                  disabled={image === null}
+                  value={scale}
+                  onChangeCommitted={updateImageFromEditor}
+                  onChange={(e, v) => setScale(v as number)}
+                  step={0.1}
+                  min={0.1}
+                  max={10}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Tooltip title="Rotate the Avatar">
+                  <RotateRightIcon />
+                </Tooltip>
+              </Grid>
+              <Grid item xs={10}>
+                <Slider
+                  disabled={image === null}
+                  value={rotation}
+                  onChangeCommitted={updateImageFromEditor}
+                  onChange={(e, v) => setRotation(v as number)}
+                  min={-180}
+                  max={180}
+                />
               </Grid>
             </Grid>
           </Box>
