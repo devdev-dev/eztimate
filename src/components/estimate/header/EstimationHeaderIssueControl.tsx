@@ -8,10 +8,12 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../../generated/graphql';
 import { useNotificationTrigger } from '../../../pusher';
+import { useAppLoading } from '../../layout/AppContext';
 import EstimationSettingsDialog from '../settings/EstimationSettingsDialog';
 
 export default function EstimationHeaderIssueControl() {
-  const { data, loading, error } = useActiveIssueQuery();
+  const { data, loading } = useActiveIssueQuery();
+  const appLoading = useAppLoading();
   const triggerNotification = useNotificationTrigger();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
@@ -22,22 +24,30 @@ export default function EstimationHeaderIssueControl() {
     setIssueName(data?.getActiveIssue?.name);
   }, [data]);
 
+  const updateIssueName = () => {
+    if (data?.getActiveIssue?.name !== issueName) {
+      appLoading.set(true);
+      updateActiveIssue({ variables: { input: { name: issueName } } }).then(() => {
+        appLoading.set(false);
+      });
+    }
+  };
   const toggleIssueState = () => {
     const newState = data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT;
-    if (data && data.getActiveIssue)
+    if (data && data.getActiveIssue) {
+      appLoading.set(true);
       updateActiveIssue({
-        variables: { input: { state: newState } },
-        optimisticResponse: {
-          updateActiveIssue: {
-            ...data!.getActiveIssue,
-            state: newState
-          }
-        }
-      });
+        variables: { input: { state: newState } }
+      }).then(() => appLoading.set(false));
+    }
   };
 
   const handleReset = () => {
-    resetActiveIssue().then(() => inputRef.current?.focus());
+    appLoading.set(true);
+    resetActiveIssue().then(() => {
+      appLoading.set(false);
+      return inputRef.current?.focus();
+    });
   };
 
   const handleNotification = () => {
@@ -65,9 +75,7 @@ export default function EstimationHeaderIssueControl() {
             onChange={e => {
               setIssueName(e.target.value);
             }}
-            onBlur={e => {
-              if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { input: { name: issueName } } });
-            }}
+            onBlur={updateIssueName}
             onKeyDown={e => {
               if (e.key === 'Escape' || e.key === 'Enter') {
                 inputRef.current?.blur();
