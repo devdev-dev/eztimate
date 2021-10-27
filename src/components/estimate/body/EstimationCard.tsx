@@ -1,7 +1,8 @@
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@mui/material';
 import * as React from 'react';
-import classNames from 'classnames';
+
+const classNames = require('classnames');
 
 interface EstimationCardProps {
   value: string;
