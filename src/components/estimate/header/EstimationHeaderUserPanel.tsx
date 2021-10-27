@@ -5,7 +5,7 @@ import { Avatar, AvatarGroup, Badge, Box, IconButton, Skeleton, Tooltip } from '
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 import { useActiveIssueQuery, useGetUserQuery } from '../../../generated/graphql';
-import { useIssueId, usePusherChannel } from '../../AppContext';
+import { useIssueId, usePusherChannel } from '../../EstimateContext';
 import UserAvatar, { UserAvatarSkeleton } from '../../UserAvatar';
 
 export default function EstimationHeaderUserPanel() {

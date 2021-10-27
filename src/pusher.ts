@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client';
 import { useEvent, useTrigger } from '@harelpls/use-pusher';
 import { PresenceChannel } from 'pusher-js';
-import { usePusherChannel } from './components/AppContext';
+import { usePusherChannel } from './components/EstimateContext';
 
 export enum PusherEvents {
   IssueUpdate = 'app:issueupdate',

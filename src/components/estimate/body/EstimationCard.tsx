@@ -6,13 +6,14 @@ import classNames from 'classnames';
 interface EstimationCardProps {
   value: string;
   selected: boolean;
+  disabled: boolean;
   onClick: (value: string | null) => void;
 }
 
-const EstimationCard = ({ value, selected, onClick }: EstimationCardProps) => {
+const EstimationCard = ({ value, selected, disabled, onClick }: EstimationCardProps) => {
   const theme = useTheme();
   return (
-    <div className={classNames(styles.card(theme), { selected: selected })} onClick={() => onClick(selected ? null : value)}>
+    <div className={classNames(styles.card(theme), { selected: selected })} onClick={() => !disabled && onClick(selected ? null : value)}>
       <h3>{value}</h3>
     </div>
   );

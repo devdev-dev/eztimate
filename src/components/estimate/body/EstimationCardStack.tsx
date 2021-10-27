@@ -3,24 +3,26 @@ import { Skeleton, Theme, useTheme } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useActiveIssueQuery, useActiveUserQuery, useUpdateUserEstimateMutation } from '../../../generated/graphql';
+import { useAppLoading } from '../../layout/AppContext';
 import EstimationCard from './EstimationCard';
 
 const EstimationCardStack = () => {
   const theme = useTheme();
+  const globalLoading = useAppLoading();
   const [userEstimate, setUserEstimate] = useState<string | null>(null);
 
-  const { data, loading } = useActiveIssueQuery();
+  const { data: issueData, loading } = useActiveIssueQuery();
   const { data: userData } = useActiveUserQuery();
 
   useEffect(() => {
-    setUserEstimate(data?.getActiveIssue?.estimates.find(e => e.user._id === userData?.getActiveUser?._id)?.value ?? null);
-  }, [data, userData, setUserEstimate]);
+    setUserEstimate(issueData?.getActiveIssue?.estimates.find(e => e.user._id === userData?.getActiveUser?._id)?.value ?? null);
+  }, [issueData, userData, setUserEstimate]);
 
   const [updateEstimate] = useUpdateUserEstimateMutation();
 
   return (
     <>
-      {loading && !data && (
+      {loading && !issueData && (
         <div className={styles.stack(theme)}>
           <div className="skeleton">
             <Skeleton variant="rectangular" height="100px" />
@@ -33,18 +35,22 @@ const EstimationCardStack = () => {
           </div>
         </div>
       )}
-      {!loading && data && (
+      {!loading && issueData && (
         <div className={styles.stack(theme)}>
-          {data.getActiveIssue?.stack.map((value, index) => {
+          {issueData.getActiveIssue?.stack.map((value, index) => {
             const isEstimatedCardValue = userEstimate === value;
             return (
               <EstimationCard
                 key={index}
                 value={value}
                 selected={isEstimatedCardValue}
+                disabled={globalLoading.value}
                 onClick={value => {
-                  updateEstimate({ variables: { value: value } });
                   setUserEstimate(value);
+                  globalLoading.set(true);
+                  updateEstimate({ variables: { value: value } }).then(() => {
+                    globalLoading.set(false);
+                  });
                 }}
               />
             );
