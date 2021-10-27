@@ -14,7 +14,7 @@ interface EstimationCardProps {
 export const EstimationCard = ({ value, selected, disabled, onClick }: EstimationCardProps) => {
   const theme = useTheme();
   return (
-    <div className={classNames(styles.card(theme), { selected: selected })} onClick={() => !disabled && onClick(selected ? null : value)}>
+    <div className={classNames(styles.card(theme, disabled), { selected: selected })} onClick={() => !disabled && onClick(selected ? null : value)}>
       <h3>{value}</h3>
     </div>
   );
@@ -23,14 +23,14 @@ export const EstimationCard = ({ value, selected, disabled, onClick }: Estimatio
 export const EstimationCardSkeleton = () => {
   const theme = useTheme();
   return (
-    <div className={classNames(styles.card(theme), 'skeleton')}>
+    <div className={classNames(styles.card(theme, false), 'skeleton')}>
       <Skeleton variant="rectangular" height="100px" />
     </div>
   );
 };
 
 const styles = {
-  card: (theme: Theme) => css`
+  card: (theme: Theme, disabled: boolean) => css`
     width: 150px;
     height: 100px;
     border-radius: 5px;
@@ -38,15 +38,20 @@ const styles = {
     transform: rotateX(30deg) rotateY(-15deg) rotate(45deg);
     transition: transform 0.5s ease, background-position 0.5s linear;
     overflow: hidden;
-    cursor: pointer;
-    background: linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 25%, ${theme.palette.secondary.main} 55%);
+    cursor: ${!disabled ? 'pointer' : 'default'};
+    --c1: ${theme.palette.primary.light};
+    --c2: ${theme.palette.primary.main};
+    --c3: ${theme.palette.secondary.main};
+    background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 25%, var(--c3) 55%);
     background-size: 400% 400%;
     box-shadow: 20px 20px 60px rgba(34, 50, 84, 0.5), 1px 1px 0 1px ${theme.palette.primary.dark};
     animation: CardSelect 0.5s linear;
 
-    &:hover {
-      transform: rotateX(30deg) rotateY(-15deg) rotate(45deg) translate(20px, 0px);
-    }
+    ${!disabled &&
+    `
+      &:hover {
+        transform: rotateX(30deg) rotateY(-15deg) rotate(45deg) translate(20px, 0px);
+      }`}
 
     &.selected {
       transform: rotateX(30deg) rotateY(-15deg) rotate(45deg) translate(20px, 0px);
