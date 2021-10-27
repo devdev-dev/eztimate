@@ -5,7 +5,7 @@ import { GetServerSideProps } from 'next';
 import absoluteUrl from 'next-absolute-url/index';
 import * as React from 'react';
 import { ReactElement } from 'react';
-import { AppContextProvider } from '../../components/AppContext';
+import { EstimateContextProvider } from '../../components/EstimateContext';
 import EstimationBody from '../../components/estimate/body/EstimationBody';
 import EstimationMenu from '../../components/estimate/EstimationMenu';
 import EstimationHeader from '../../components/estimate/header/EstimationHeader';
@@ -35,14 +35,14 @@ const config: PusherProviderProps = {
 const InstantPage = ({ issueId }: { issueId: string }) => {
   return (
     <PusherProvider {...config}>
-      <AppContextProvider issueId={issueId}>
+      <EstimateContextProvider issueId={issueId}>
         <>
           <EstimationHeader />
           <EstimationBody />
           <EstimationMenu />
           <NotificationSnackbar />
         </>
-      </AppContextProvider>
+      </EstimateContextProvider>
     </PusherProvider>
   );
 };

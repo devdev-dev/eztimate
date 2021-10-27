@@ -1,11 +1,11 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleIcon from '@mui/icons-material/Circle';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Avatar, AvatarGroup, Badge, Box, IconButton, Skeleton } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, IconButton, Skeleton, Tooltip } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import * as React from 'react';
 import { useActiveIssueQuery, useGetUserQuery } from '../../../generated/graphql';
-import { useIssueId, usePusherChannel } from '../../AppContext';
+import { useIssueId, usePusherChannel } from '../../EstimateContext';
 import UserAvatar, { UserAvatarSkeleton } from '../../UserAvatar';
 
 export default function EstimationHeaderUserPanel() {
@@ -46,11 +46,13 @@ export default function EstimationHeaderUserPanel() {
                 );
               })}
           </AvatarGroup>
-          <IconButton onClick={() => handleCopyID(issueId)}>
-            <Avatar>
-              <PersonAddIcon />
-            </Avatar>
-          </IconButton>
+          <Tooltip title="Copy Invite Link">
+            <IconButton onClick={() => handleCopyID(issueId)}>
+              <Avatar>
+                <PersonAddIcon />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       )}
     </Box>

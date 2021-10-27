@@ -1,17 +1,17 @@
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ReplayIcon from '@mui/icons-material/Replay';
-import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Divider, IconButton, InputBase, Menu, MenuItem, Paper, Skeleton, Tooltip } from '@mui/material';
+import { Divider, IconButton, InputBase, Paper, Skeleton, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { IssueState, useActiveIssueQuery, useResetActiveIssueMutation, useUpdateActiveIssueMutation } from '../../../generated/graphql';
 import { useNotificationTrigger } from '../../../pusher';
-import EstimationSettingsDialog from '../settings/EstimationSettingsDialog';
+import { useAppLoading } from '../../layout/AppContext';
 
 export default function EstimationHeaderIssueControl() {
-  const { data, loading, error } = useActiveIssueQuery();
+  const { data, loading } = useActiveIssueQuery();
+  const appLoading = useAppLoading();
   const triggerNotification = useNotificationTrigger();
   const [resetActiveIssue] = useResetActiveIssueMutation();
   const [updateActiveIssue] = useUpdateActiveIssueMutation();
@@ -22,22 +22,30 @@ export default function EstimationHeaderIssueControl() {
     setIssueName(data?.getActiveIssue?.name);
   }, [data]);
 
+  const updateIssueName = () => {
+    if (data?.getActiveIssue?.name !== issueName) {
+      appLoading.set(true);
+      updateActiveIssue({ variables: { input: { name: issueName } } }).then(() => {
+        appLoading.set(false);
+      });
+    }
+  };
   const toggleIssueState = () => {
     const newState = data?.getActiveIssue?.state === IssueState.COLLECT ? IssueState.DISCUSS : IssueState.COLLECT;
-    if (data && data.getActiveIssue)
+    if (data && data.getActiveIssue) {
+      appLoading.set(true);
       updateActiveIssue({
-        variables: { input: { state: newState } },
-        optimisticResponse: {
-          updateActiveIssue: {
-            ...data!.getActiveIssue,
-            state: newState
-          }
-        }
-      });
+        variables: { input: { state: newState } }
+      }).then(() => appLoading.set(false));
+    }
   };
 
   const handleReset = () => {
-    resetActiveIssue().then(() => inputRef.current?.focus());
+    appLoading.set(true);
+    resetActiveIssue().then(() => {
+      appLoading.set(false);
+      return inputRef.current?.focus();
+    });
   };
 
   const handleNotification = () => {
@@ -65,9 +73,7 @@ export default function EstimationHeaderIssueControl() {
             onChange={e => {
               setIssueName(e.target.value);
             }}
-            onBlur={e => {
-              if (data?.getActiveIssue?.name !== issueName) updateActiveIssue({ variables: { input: { name: issueName } } });
-            }}
+            onBlur={updateIssueName}
             onKeyDown={e => {
               if (e.key === 'Escape' || e.key === 'Enter') {
                 inputRef.current?.blur();
@@ -76,23 +82,24 @@ export default function EstimationHeaderIssueControl() {
             sx={{ ml: 1, flex: 1 }}
             placeholder="Issue under Estimation"
             value={issueName}
+            disabled={appLoading.value}
           />
 
           <Tooltip title={data?.getActiveIssue?.state === IssueState.COLLECT ? 'Reveal Results' : 'Hide Results'}>
-            <IconButton onClick={toggleIssueState}>
+            <IconButton onClick={toggleIssueState} disabled={appLoading.value}>
               {data?.getActiveIssue?.state === IssueState.COLLECT ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Send Notification">
-            <IconButton onClick={handleNotification}>
+            <IconButton disabled={appLoading.value} onClick={handleNotification}>
               <CampaignIcon />
             </IconButton>
           </Tooltip>
           <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
           <Tooltip title="Reset Estimation">
-            <IconButton color="primary" sx={{ p: '10px' }} onClick={handleReset}>
+            <IconButton disabled={appLoading.value} color="primary" sx={{ p: '10px' }} onClick={handleReset}>
               <ReplayIcon />
             </IconButton>
           </Tooltip>

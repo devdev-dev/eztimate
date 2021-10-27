@@ -4,11 +4,12 @@ import { User } from '../generated/graphql';
 
 export type UserAvatarProps = {
   user: Pick<User, 'name' | 'avatar'>;
+  tooltip?: string;
 };
 
-export default function UserAvatar({ user }: UserAvatarProps) {
+export default function UserAvatar({ user, tooltip }: UserAvatarProps) {
   return (
-    <Tooltip title={user.name ?? ''}>
+    <Tooltip title={tooltip ?? user.name ?? ''}>
       <Avatar src={`${user.avatar}`}>{getInitials(`${user.name}`)}</Avatar>
     </Tooltip>
   );

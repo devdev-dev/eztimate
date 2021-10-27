@@ -29,7 +29,7 @@ export default function ActiveUserPanel() {
         <Stack direction="row" spacing={2}>
           <IconButton onClick={handleOpenSettings}>
             <MenuBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} badgeContent={<SettingsIcon fontSize="small" />}>
-              {data?.getActiveUser ? <UserAvatar user={data?.getActiveUser} /> : <UserAvatarSkeleton />}
+              {data?.getActiveUser ? <UserAvatar user={data?.getActiveUser} tooltip="Profile Settings" /> : <UserAvatarSkeleton />}
             </MenuBadge>
           </IconButton>
         </Stack>
