@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useActiveIssueQuery, useActiveUserQuery, useUpdateUserEstimateMutation } from '../../../generated/graphql';
 import { useAppLoading } from '../../layout/AppContext';
-import EstimationCard from './EstimationCard';
+import { EstimationCard, EstimationCardSkeleton } from './EstimationCard';
 
 const EstimationCardStack = () => {
   const theme = useTheme();
@@ -24,15 +24,11 @@ const EstimationCardStack = () => {
     <>
       {loading && !issueData && (
         <div className={styles.stack(theme)}>
-          <div className="skeleton">
-            <Skeleton variant="rectangular" height="100px" />
-          </div>
-          <div className="skeleton">
-            <Skeleton variant="rectangular" height="100px" />
-          </div>
-          <div className="skeleton">
-            <Skeleton variant="rectangular" height="100px" />
-          </div>
+          <EstimationCardSkeleton />
+          <EstimationCardSkeleton />
+          <EstimationCardSkeleton />
+          <EstimationCardSkeleton />
+          <EstimationCardSkeleton />
         </div>
       )}
       {!loading && issueData && (

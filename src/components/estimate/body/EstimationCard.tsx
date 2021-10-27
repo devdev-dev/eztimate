@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { Theme, useTheme } from '@mui/material';
+import { Skeleton, Theme, useTheme } from '@mui/material';
 import * as React from 'react';
 
 const classNames = require('classnames');
@@ -11,11 +11,20 @@ interface EstimationCardProps {
   onClick: (value: string | null) => void;
 }
 
-const EstimationCard = ({ value, selected, disabled, onClick }: EstimationCardProps) => {
+export const EstimationCard = ({ value, selected, disabled, onClick }: EstimationCardProps) => {
   const theme = useTheme();
   return (
     <div className={classNames(styles.card(theme), { selected: selected })} onClick={() => !disabled && onClick(selected ? null : value)}>
       <h3>{value}</h3>
+    </div>
+  );
+};
+
+export const EstimationCardSkeleton = () => {
+  const theme = useTheme();
+  return (
+    <div className={classNames(styles.card(theme), 'skeleton')}>
+      <Skeleton variant="rectangular" height="100px" />
     </div>
   );
 };
@@ -58,5 +67,3 @@ const styles = {
     }
   `
 };
-
-export default EstimationCard;
