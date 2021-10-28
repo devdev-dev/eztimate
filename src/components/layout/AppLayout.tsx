@@ -1,4 +1,5 @@
 import { AppBar, Box, Container, Typography } from '@mui/material';
+import Link from '@mui/material/Link';
 import * as React from 'react';
 import { AppContextProvider } from './AppContext';
 import MainAppToolbar from './MainAppToolbar';
@@ -22,13 +23,22 @@ export default function AppLayout({ title, children }: AppLayoutProps) {
           <MainAppToolbar />
         </AppBar>
 
-        <Container maxWidth="lg">
-          <Typography variant={'h4'} sx={{ py: 4 }}>
-            {title}
-          </Typography>
-          {children}
-        </Container>
+        <Container maxWidth="lg">{children}</Container>
+        <Copyright sx={{ mt: 5 }} />
       </Box>
     </AppContextProvider>
+  );
+}
+
+function Copyright(props: any) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   );
 }
