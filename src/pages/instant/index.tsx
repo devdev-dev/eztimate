@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { PusherProvider, PusherProviderProps } from '@harelpls/use-pusher';
+import { Box } from '@mui/material';
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import absoluteUrl from 'next-absolute-url/index';
@@ -36,12 +37,12 @@ const InstantPage = ({ issueId }: { issueId: string }) => {
   return (
     <PusherProvider {...config}>
       <EstimateContextProvider issueId={issueId}>
-        <>
+        <Box sx={{ mt: 2 }}>
           <EstimationHeader />
           <EstimationBody />
           <EstimationMenu />
           <NotificationSnackbar />
-        </>
+        </Box>
       </EstimateContextProvider>
     </PusherProvider>
   );

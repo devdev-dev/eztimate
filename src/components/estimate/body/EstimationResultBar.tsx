@@ -53,10 +53,16 @@ export function EstimationResultBar({ estimates, hideResults }: EstimationResult
 export function EstimationResultBarSkeleton() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <StyledResultBar sx={{ bgcolor: 'transparent' }} weight={1} maxWeight={1} disabled>
+      <StyledResultBar sx={{ bgcolor: 'transparent' }} weight={1} maxWeight={1} disabled={true}>
         <Skeleton variant="rectangular" width="100%" height="24px" />
       </StyledResultBar>
       <AvatarGroup max={10} sx={{ p: 2, justifyContent: 'center' }}>
+        <Skeleton variant="circular">
+          <Avatar />
+        </Skeleton>
+        <Skeleton variant="circular">
+          <Avatar />
+        </Skeleton>
         <Skeleton variant="circular">
           <Avatar />
         </Skeleton>
