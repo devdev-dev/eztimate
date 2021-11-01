@@ -1,8 +1,11 @@
-import { AppBar, Box, Container, Typography } from '@mui/material';
-import Link from '@mui/material/Link';
+import { css } from '@emotion/css';
+import BoltIcon from '@mui/icons-material/Bolt';
+import HomeIcon from '@mui/icons-material/Home';
+import { AppBar, Box, Container, Grid, IconButton, LinearProgress, styled, Toolbar, Typography } from '@mui/material';
+import Link from 'next/link';
 import * as React from 'react';
-import { AppContextProvider } from './AppContext';
-import MainAppToolbar from './MainAppToolbar';
+import ActiveUserPanel from './activeuser/ActiveUserPanel';
+import { AppContextProvider, useAppLoading } from './AppContext';
 
 export interface AppLayoutProps {
   title: string;
@@ -15,14 +18,10 @@ export default function AppLayout({ title, children }: AppLayoutProps) {
       <Box
         sx={{
           bgcolor: '#dee9f3',
-          height: '100vh',
-          width: '100%'
+          minHeight: '100vh'
         }}
       >
-        <AppBar position="relative" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
-          <MainAppToolbar />
-        </AppBar>
-
+        <MainAppToolbar />
         <Container maxWidth="lg">{children}</Container>
         <Copyright sx={{ mt: 5 }} />
       </Box>
@@ -30,15 +29,54 @@ export default function AppLayout({ title, children }: AppLayoutProps) {
   );
 }
 
+function MainAppToolbar() {
+  const globalLoading = useAppLoading();
+  console.log(globalLoading);
+
+  return (
+    <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
+      <Toolbar>
+        <Grid container sx={{ p: 1, alignItems: 'center' }}>
+          <Grid item xs={3}>
+            &nbsp;
+          </Grid>
+          <Grid item xs className={styles.navigation}>
+            <Link href="/" passHref>
+              <IconButton color="inherit">
+                <HomeIcon />
+              </IconButton>
+            </Link>
+            <Link href="/instant" passHref>
+              <IconButton color="inherit">
+                <BoltIcon />
+              </IconButton>
+            </Link>
+          </Grid>
+          <Grid item xs={3} className={styles.activeUser}>
+            <ActiveUserPanel />
+          </Grid>
+        </Grid>
+      </Toolbar>
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress sx={{ visibility: !globalLoading.value ? 'hidden' : 'visible' }} />
+      </Box>
+    </AppBar>
+  );
+}
+
+const styles = {
+  navigation: css`
+    text-align: center;
+  `,
+  activeUser: css`
+    text-align: end;
+  `
+};
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      {'Copyright © '} DeviantDev {new Date().getFullYear()}
     </Typography>
   );
 }
