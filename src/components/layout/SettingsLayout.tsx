@@ -1,6 +1,5 @@
-import { AppBar, Box, Button, Container, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
-import { StyledToolbar } from './MainAppToolbar';
 
 export interface SettingsLayoutProps {
   title: string;
@@ -18,11 +17,11 @@ export default function SettingsLayout({ title, onClose, children }: SettingsLay
       }}
     >
       <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>
-        <StyledToolbar>
+        <Toolbar>
           <Button autoFocus onClick={onClose} variant="contained">
             close
           </Button>
-        </StyledToolbar>
+        </Toolbar>
       </AppBar>
 
       <Container maxWidth="lg">

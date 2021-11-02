@@ -31,7 +31,6 @@ export default function AppLayout({ title, children }: AppLayoutProps) {
 
 function MainAppToolbar() {
   const globalLoading = useAppLoading();
-  console.log(globalLoading);
 
   return (
     <AppBar position="sticky" color="transparent" variant="outlined" elevation={0} sx={{ bgcolor: 'white' }}>

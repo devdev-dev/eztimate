@@ -102,11 +102,6 @@ export const mutationResolvers: MutationResolvers = {
       }
     }
   },
-  createActiveUser: async (_, {}, { db }) => {
-    const { insertedId } = await db.collection('users').insertOne({});
-    const user: User = { _id: insertedId.toHexString() };
-    return user;
-  },
   updateActiveUser: async (_, { input }, { db, userId }) => {
     let update = {};
     if (input.avatar !== undefined) update = { ...update, avatar: input.avatar };

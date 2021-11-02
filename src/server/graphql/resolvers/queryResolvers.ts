@@ -9,7 +9,14 @@ export const queryResolvers: QueryResolvers = {
     return (await db.collection('issues').findOne({ _id: issueId })) as Issue;
   },
   async getActiveUser(parent, args, { db, userId }) {
-    return (await db.collection('users').findOne({ _id: userId })) as User;
+    let dbUser = await db.collection('users').findOne({ _id: userId });
+
+    if (dbUser === null) {
+      const { insertedId } = await db.collection('users').insertOne({});
+      dbUser = { _id: insertedId.toHexString() };
+    }
+
+    return dbUser as User;
   },
   async getUser(parent, { id }, { db }) {
     return (await db.collection('users').findOne({ _id: getObjectId(id) })) as User;
