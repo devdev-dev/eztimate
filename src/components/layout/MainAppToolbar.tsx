@@ -9,7 +9,6 @@ import { useAppLoading } from './AppContext';
 
 export default function MainAppToolbar() {
   const globalLoading = useAppLoading();
-  console.log(globalLoading);
 
   return (
     <>

@@ -8,6 +8,7 @@ import { resolvers } from '../../server/graphql/resolvers';
 import * as typeDefs from '../../server/graphql/schema.graphql';
 import getDatabase, { getObjectId } from '../../server/mongo';
 
+console.time('gqlroute');
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
@@ -35,7 +36,9 @@ export class DatabaseError extends ApolloError {
   }
 }
 
+console.timeStamp('gqlroute');
 const startServer = apolloServer.start();
+console.timeStamp('gqlroute');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -53,6 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })(req, res);
 }
 
+console.timeEnd('gqlroute');
 export const config = {
   api: {
     bodyParser: false

@@ -21,11 +21,12 @@ export const mutationResolvers: MutationResolvers = {
     return issue;
   },
   updateActiveIssue: async (_, { input }, { db, issueId }) => {
+    console.time('updateActiveIssue');
     let update = {};
     if (input.name !== undefined) update = { ...update, name: input.name };
     if (input.state !== undefined) update = { ...update, state: input.state };
     if (input.stack !== undefined) update = { ...update, stack: input.stack };
-    return (
+    const returnValue = (
       await db.collection('issues').findOneAndUpdate(
         { _id: issueId },
         {
@@ -34,6 +35,9 @@ export const mutationResolvers: MutationResolvers = {
         { returnDocument: 'after' }
       )
     ).value as Issue;
+
+    console.timeEnd('updateActiveIssue');
+    return returnValue;
   },
   resetActiveIssue: async (_, {}, { db, issueId }) => {
     const dbIssue = (
@@ -61,6 +65,7 @@ export const mutationResolvers: MutationResolvers = {
     }
   },
   updateUserEstimate: async (_, { value }, { db, issueId, userId }) => {
+    console.time('updateUserEstimate');
     if (value) {
       const { value: dbEstimate } = await db.collection('estimates').findOneAndReplace(
         { user: userId },
@@ -81,6 +86,8 @@ export const mutationResolvers: MutationResolvers = {
           },
           { returnDocument: 'after' }
         );
+
+        console.timeEnd('updateUserEstimate');
         return dbIssue as Issue;
       } else {
         throw new DatabaseError('Create / Update estimate not possible. ');
@@ -96,6 +103,8 @@ export const mutationResolvers: MutationResolvers = {
             returnDocument: 'after'
           }
         );
+
+        console.timeEnd('updateUserEstimate');
         return dbIssue as Issue;
       } else {
         throw new DatabaseError('Create / Update estimate not possible. ');

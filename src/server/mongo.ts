@@ -11,11 +11,13 @@ if (!process.env.MONGODB_DB) {
 }
 
 export default async function getDatabase() {
+  console.time('createdb');
   if (!global.mongo.client) {
     global.mongo.client = new MongoClient(process.env.MONGODB_URI!, {});
     await global.mongo.client.connect();
   }
 
+  console.timeEnd('createdb');
   return { client: global.mongo, db: global.mongo.client.db(process.env.MONGODB_DB) };
 }
 
